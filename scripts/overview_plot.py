@@ -1,13 +1,35 @@
+import os
+import json
+
+import pandas as pd
+
 import seaborn as sns
 import matplotlib.pyplot as plt
 
 
+def read_result_data(input_dirs):
+    df_list = []
+    for dir_ in input_dirs:
+        df = pd.read_csv(os.path.join(dir_, 'result.csv'))
+
+        _, tool, source = dir_[:-1].split('/')
+        df['tool'] = tool
+        df['source'] = source
+
+        df_list.append(df)
+
+    return pd.concat(df_list)
+
+
 def main(input_dirs, out_fname):
-    plt.figure()
+    df = read_result_data(input_dirs)
 
-    sns.distplot([1,2,2,3,3,3,4])
+    g = sns.FacetGrid(df, col='source', row='tool')
+    g.map(sns.distplot, 'pvalue', bins=100, kde=False)
 
-    plt.savefig(out_fname)
+    g.set(xlim=(0, 1))
+
+    g.savefig(out_fname)
 
 
 if __name__ == '__main__':
