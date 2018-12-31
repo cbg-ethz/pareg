@@ -33,7 +33,7 @@ class Executor(ABC):
         # enrichment results
         if self.df_result is None:
             raise RuntimeError('Result was not saved')
-        self.df_result .to_csv('result.csv', index=False)
+        self.df_result.to_csv('result.csv', index=False)
 
     def run(self):
         # build environment
