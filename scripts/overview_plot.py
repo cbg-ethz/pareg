@@ -30,8 +30,37 @@ def pvalue_overview(input_dirs, out_dir):
     g.savefig(os.path.join(out_dir, 'overview.pdf'))
 
 
+def runtime_overview(input_dirs, out_dir):
+    # read data
+    tmp = []
+    for dir_ in input_dirs:
+        fname = os.path.join(dir_, 'meta.json')
+        with open(fname) as fd:
+            meta_data = json.load(fd)
+
+        _, tool, source = dir_[:-1].split('/')
+
+        tmp.append({
+            'tool': tool,
+            'source': source,
+            'runtime': meta_data['exec_time']
+        })
+    df = pd.DataFrame(tmp)
+
+    # plot result
+    plt.figure()
+
+    sns.barplot(x='tool', y='runtime', hue='source', data=df)
+
+    plt.ylabel('Runtime [s]')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, 'runtime.pdf'))
+
+
 def main(input_dirs, out_dir):
     pvalue_overview(input_dirs, out_dir)
+    runtime_overview(input_dirs, out_dir)
 
 
 if __name__ == '__main__':
