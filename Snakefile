@@ -13,7 +13,7 @@ print(source_list)
 
 rule all:
     input:
-        'results/overview.pdf'
+        'results/overview_plots/'
 
 rule execute:
     input:
@@ -36,6 +36,6 @@ rule summarize:
             'results/{tool}/{source}/',
             tool=tool_list, source=source_list)
     output:
-        file = 'results/overview.pdf'
+        file = directory('results/overview_plots/')
     script:
         'scripts/overview_plot.py'

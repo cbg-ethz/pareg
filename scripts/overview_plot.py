@@ -21,15 +21,17 @@ def read_result_data(input_dirs):
     return pd.concat(df_list)
 
 
-def main(input_dirs, out_fname):
+def pvalue_overview(input_dirs, out_dir):
     df = read_result_data(input_dirs)
 
     g = sns.FacetGrid(df, col='source', row='tool')
     g.map(sns.distplot, 'pvalue', bins=100, kde=False)
-
     g.set(xlim=(0, 1))
+    g.savefig(os.path.join(out_dir, 'overview.pdf'))
 
-    g.savefig(out_fname)
+
+def main(input_dirs, out_dir):
+    pvalue_overview(input_dirs, out_dir)
 
 
 if __name__ == '__main__':
