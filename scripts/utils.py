@@ -19,6 +19,10 @@ class Executor(ABC):
         self.df_inp = load_input(input_file)
         self.df_terms = load_terms(term_file)
 
+        self.reference_set = \
+            set(self.df_inp['gene'].tolist()) | \
+            set(self.df_terms['gene'].tolist())
+
         self.meta_data = {}
         self.df_result = None
 

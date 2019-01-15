@@ -11,7 +11,7 @@ class MyExecutor(Executor):
         for term in self.df_terms['name'].unique():
             tmp.append({
                 'term': term,
-                'pvalue': .5
+                'p_value': .5
             })
 
         self.df_result = pd.DataFrame(tmp)

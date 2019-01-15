@@ -7,6 +7,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 
+sns.set_context('talk')
+
+
 def read_result_data(input_dirs):
     df_list = []
     for dir_ in input_dirs:
@@ -25,7 +28,7 @@ def pvalue_overview(input_dirs, out_dir):
     df = read_result_data(input_dirs)
 
     g = sns.FacetGrid(df, col='source', row='tool')
-    g.map(sns.distplot, 'pvalue', bins=100, kde=False)
+    g.map(sns.distplot, 'p_value', bins=100, kde=False)
     g.set(xlim=(0, 1))
     g.savefig(os.path.join(out_dir, 'overview.pdf'))
 
