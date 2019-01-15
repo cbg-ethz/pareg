@@ -21,16 +21,42 @@ def read_result_data(input_dirs):
 
         df_list.append(df)
 
-    return pd.concat(df_list)
+    return pd.concat(df_list, ignore_index=True)
 
 
-def pvalue_overview(input_dirs, out_dir):
+def pvalue_histograms(input_dirs, out_dir):
     df = read_result_data(input_dirs)
 
-    g = sns.FacetGrid(df, col='source', row='tool')
+    g = sns.FacetGrid(df, col='source', row='tool', size=5)
     g.map(sns.distplot, 'p_value', bins=100, kde=False)
     g.set(xlim=(0, 1))
-    g.savefig(os.path.join(out_dir, 'overview.pdf'))
+    g.savefig(os.path.join(out_dir, 'pvalue_histograms.pdf'))
+
+
+def pvalue_scatterplots(input_dirs, out_dir):
+    df = read_result_data(input_dirs)
+
+    # custom pivot (TODO: make this better)
+    df_piv = df.pivot_table(
+        index='source', columns='tool', values='p_value', aggfunc=list)
+
+    tmp = []
+    for row in df_piv.itertuples():
+        cur = []
+        for col in df_piv.columns:
+            cur.append([(col, v) for v in row._asdict()[col]])
+        for foo in zip(*cur):
+            t = {col: val for col, val in foo}
+            t['source'] = row.Index
+            tmp.append(t)
+    df_wide = pd.DataFrame(tmp)
+
+    # plot
+    g = sns.PairGrid(df_wide, hue='source', size=5)
+    g = g.map_diag(sns.distplot, kde=False)
+    g = g.map_offdiag(sns.scatterplot)
+    g = g.add_legend()
+    g.savefig(os.path.join(out_dir, 'pvalue_scatterplots.pdf'))
 
 
 def runtime_overview(input_dirs, out_dir):
@@ -62,7 +88,8 @@ def runtime_overview(input_dirs, out_dir):
 
 
 def main(input_dirs, out_dir):
-    pvalue_overview(input_dirs, out_dir)
+    pvalue_histograms(input_dirs, out_dir)
+    pvalue_scatterplots(input_dirs, out_dir)
     runtime_overview(input_dirs, out_dir)
 
 
