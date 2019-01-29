@@ -56,6 +56,7 @@ def pvalue_scatterplots(input_dirs, out_dir):
     g = g.map_diag(sns.distplot, kde=False)
     g = g.map_offdiag(sns.scatterplot)
     g = g.add_legend()
+    g.set(xlim=(0, 1), ylim=(0, 1))
     g.savefig(os.path.join(out_dir, 'pvalue_scatterplots.pdf'))
 
 
