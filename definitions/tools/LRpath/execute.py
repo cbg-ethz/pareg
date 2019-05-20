@@ -36,15 +36,7 @@ class MyExecutor(Executor):
             fam = sm.families.Binomial(link=sm.genmod.families.links.logit)
             model = smf.glm('y ~ X', data=df, family=fam)
 
-            try:
-                fit = model.fit()
-            except PerfectSeparationError:
-                results.append({
-                    'term': name,
-                    'log_odds': np.nan,
-                    'p_value': np.nan
-                })
-                continue
+            fit = model.fit()
 
             # print(fit.summary())
             results.append({
