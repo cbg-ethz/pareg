@@ -1,28 +1,31 @@
-library(tidyr)
 library(dplyr)
-
-# library(betareg)
-
+library(tidyr)
+library(tibble)
+library(rstanarm)
 
 pareg <- function (df.genes, df.terms) {
-  df.model <- df.genes %>%
-    mutate(
-      member=gene %in% df.terms$gene
-    )
+  # generate design matrix
+  df.model <- create_model_df(df.genes, df.terms)
   # print(df.model)
 
-  # bfit <- betareg::betareg(
-  #   pvalue ~ member, df.model,
-  #   link="logit", type="ML",
-  #   control=betareg::betareg.control(method="L-BFGS-B", fsmaxit=0))
+  # create formula
+  covariates <- df.model %>%
+    select(ends_with(".member")) %>%
+    names
+  form <- as.formula(paste("pvalue ~", paste(covariates, collapse="+")))
 
-  bfit <- rstanarm::stan_betareg(pvalue ~ member, df.model)
+  # fit model
+  bfit <- rstanarm::stan_betareg(formula=form, data=df.model)
   # print(summary(bfit))
 
+  # extract enrichments
   enrich <- coef(bfit)["memberTRUE"]
 
-  return(data.frame(
-    name=df.terms$name[1],
-    enrichment=enrich
-  ))
+  df.enrich <- as.data.frame(coef(bfit)) %>%
+    rownames_to_column %>%
+    filter(grepl(".memberTRUE$", rowname)) %>%
+    extract(rowname, "name", "(.*).memberTRUE") %>%
+    rename(enrichment=`coef(bfit)`)
+
+  return(df.enrich)
 }
