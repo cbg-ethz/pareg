@@ -9,8 +9,9 @@ create_model_df <- function (df.genes, df.terms) {
     ungroup %>%
     right_join(df.genes, by="gene") %>%
     spread(key=name, value=member, fill=FALSE) %>%
-    select(-"<NA>") %>%
-    rename_at(vars(-gene, -pvalue), ~ paste0(., ".member"))
+    select(-one_of("<NA>")) %>% # use `one_of` to handle case where <NA> does not exist
+    rename_at(vars(-gene, -pvalue), ~ paste0(., ".member")) %>%
+    mutate_at(vars(gene), factor) # gene is character if select statement is executed
 
   return(df.model)
 }
