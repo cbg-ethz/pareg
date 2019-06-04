@@ -19,8 +19,6 @@ pareg <- function (df.genes, df.terms) {
   # print(summary(bfit))
 
   # extract enrichments
-  enrich <- coef(bfit)["memberTRUE"]
-
   df.enrich <- as.data.frame(coef(bfit)) %>%
     rownames_to_column %>%
     filter(grepl(".memberTRUE$", rowname)) %>%
