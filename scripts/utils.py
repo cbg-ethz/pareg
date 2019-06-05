@@ -36,7 +36,13 @@ class Executor(ABC):
 
         # enrichment results
         if self.df_result is None:
-            raise RuntimeError('Result was not saved')
+            raise RuntimeError(
+                'Result was not saved (must define `self.df_result`)')
+        if set(self.df_result.columns) != {'term', 'p_value'}:
+            raise RuntimeError(
+                'Result must have columns: "term", "p_value" '
+                f'(has: {self.df_result.columns})')
+
         self.df_result.to_csv('result.csv', index=False)
 
     def run(self):
