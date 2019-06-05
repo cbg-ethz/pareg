@@ -8,8 +8,15 @@ from utils import Executor
 
 class MyExecutor(Executor):
     def setup(self):
-        self.genes = set(self.df_inp['gene'].tolist())
-        self.grouping = self.df_terms.groupby('name')['gene'].apply(set).to_dict()
+        threshold = .05
+
+        self.genes = set(
+            self.df_inp.loc[self.df_inp['pvalue'] < threshold, 'gene']
+                       .tolist()
+        )
+        self.grouping = (self.df_terms.groupby('name')['gene']
+                                      .apply(set)
+                                      .to_dict())
 
     def execute(self):
         sec = SetEnrichmentComputer(self.grouping, self.reference_set)
