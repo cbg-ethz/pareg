@@ -16,7 +16,10 @@ class MyExecutor(Executor):
             'script.R',
             _out=sys.stdout, _err=sys.stderr)
 
-        self.df_result = pd.read_csv('result.csv')
+        self.df_result = pd.read_csv('enrichment_result.csv').rename(columns={
+            'name': 'term',
+            'enrichment': 'p_value'
+        })
 
 
 if __name__ == '__main__':
