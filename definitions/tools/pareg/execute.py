@@ -8,8 +8,8 @@ from utils import Executor
 
 class MyExecutor(Executor):
     def setup(self):
-        self.df_inp.to_csv('genes.csv')
-        self.df_terms.to_csv('terms.csv')
+        self.df_inp.to_csv('genes.csv', index=False)
+        self.df_terms.to_csv('terms.csv', index=False)
 
     def execute(self):
         sh.Rscript(
