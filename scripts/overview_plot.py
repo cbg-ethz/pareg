@@ -24,18 +24,14 @@ def read_result_data(input_dirs):
     return pd.concat(df_list, ignore_index=True)
 
 
-def pvalue_histograms(input_dirs, out_dir):
-    df = read_result_data(input_dirs)
-
+def pvalue_histograms(df, out_dir):
     g = sns.FacetGrid(df, col='source', row='tool', height=5)
     g.map(sns.distplot, 'p_value', bins=100, kde=False)
     g.set(xlim=(0, 1))
     g.savefig(os.path.join(out_dir, 'pvalue_histograms.pdf'))
 
 
-def pvalue_scatterplots(input_dirs, out_dir):
-    df = read_result_data(input_dirs)
-
+def pvalue_scatterplots(df, out_dir):
     # custom pivot (TODO: make this better)
     df_piv = df.pivot_table(
         index='source', columns='tool', values='p_value', aggfunc=list)
@@ -89,8 +85,12 @@ def runtime_overview(input_dirs, out_dir):
 
 
 def main(input_dirs, out_dir):
-    pvalue_histograms(input_dirs, out_dir)
-    pvalue_scatterplots(input_dirs, out_dir)
+    df = read_result_data(input_dirs)
+    df.to_csv(os.path.join(out_dir, 'results.csv'), index=False)
+
+    pvalue_histograms(df, out_dir)
+    pvalue_scatterplots(df, out_dir)
+
     runtime_overview(input_dirs, out_dir)
 
 
