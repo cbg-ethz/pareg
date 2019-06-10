@@ -1,3 +1,4 @@
+import os
 import sys
 import pandas as pd
 
@@ -12,8 +13,9 @@ class MyExecutor(Executor):
         self.df_terms.to_csv('terms.csv', index=False)
 
     def execute(self):
+        root = os.path.dirname(os.path.realpath(__file__))
         sh.Rscript(
-            'script.R',
+            os.path.join(root, 'script.R'),
             _out=sys.stdout, _err=sys.stderr)
 
         self.df_result = pd.read_csv('enrichment_result.csv').rename(columns={
