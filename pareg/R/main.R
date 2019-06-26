@@ -1,6 +1,4 @@
-library(dplyr)
-library(tidyr)
-library(tibble)
+library(tidyverse)
 library(rstanarm)
 
 pareg <- function (df.genes, df.terms, ...) {
