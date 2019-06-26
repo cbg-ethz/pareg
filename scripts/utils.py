@@ -7,11 +7,11 @@ import pandas as pd
 
 
 def load_input(fname):
-    return pd.read_csv(fname)
+    return pd.read_csv(fname, dtype={'gene': str})
 
 
 def load_terms(fname):
-    return pd.read_csv(fname)
+    return pd.read_csv(fname, dtype={'gene': str})
 
 
 class Executor(ABC):

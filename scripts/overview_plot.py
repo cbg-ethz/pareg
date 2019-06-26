@@ -25,9 +25,11 @@ def read_result_data(input_dirs):
 
 
 def pvalue_histograms(df, out_dir):
-    g = sns.FacetGrid(df, col='source', row='tool', height=5)
+    g = sns.FacetGrid(
+        df, col='source', row='tool',
+        sharex=False, sharey=False,
+        height=5)
     g.map(sns.distplot, 'p_value', bins=100, kde=False)
-    g.set(xlim=(0, 1))
     g.savefig(os.path.join(out_dir, 'pvalue_histograms.pdf'))
 
 
@@ -52,7 +54,6 @@ def pvalue_scatterplots(df, out_dir):
     g = g.map_diag(sns.distplot, kde=False)
     g = g.map_offdiag(sns.scatterplot)
     g = g.add_legend()
-    g.set(xlim=(0, 1), ylim=(0, 1))
     g.savefig(os.path.join(out_dir, 'pvalue_scatterplots.pdf'))
 
 
@@ -74,7 +75,7 @@ def runtime_overview(input_dirs, out_dir):
     df = pd.DataFrame(tmp)
 
     # plot result
-    plt.figure()
+    plt.figure(figsize=(8, 6))
 
     sns.barplot(x='tool', y='runtime', hue='source', data=df)
 
