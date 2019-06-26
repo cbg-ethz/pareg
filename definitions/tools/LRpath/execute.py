@@ -33,7 +33,8 @@ class MyExecutor(Executor):
             })
             # print(df)
 
-            fam = sm.families.Binomial(link=sm.genmod.families.links.logit)
+            logit = sm.genmod.families.links.logit()
+            fam = sm.families.Binomial(link=logit)
             model = smf.glm('y ~ X', data=df, family=fam)
 
             fit = model.fit()
