@@ -121,6 +121,7 @@ def main(input_dirs, data_dirs, out_dir):
     plt.figure(figsize=(8, 6))
 
     sns.boxplot(x='tool', y='score', data=df)
+    sns.stripplot(x='tool', y='score', data=df)
 
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, 'score_boxplot.pdf'))
