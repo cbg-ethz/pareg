@@ -3,7 +3,7 @@ library(tidyr)
 library(tibble)
 library(rstanarm)
 
-pareg <- function (df.genes, df.terms) {
+pareg <- function (df.genes, df.terms, ...) {
   # generate design matrix
   df.model <- create_model_df(df.genes, df.terms)
   # print(df.model)
@@ -15,7 +15,10 @@ pareg <- function (df.genes, df.terms) {
   form <- as.formula(paste("pvalue ~", paste(covariates, collapse="+")))
 
   # fit model
-  bfit <- rstanarm::stan_betareg(formula=form, data=df.model)
+  bfit <- rstanarm::stan_betareg(
+    formula=form, data=df.model,
+    ...
+  )
   # print(summary(bfit))
 
   # extract enrichments
