@@ -18,7 +18,8 @@ def aggregate_input(wildcards):
 
 rule all:
     input:
-        'overview_plots/'
+        'overview_plots/',
+        'performance/'
 
 checkpoint provide_data:
     output:
@@ -51,3 +52,12 @@ rule summarize:
         file = directory('overview_plots/')
     script:
         'scripts/overview_plot.py'
+
+rule performance_evaluation:
+    input:
+        input_dirs = aggregate_input,
+        data_dir = 'data/'
+    output:
+        out_dir = directory('performance/')
+    script:
+        'scripts/compute_performance.py'

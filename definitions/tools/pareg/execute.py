@@ -9,8 +9,10 @@ from utils import Executor
 
 class MyExecutor(Executor):
     def setup(self):
-        self.df_inp.to_csv('genes.csv', index=False)
-        self.df_terms.to_csv('terms.csv', index=False)
+        (self.df_inp.rename(columns={'p_value': 'pvalue'})
+                    .to_csv('genes.csv', index=False))
+        (self.df_terms.rename(columns={'term': 'name'})
+                      .to_csv('terms.csv', index=False))
 
     def execute(self):
         root = os.path.dirname(os.path.realpath(__file__))

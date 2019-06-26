@@ -11,10 +11,10 @@ class MyExecutor(Executor):
         threshold = .05
 
         self.genes = set(
-            self.df_inp.loc[self.df_inp['pvalue'] < threshold, 'gene']
+            self.df_inp.loc[self.df_inp['p_value'] < threshold, 'gene']
                        .tolist()
         )
-        self.grouping = (self.df_terms.groupby('name')['gene']
+        self.grouping = (self.df_terms.groupby('term')['gene']
                                       .apply(set)
                                       .to_dict())
 

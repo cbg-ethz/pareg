@@ -16,13 +16,13 @@ from utils import Executor
 
 class MyExecutor(Executor):
     def setup(self):
-        self.genes = self.df_inp.set_index('gene').to_dict()['pvalue']
-        self.grouping = self.df_terms.groupby('name')['gene'].apply(set).to_dict()
+        self.genes = self.df_inp.set_index('gene').to_dict()['p_value']
+        self.grouping = self.df_terms.groupby('term')['gene'].apply(set).to_dict()
 
     def execute(self):
         results = []
-        for name, gset in self.grouping.items():
-            # print(self.genes, name, gset)
+        for term, gset in self.grouping.items():
+            # print(self.genes, term, gset)
 
             df = pd.DataFrame({
                 'y': np.array([1
@@ -41,7 +41,7 @@ class MyExecutor(Executor):
 
             # print(fit.summary())
             results.append({
-                'term': name,
+                'term': term,
                 'log_odds': fit.params['X'],
                 'p_value': fit.pvalues['X']
             })

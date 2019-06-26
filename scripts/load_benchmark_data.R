@@ -21,8 +21,8 @@ df.dea <- purrr::imap(geo2kegg, function (entry, dataset.name) {
   rowData(entry) %>%
     as.data.frame %>%
     rownames_to_column("gene") %>%
-    rename(ADJ.PVAL="pvalue") %>%
-    dplyr::select(gene, pvalue) %>%
+    rename(ADJ.PVAL="p_value") %>%
+    dplyr::select(gene, p_value) %>%
     mutate(dataset=dataset.name)
 }) %>%
   map_df(bind_rows)
@@ -32,7 +32,8 @@ kegg.gs <- getGenesets(org="hsa", db="kegg")
 df.gs <- kegg.gs %>%
   enframe %>%
   unnest %>%
-  rename(value="gene")
+  rename(name="term", value="gene") %>%
+  extract(term, "term")
 
 ## disease relevance rankings
 # geneset ranking per disease
@@ -64,8 +65,9 @@ store_csv <- function (data, group) {
   disease <- d2d.map[[dataset.name]]
   mala.kegg[[disease]] %>%
     as.data.frame %>%
-    rename(TITLE="name", REL.SCORE="relevance.score") %>%
-    dplyr::select(name, relevance.score) %>%
+    rownames_to_column("term") %>%
+    rename(REL.SCORE="relevance.score") %>%
+    dplyr::select(term, relevance.score) %>%
     write_csv(file.path(dname, "expected_terms.csv"))
 }
 

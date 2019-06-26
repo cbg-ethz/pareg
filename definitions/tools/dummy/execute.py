@@ -8,7 +8,7 @@ from utils import Executor
 class MyExecutor(Executor):
     def execute(self):
         tmp = []
-        for term in self.df_terms['name'].unique():
+        for term in self.df_terms['term'].unique():
             tmp.append({
                 'term': term,
                 'p_value': .5
