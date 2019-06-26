@@ -12,7 +12,8 @@ pareg <- function (df.genes, df.terms, ...) {
   covariates <- df.model %>%
     select(ends_with(".member")) %>%
     names
-  form <- as.formula(paste("pvalue ~", paste(covariates, collapse="+")))
+
+  form <- as.formula(paste0("pvalue ~ `", paste(covariates, collapse="`+`"), "`"))
 
   # fit model
   bfit <- rstanarm::stan_betareg(
