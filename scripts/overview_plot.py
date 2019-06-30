@@ -85,12 +85,32 @@ def runtime_overview(input_dirs, out_dir):
     plt.savefig(os.path.join(out_dir, 'runtime.pdf'))
 
 
+def significant_term_counts(df, out_dir):
+    # gather
+    df_sig = (df.groupby(['tool', 'source'])
+                .aggregate(lambda x: (x <= .05).sum())
+                .rename(columns={'p_value': 'term_count'})
+                .reset_index())
+
+    # plot
+    plt.figure(figsize=(8, 6))
+
+    sns.boxplot(x='tool', y='term_count', data=df_sig)
+    sns.stripplot(x='tool', y='term_count', data=df_sig)
+
+    plt.ylabel('|Terms with $\mathrm{pvalue} < 0.05$|')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, 'term_counts.pdf'))
+
+
 def main(input_dirs, out_dir):
     df = read_result_data(input_dirs)
     df.to_csv(os.path.join(out_dir, 'results.csv'), index=False)
 
     pvalue_histograms(df, out_dir)
     pvalue_scatterplots(df, out_dir)
+    significant_term_counts(df, out_dir)
 
     runtime_overview(input_dirs, out_dir)
 
