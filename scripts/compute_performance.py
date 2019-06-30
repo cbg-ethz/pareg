@@ -26,6 +26,9 @@ def compute_relevance_score(df_obs, df_true):
     tmp_obs = df_obs.set_index('term')
     tmp_true = df_true.set_index('term')
 
+    # only consider terms with estimated relevance
+    tmp_obs = tmp_obs.loc[tmp_true.index]
+
     ranks = 1 - tmp_obs['p_value'].apply(
         lambda x: (tmp_obs['p_value'] <= x).mean())
     return ranks.multiply(tmp_true['relevance.score']).sum()
@@ -116,12 +119,20 @@ def main(input_dirs, data_dirs, out_dir):
         })
 
     df = pd.DataFrame(tmp)
+    df.to_csv(os.path.join(out_dir, 'scores.csv'), index=False)
 
     # plot result
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(8, 8))
 
-    sns.boxplot(x='tool', y='score', data=df)
-    sns.stripplot(x='tool', y='score', data=df)
+    sns.boxplot(
+        x='tool', y='score', data=df,
+        order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
+    sns.stripplot(
+        x='tool', y='score', data=df,
+        order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
+
+    plt.xticks(rotation=90)
+    plt.ylim((-1, 101))
 
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, 'score_boxplot.pdf'))
