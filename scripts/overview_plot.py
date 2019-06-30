@@ -50,10 +50,10 @@ def pvalue_scatterplots(df, out_dir):
     df_wide = pd.DataFrame(tmp)
 
     # plot
-    g = sns.PairGrid(df_wide.dropna(), hue='source', height=5)
+    g = sns.PairGrid(df_wide.dropna(), height=5)  # , hue='source'
     g = g.map_diag(sns.distplot, kde=False)
-    g = g.map_offdiag(sns.scatterplot)
-    g = g.add_legend()
+    g = g.map_offdiag(sns.scatterplot, rasterized=True)
+    # g = g.add_legend()
     g.savefig(os.path.join(out_dir, 'pvalue_scatterplots.pdf'))
 
 
@@ -75,11 +75,19 @@ def runtime_overview(input_dirs, out_dir):
     df = pd.DataFrame(tmp)
 
     # plot result
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(8, 8))
 
-    sns.barplot(x='tool', y='runtime', hue='source', data=df)
+    sns.boxplot(
+        x='tool', y='runtime', data=df,
+        order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
+    sns.stripplot(
+        x='tool', y='runtime', data=df,
+        order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
 
+    plt.xlabel('Tool')
     plt.ylabel('Runtime [s]')
+
+    plt.xticks(rotation=90)
 
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, 'runtime.pdf'))
@@ -93,12 +101,19 @@ def significant_term_counts(df, out_dir):
                 .reset_index())
 
     # plot
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(8, 8))
 
-    sns.boxplot(x='tool', y='term_count', data=df_sig)
-    sns.stripplot(x='tool', y='term_count', data=df_sig)
+    sns.boxplot(
+        x='tool', y='term_count', data=df_sig,
+        order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
+    sns.stripplot(
+        x='tool', y='term_count', data=df_sig,
+        order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
 
+    plt.xlabel('Tool')
     plt.ylabel('|Terms with $\mathrm{pvalue} < 0.05$|')
+
+    plt.xticks(rotation=90)
 
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, 'term_counts.pdf'))
