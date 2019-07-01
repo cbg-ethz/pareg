@@ -29,6 +29,7 @@ def read_result_data(input_dirs):
 def pvalue_histograms(df, out_dir):
     g = sns.FacetGrid(
         df, col='source', row='tool',
+        row_order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique(),
         sharex=False, sharey=False,
         height=5)
     g.map(sns.distplot, 'p_value', bins=100, kde=False)
@@ -49,7 +50,10 @@ def pvalue_scatterplots(df, out_dir):
             t = {col: val for col, val in foo}
             t['source'] = row.Index
             tmp.append(t)
+
     df_wide = pd.DataFrame(tmp)
+    df_wide = df_wide.reindex(
+        df.loc[df['tool'].str.lower().argsort(), 'tool'].unique(), axis=1)
 
     # plot
     g = sns.PairGrid(df_wide.dropna(), height=5)  # , hue='source'
