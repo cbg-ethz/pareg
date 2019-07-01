@@ -3,6 +3,8 @@ import json
 
 import pandas as pd
 
+from statsmodels.sandbox.stats.multicomp import multipletests
+
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -95,25 +97,36 @@ def runtime_overview(input_dirs, out_dir):
 
 def significant_term_counts(df, out_dir):
     # gather
+    df['p_value_corrected'] = multipletests(df['p_value'], method='fdr_bh')[1]
+
     df_sig = (df.groupby(['tool', 'source'])
                 .aggregate(lambda x: (x <= .05).sum())
-                .rename(columns={'p_value': 'term_count'})
+                .rename(columns={
+                    'p_value': 'uncorrected',
+                    'p_value_corrected': 'corrected'})
                 .reset_index())
 
+    df_long = pd.melt(df_sig, id_vars=['tool', 'source'])
+
     # plot
-    plt.figure(figsize=(8, 8))
+    plt.figure(figsize=(12, 8))
 
     sns.boxplot(
-        x='tool', y='term_count', data=df_sig,
+        x='tool', y='value', hue='variable', data=df_long,
         order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
     sns.stripplot(
-        x='tool', y='term_count', data=df_sig,
+        x='tool', y='value', hue='variable', data=df_long,
         order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
 
     plt.xlabel('Tool')
     plt.ylabel('|Terms with $\mathrm{pvalue} < 0.05$|')
 
     plt.xticks(rotation=90)
+
+    handles, labels = plt.gca().get_legend_handles_labels()
+    plt.legend(
+        handles[:2], labels[:2],
+        bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0)
 
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, 'term_counts.pdf'))
