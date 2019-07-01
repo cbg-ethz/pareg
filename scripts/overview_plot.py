@@ -94,6 +94,7 @@ def runtime_overview(input_dirs, out_dir):
     plt.ylabel('Runtime [s]')
 
     plt.xticks(rotation=90)
+    plt.yscale('log')
 
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, 'runtime.pdf'))
