@@ -111,7 +111,12 @@ def significant_term_counts(df, out_dir):
                     'p_value_corrected': 'corrected'})
                 .reset_index())
 
+    # assume that we only use one term database (for now...)
+    assert df.groupby(['tool', 'source'])['term'].count().unique().size == 1
+    total_term_count = df.groupby(['tool', 'source'])['term'].count().iloc[0]
+
     df_long = pd.melt(df_sig, id_vars=['tool', 'source'])
+    df_long['value'] /= total_term_count
 
     # plot
     plt.figure(figsize=(12, 8))
@@ -124,9 +129,10 @@ def significant_term_counts(df, out_dir):
         order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
 
     plt.xlabel('Tool')
-    plt.ylabel('|Terms with $\mathrm{pvalue} < 0.05$|')
+    plt.ylabel('%terms with $\mathrm{pvalue} < 0.05$')
 
     plt.xticks(rotation=90)
+    plt.ylim((-.1, 1.1))
 
     handles, labels = plt.gca().get_legend_handles_labels()
     plt.legend(
