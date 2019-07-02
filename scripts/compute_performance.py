@@ -68,7 +68,7 @@ def compute_relative_relevance_score(df_obs, df_true):
     obs_score = compute_relevance_score(df_obs, df_true)
     opt_score = compute_optimal_score(df_true)
 
-    return (obs_score / opt_score) * 100
+    return obs_score / opt_score
 
 def test():
     ea_ranks = pd.DataFrame({
@@ -131,8 +131,11 @@ def main(input_dirs, data_dirs, out_dir):
         x='tool', y='score', data=df,
         order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
 
+    plt.xlabel('Tool')
+    plt.ylabel('Relative relevance score')
+
     plt.xticks(rotation=90)
-    plt.ylim((-1, 101))
+    plt.ylim((-.1, 1.1))
 
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, 'score_boxplot.pdf'))
