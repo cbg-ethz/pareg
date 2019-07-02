@@ -23,11 +23,14 @@ def compute_relevance_score(df_obs, df_true):
     #     lambda x: (df_obs['p_value'] <= x).mean())
     # return (ranks * df_true['relevance.score']).sum()
 
+    shared_terms = set(df_obs['term']) & set(df_true['term'])
+
     tmp_obs = df_obs.set_index('term')
     tmp_true = df_true.set_index('term')
 
     # only consider terms with estimated relevance
-    tmp_obs = tmp_obs.loc[tmp_true.index]
+    tmp_obs = tmp_obs.loc[shared_terms]
+    tmp_true = tmp_true.loc[shared_terms]
 
     ranks = 1 - tmp_obs['p_value'].apply(
         lambda x: (tmp_obs['p_value'] <= x).mean())
@@ -70,7 +73,7 @@ def compute_relative_relevance_score(df_obs, df_true):
 
     return obs_score / opt_score
 
-def test():
+def tests():
     ea_ranks = pd.DataFrame({
         'term': ["a_bla", "d_hmm", "b_blu", "c_ha"],
         'p_value': [.01, .8, 0.2, 0.0005]
