@@ -8,6 +8,8 @@ from statsmodels.sandbox.stats.multicomp import multipletests
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from tool_handlers import TRANSFORMER_DICT
+
 
 sns.set_context('talk')
 
@@ -32,14 +34,14 @@ def pvalue_histograms(df, out_dir):
         row_order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique(),
         sharex=False, sharey=False,
         height=5)
-    g.map(sns.distplot, 'p_value', bins=100, kde=False)
+    g.map(sns.distplot, 'p_value', kde=False)
     g.savefig(os.path.join(out_dir, 'pvalue_histograms.pdf'))
 
 
 def pvalue_scatterplots(df, out_dir):
     # custom pivot (TODO: make this better)
     df_piv = df.pivot_table(
-        index='source', columns='tool', values='p_value', aggfunc=list)
+        index='source', columns='tool', values='trans_p_value', aggfunc=list)
 
     tmp = []
     for row in df_piv.itertuples():
@@ -102,14 +104,16 @@ def runtime_overview(input_dirs, out_dir):
 
 def significant_term_counts(df, out_dir):
     # gather
-    df['p_value_corrected'] = multipletests(df['p_value'], method='fdr_bh')[1]
+    # df.groupby(['tool', 'source'])['p_value'].apply(lambda x: multipletests(x, method='fdr_bh')[1])
 
-    df_sig = (df.groupby(['tool', 'source'])
-                .aggregate(lambda x: (x <= .05).sum())
-                .rename(columns={
-                    'p_value': 'uncorrected',
-                    'p_value_corrected': 'corrected'})
-                .reset_index())
+    df_sig = (
+        df.groupby(['tool', 'source'])['p_value']
+          .apply(
+            lambda x: (TRANSFORMER_DICT[x.name[0]].threshold_pvalues(x).sum()))
+          .reset_index()
+          .rename(columns={'p_value': 'term_count'})
+    )
+
 
     # assume that we only use one term database (for now...)
     assert df.groupby(['tool', 'source'])['term'].count().unique().size == 1
@@ -122,10 +126,10 @@ def significant_term_counts(df, out_dir):
     plt.figure(figsize=(12, 8))
 
     sns.boxplot(
-        x='tool', y='value', hue='variable', data=df_long,
+        x='tool', y='value', data=df_long,
         order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
     sns.stripplot(
-        x='tool', y='value', hue='variable', data=df_long,
+        x='tool', y='value', data=df_long,
         order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
 
     plt.xlabel('Tool')
@@ -134,11 +138,6 @@ def significant_term_counts(df, out_dir):
     plt.xticks(rotation=90)
     plt.ylim((-.1, 1.1))
 
-    handles, labels = plt.gca().get_legend_handles_labels()
-    plt.legend(
-        handles[:2], labels[:2],
-        bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0)
-
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, 'term_counts.pdf'))
 
@@ -146,6 +145,10 @@ def significant_term_counts(df, out_dir):
 def main(input_dirs, out_dir):
     df = read_result_data(input_dirs)
     df.to_csv(os.path.join(out_dir, 'results.csv'), index=False)
+
+    df['trans_p_value'] = df.apply(
+        lambda x: TRANSFORMER_DICT[x.tool].transform_pvalues([x.p_value])[0],
+        axis=1)
 
     pvalue_histograms(df, out_dir)
     pvalue_scatterplots(df, out_dir)
