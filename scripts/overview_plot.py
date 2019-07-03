@@ -123,7 +123,7 @@ def significant_term_counts(df, out_dir):
     df_long['value'] /= total_term_count
 
     # plot
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(8, 8))
 
     sns.boxplot(
         x='tool', y='value', data=df_long,
@@ -143,13 +143,18 @@ def significant_term_counts(df, out_dir):
 
 
 def main(input_dirs, out_dir):
+    # read data
     df = read_result_data(input_dirs)
     df.to_csv(os.path.join(out_dir, 'results.csv'), index=False)
 
+    # transform data
     df['trans_p_value'] = df.apply(
         lambda x: TRANSFORMER_DICT[x.tool].transform_pvalues([x.p_value])[0],
         axis=1)
+    df['trans_p_value'] = (df.groupby(['tool', 'source'])['trans_p_value']
+                             .transform(lambda x: x.fillna(x.max())))
 
+    # plot data
     pvalue_histograms(df, out_dir)
     pvalue_scatterplots(df, out_dir)
     significant_term_counts(df, out_dir)

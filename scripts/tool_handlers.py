@@ -19,8 +19,13 @@ class EnrichmentScoreHandler(ABC):
 class PValueHandler(EnrichmentScoreHandler):
     def transform_pvalues(self, pvalues):
         tmp = np.asarray(pvalues)
-        tmp[tmp == 0] = 1e-16  # TODO: fill with max value
-        return -np.log10(tmp)
+        tmp[tmp == 0] = np.nan
+        tmp_trans = -np.log10(tmp)
+
+        # set "most significant" values
+        #tmp_trans[np.isnan(tmp_trans)] = tmp_trans[~np.isnan(tmp_trans)].max()
+
+        return tmp_trans
 
     def threshold_pvalues(self, pvalues):
         return np.asarray(pvalues) <= .05
