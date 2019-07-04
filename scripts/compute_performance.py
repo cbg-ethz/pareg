@@ -19,10 +19,6 @@ def compute_relevance_score(df_obs, df_true):
     2) Multiply ranks with corresponding relevance scores
     3) Sum result
     """
-    # ranks = 1 - df_obs['p_value'].apply(
-    #     lambda x: (df_obs['p_value'] <= x).mean())
-    # return (ranks * df_true['relevance.score']).sum()
-
     shared_terms = set(df_obs['term']) & set(df_true['term'])
 
     tmp_obs = df_obs.set_index('term')
@@ -32,8 +28,10 @@ def compute_relevance_score(df_obs, df_true):
     tmp_obs = tmp_obs.loc[shared_terms]
     tmp_true = tmp_true.loc[shared_terms]
 
-    ranks = 1 - tmp_obs['p_value'].apply(
-        lambda x: (tmp_obs['p_value'] <= x).mean())
+    # ranks = 1 - tmp_obs['p_value'].apply(
+    #     lambda x: (tmp_obs['p_value'] <= x).mean())
+    ranks = 1 - tmp_obs['p_value'].rank(method='max') / tmp_obs.shape[0]
+
     return ranks.multiply(tmp_true['relevance.score']).sum()
 
 
