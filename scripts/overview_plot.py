@@ -1,5 +1,6 @@
 import os
 import json
+import datetime
 
 import pandas as pd
 
@@ -7,11 +8,17 @@ from statsmodels.sandbox.stats.multicomp import multipletests
 
 import seaborn as sns
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 
 from tool_handlers import TRANSFORMER_DICT
 
 
 sns.set_context('talk')
+
+
+@FuncFormatter
+def format_seconds(x, pos):
+    return str(datetime.timedelta(seconds=round(x)))
 
 
 def read_result_data(input_dirs):
@@ -93,10 +100,12 @@ def runtime_overview(input_dirs, out_dir):
         order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique())
 
     plt.xlabel('Tool')
-    plt.ylabel('Runtime [s]')
+    plt.ylabel('Runtime [h:m:s]')
 
     plt.xticks(rotation=90)
     plt.yscale('log')
+
+    plt.gca().yaxis.set_major_formatter(format_seconds)
 
     plt.tight_layout()
     plt.savefig(os.path.join(out_dir, 'runtime.pdf'))
