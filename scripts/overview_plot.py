@@ -46,6 +46,31 @@ def pvalue_histograms(df, out_dir):
     g.savefig(os.path.join(out_dir, 'pvalue_histograms.pdf'))
 
 
+def annotate_correlation(*args, method, **kwargs):
+    """Plot correlation.
+
+    Adapted from https://github.com/mwaskom/seaborn/issues/1444
+    """
+    # compute correlation
+    corr_r = args[0].corr(args[1], method)
+    corr_text = f'{corr_r:2.2f}'.replace('0.', '.')
+
+    # visualize correlation
+    ax = plt.gca()
+    ax.set_axis_off()
+
+    marker_size = abs(corr_r) * 10000
+    ax.scatter(
+        .5, .5, marker_size, corr_r, alpha=0.6,
+        cmap='vlag', vmin=-1, vmax=1,  # bwr_r
+        transform=ax.transAxes)
+
+    ax.annotate(
+        corr_text,
+        [.5, .5], xycoords='axes fraction',
+        ha='center', va='center', fontsize=20)
+
+
 def pvalue_scatterplots(df, out_dir):
     # custom pivot (TODO: make this better)
     df_piv = df.pivot_table(
@@ -70,8 +95,9 @@ def pvalue_scatterplots(df, out_dir):
 
     # plot
     g = sns.PairGrid(df_wide.dropna(), height=5)  # , hue='source'
+    g = g.map_upper(annotate_correlation, method='spearman')
     g = g.map_diag(sns.distplot, kde=False)
-    g = g.map_offdiag(sns.scatterplot, rasterized=True)
+    g = g.map_lower(sns.scatterplot, rasterized=True)
     # g = g.add_legend()
     g.savefig(os.path.join(out_dir, 'pvalue_scatterplots.pdf'))
 
