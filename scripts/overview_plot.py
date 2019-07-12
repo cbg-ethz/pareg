@@ -2,6 +2,7 @@ import os
 import json
 import datetime
 
+import numpy as np
 import pandas as pd
 
 from statsmodels.sandbox.stats.multicomp import multipletests
@@ -62,7 +63,10 @@ def pvalue_scatterplots(df, out_dir):
 
     df_wide = pd.DataFrame(tmp)
     df_wide = df_wide.reindex(
-        df.loc[df['tool'].str.lower().argsort(), 'tool'].unique(), axis=1)
+        np.r_[
+            df.loc[df['tool'].str.lower().argsort(), 'tool'].unique(),
+            ['source']],
+        axis=1)
 
     # plot
     g = sns.PairGrid(df_wide.dropna(), height=5)  # , hue='source'
@@ -122,7 +126,6 @@ def significant_term_counts(df, out_dir):
           .reset_index()
           .rename(columns={'p_value': 'term_count'})
     )
-
 
     # assume that we only use one term database (for now...)
     assert df.groupby(['tool', 'source'])['term'].count().unique().size == 1
