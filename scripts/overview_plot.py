@@ -77,6 +77,33 @@ def annotate_correlation(x, y, *args, method='spearman', **kwargs):
         ha='center', va='center', fontsize=20)
 
 
+def gentle_limit(limit_func, data, offset_scale=.05):
+    """Set limits without cutting of data."""
+    min_ = data.min()
+    max_ = data.max()
+    range_ = abs(max_ - min_)
+
+    offset = range_ * offset_scale
+    limit_func(min_ - offset, max_ + offset)
+
+
+def format_axis(*args, ax=None, **kwargs):
+    """Make axes look more minimalistic and fitting."""
+    ax = ax or plt.gca()
+
+    # sensible limits
+    func_list = (ax.set_xlim, ax.set_ylim)
+    assert len(func_list) >= len(args), 'woops'
+    for func, data in zip(func_list, args):
+        gentle_limit(func, data)
+
+    # remove various annotations
+    ax.tick_params(
+        axis='both', which='both',
+        left=False, labelleft=False,
+        bottom=False, labelbottom=False)
+
+
 def pvalue_scatterplots(df, out_dir):
     # prepare data
     df['idx'] = df['source'] + '|' + df['term']
@@ -91,12 +118,22 @@ def pvalue_scatterplots(df, out_dir):
         axis=1)
 
     # plot
-    g = sns.PairGrid(df_wide.dropna(), height=5)  # , hue='source'
-    g = g.map_upper(annotate_correlation, method='spearman')
-    g = g.map_diag(sns.distplot, kde=False)
-    g = g.map_lower(sns.scatterplot, rasterized=True)
-    # g = g.add_legend()
-    g.savefig(os.path.join(out_dir, 'pvalue_scatterplots.pdf'))
+    with sns.plotting_context('talk', font_scale=2):
+        g = sns.PairGrid(df_wide.dropna(), diag_sharey=False, height=5)
+
+        g.map_upper(annotate_correlation, method='spearman')
+        g.map_diag(
+            sns.distplot, kde=False,
+            bins=np.linspace(
+                df_wide.drop(['source', 'term'], axis=1).values.ravel().min(),
+                df_wide.drop(['source', 'term'], axis=1).values.ravel().max(),
+                50))
+        g.map_lower(sns.scatterplot, rasterized=True)
+
+        g.map_lower(format_axis)
+        g.map_diag(format_axis)  # [format_axis(ax=ax) for ax in g.diag_axes] # TODO: why does this not work?
+
+        g.savefig(os.path.join(out_dir, 'pvalue_scatterplots.pdf'))
 
 
 def runtime_overview(input_dirs, out_dir):
