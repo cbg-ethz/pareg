@@ -5,6 +5,8 @@ import datetime
 import numpy as np
 import pandas as pd
 
+from dfply import *
+
 from statsmodels.sandbox.stats.multicomp import multipletests
 
 import seaborn as sns
@@ -72,25 +74,16 @@ def annotate_correlation(*args, method, **kwargs):
 
 
 def pvalue_scatterplots(df, out_dir):
-    # custom pivot (TODO: make this better)
-    df_piv = df.pivot_table(
-        index='source', columns='tool', values='trans_p_value', aggfunc=list)
+    # prepare data
+    df['idx'] = df['source'] + '|' + df['term']
+    df_wide = (df.pivot(index='idx', columns='tool', values='trans_p_value')
+                 .reset_index() >>
+                 separate('idx', ['source', 'term'], sep=r'\|'))
 
-    tmp = []
-    for row in df_piv.itertuples():
-        cur = []
-        for col in df_piv.columns:
-            cur.append([(col, v) for v in row._asdict()[col]])
-        for foo in zip(*cur):
-            t = {col: val for col, val in foo}
-            t['source'] = row.Index
-            tmp.append(t)
-
-    df_wide = pd.DataFrame(tmp)
     df_wide = df_wide.reindex(
         np.r_[
             df.loc[df['tool'].str.lower().argsort(), 'tool'].unique(),
-            ['source']],
+            ['source', 'term']],
         axis=1)
 
     # plot
