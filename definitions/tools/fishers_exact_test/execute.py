@@ -19,7 +19,9 @@ class MyExecutor(Executor):
                                       .to_dict())
 
     def execute(self):
-        sec = SetEnrichmentComputer(self.grouping, self.reference_set)
+        sec = SetEnrichmentComputer(
+            self.grouping, self.reference_set,
+            alternative_hypothesis='two-sided')
         res = sec.get_terms(self.genes)
 
         self.df_result = (res[['group_name', 'p_value']]
