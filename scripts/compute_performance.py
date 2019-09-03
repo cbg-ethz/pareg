@@ -1,6 +1,7 @@
 """Adapted from GSEABenchmarkeR."""
 
 import os
+import collections
 
 import numpy as np
 import pandas as pd
@@ -103,9 +104,10 @@ def main(input_dirs, data_dirs, out_dir):
     # compute scores
     tmp = []
     for dir_ in input_dirs:
-        _, tool, dataset, _ = dir_.split('/')
+        _, tool, group, dataset, _ = dir_.split('/')
+
         # read data
-        fname_e = os.path.join(data_dirs, dataset, 'expected_terms.csv')
+        fname_e = os.path.join(data_dirs, group, dataset, 'expected_terms.csv')
         df_expected = pd.read_csv(fname_e)
 
         fname_o = os.path.join(dir_, 'result.csv')
@@ -143,6 +145,17 @@ def main(input_dirs, data_dirs, out_dir):
 
 
 if __name__ == '__main__':
-    main(
-        snakemake.input['input_dirs'], snakemake.input['data_dir'],
-        snakemake.output['out_dir'])
+    # organize input (TODO: do this with Snakemake)
+    inp_data = collections.defaultdict(list)
+    for dir_ in snakemake.input['input_dirs']:
+        _, _, group, _, _ = dir_.split('/')
+        inp_data[group].append(dir_)
+
+    # execution
+    for group, dir_list in inp_data.items():
+        target_dir = os.path.join(snakemake.output['out_dir'], group)
+        os.makedirs(target_dir, exist_ok=True)
+
+        main(
+            dir_list, snakemake.input['data_dir'],
+            target_dir)

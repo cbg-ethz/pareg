@@ -1,6 +1,7 @@
 import os
 import json
 import datetime
+import collections
 
 import numpy as np
 import pandas as pd
@@ -29,7 +30,7 @@ def read_result_data(input_dirs):
     for dir_ in input_dirs:
         df = pd.read_csv(os.path.join(dir_, 'result.csv'))
 
-        _, tool, source = dir_[:-1].split('/')
+        _, tool, group, source = dir_[:-1].split('/')
         df['tool'] = tool
         df['source'] = source
 
@@ -144,7 +145,7 @@ def runtime_overview(input_dirs, out_dir):
         with open(fname) as fd:
             meta_data = json.load(fd)
 
-        _, tool, source = dir_[:-1].split('/')
+        _, tool, group, source = dir_[:-1].split('/')
 
         tmp.append({
             'tool': tool,
@@ -235,4 +236,15 @@ def main(input_dirs, out_dir):
 
 
 if __name__ == '__main__':
-    main(snakemake.input.input_dirs, snakemake.output.file)
+    # organize input (TODO: do this with Snakemake)
+    inp_data = collections.defaultdict(list)
+    for dir_ in snakemake.input['input_dirs']:
+        _, _, group, _, _ = dir_.split('/')
+        inp_data[group].append(dir_)
+
+    # execution
+    for group, dir_list in inp_data.items():
+        target_dir = os.path.join(snakemake.output['out_dir'], group)
+        os.makedirs(target_dir, exist_ok=True)
+
+        main(dir_list, target_dir)

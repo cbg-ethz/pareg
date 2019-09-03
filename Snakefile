@@ -1,3 +1,6 @@
+import itertools
+
+
 ###
 # setup
 
@@ -9,12 +12,16 @@ workdir: 'pipeline_run'
 # rule definitions
 
 def aggregate_input(wildcards):
+    """Generate run-path for each tool/group/dataset."""
     checkpoint_output = checkpoints.provide_data.get(**wildcards).output.out_dir
-    return expand(
-        'runs/{tool}/{dataset}/',
-        tool=tool_list,
-        dataset=glob_wildcards(
-            os.path.join(checkpoint_output, '{dataset,[^./]+}/')).dataset)
+
+    match = glob_wildcards(
+        os.path.join(checkpoint_output, '{group}', '{dataset,[^./]+}/'))
+
+    return [os.path.join('runs/', *p) + '/'
+            for p in itertools.product(tool_list, [os.path.join(*p)
+                                                   for p in zip(*match)])]
+
 
 rule all:
     input:
@@ -24,15 +31,21 @@ rule all:
 checkpoint provide_data:
     output:
         out_dir = directory('data/')
-    script:
-        'scripts/load_benchmark_data.R'
+    shell:
+        """
+        # artifical data
+        python3 {workflow.basedir}/scripts/generate_artificial_data.py {output.out_dir}
+
+        # real data
+        Rscript {workflow.basedir}/scripts/load_benchmark_data.R {output.out_dir}/real_data/
+        """
 
 rule execute:
     input:
         script = srcdir('definitions/tools/{tool}/execute.py'),
-        data = 'data/{dataset}/'
+        data = 'data/{group}/{dataset}/'
     output:
-        directory('runs/{tool}/{dataset}/')
+        directory('runs/{tool}/{group}/{dataset}/')
     shell:
         """
         work_dir=$(pwd)
@@ -49,7 +62,7 @@ rule summarize:
     input:
         input_dirs = aggregate_input
     output:
-        file = directory('overview_plots/')
+        out_dir = directory('overview_plots/')
     script:
         'scripts/overview_plot.py'
 

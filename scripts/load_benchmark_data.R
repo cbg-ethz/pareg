@@ -48,7 +48,7 @@ d2d.map <- readDataId2diseaseCodeMap(d2d.file)
 head(d2d.map)
 
 ## save to disk
-root.dir <- snakemake@output[["out_dir"]]
+root.dir <- commandArgs(TRUE)[1]
 store_csv <- function (data, group) {
   # setup
   dataset.name <- group[[1]]
