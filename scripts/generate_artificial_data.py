@@ -55,26 +55,72 @@ def sliding_window_data(output_dir):
         df_expected.to_csv(os.path.join(target_dir, 'expected_terms.csv'), index=False)
 
 
+class DataGenerator:
+    """Given input genes, create terms."""
+
+    def __init__(self, input_size=1000):
+        np.random.seed(42)
+        self._setup(input_size)
+
+    def _setup(self, input_size):
+        """Initialize data.
+
+        Create equally sized gene sets
+        """
+        step = input_size // 3
+        self.genes_sig = [f'g{i:03}' for i in range(0, step)]
+        self.genes_uni = [f'g{i:03}' for i in range(step, 2*step)]
+        self.genes_out = [f'g{i:03}' for i in range(2*step, 3*step)]
+
+        self.df_genes = pd.DataFrame({
+            'gene': np.r_[self.genes_sig, self.genes_uni],
+            'p_value': np.r_[
+                np.random.beta(0.1, 1, size=len(self.genes_sig)),
+                np.random.beta(1, 1, size=len(self.genes_uni))
+            ]
+        })
+
+        print(f'Input gene set has size {self.df_genes.shape[0]}')
+
+    def generate_term(self, frac_sig, frac_uni, frac_out, name, term_size=100):
+        """Generate custom gene setself.
+
+        The created gene set has a certain fraction of genes from input
+        which have a significant and non-significant p-value, as well as
+        genes which are in the input set.
+        """
+        # setup
+        fracs = [frac_sig, frac_uni, frac_out]
+        gs_set = [self.genes_sig, self.genes_uni, self.genes_out]
+
+        # generate term
+        term_genes = np.concatenate([np.random.choice(
+                                        gs,
+                                        size=np.round(term_size*f).astype(int),
+                                        replace=False)
+                                     for f, gs in zip(fracs, gs_set)])
+
+        df_term = pd.DataFrame({
+            'term': name,
+            'gene': term_genes
+        })
+
+        # sanity checks
+        assert sum(fracs) == 1, fracs
+        assert len(fracs) == len(gs_set)
+        assert df_term.shape[0] == term_size
+
+        return df_term
+
+
 def sanity_check(output_dir):
     """Generate artificial data.
 
     Dataset which shows how tools behave for more/fewer/equal DE gene counts.
     """
-    # generate gene set
-    genes_sig = [f'g{i:03}' for i in range(0, 300)]
-    genes_uni = [f'g{i:03}' for i in range(300, 600)]
-    genes_out = [f'g{i:03}' for i in range(600, 900)]
-
-    df_genes = pd.DataFrame({
-        'gene': np.r_[genes_sig, genes_uni],
-        'p_value': np.r_[
-            np.random.beta(0.1, 1, size=len(genes_sig)),
-            np.random.beta(1, 1, size=len(genes_uni))
-        ]
-    })
-
     # generate terms
-    N = 100
+    generator = DataGenerator(900)
+
     frac_list = [
         [.5, .5, 0],  # sig, uni, out
         [.8, .2, 0],
@@ -82,22 +128,9 @@ def sanity_check(output_dir):
     ]
 
     for i, fracs in enumerate(tqdm(frac_list)):
-        assert sum(fracs) == 1
-
-        gs_set = [genes_sig, genes_uni, genes_out]
-        assert len(fracs) == len(gs_set)
-
         df_list = []
         for j in range(10):
-            term_genes = np.concatenate([np.random.choice(
-                gs, size=round(N*f), replace=False)
-                                         for f, gs in zip(fracs, gs_set)])
-            assert len(term_genes) == N
-
-            tmp = pd.DataFrame({
-                'term': f'gs_{j:02}',
-                'gene': term_genes
-            })
+            tmp = generator.generate_term(*fracs, f'gs_{j:02}', 100)
             df_list.append(tmp)
         df_terms = pd.concat(df_list)
 
@@ -112,7 +145,7 @@ def sanity_check(output_dir):
         shutil.rmtree(target_dir, ignore_errors=True)
         os.makedirs(target_dir)
 
-        df_genes.to_csv(os.path.join(target_dir, 'input.csv'), index=False)
+        generator.df_genes.to_csv(os.path.join(target_dir, 'input.csv'), index=False)
         df_terms.to_csv(os.path.join(target_dir, 'terms.csv'), index=False)
         df_expected.to_csv(os.path.join(target_dir, 'expected_terms.csv'), index=False)
 
@@ -122,41 +155,16 @@ def scoring_check(output_dir):
 
     Data with meaningful output rankings.
     """
-    # generate gene set
-    genes_sig = [f'g{i:03}' for i in range(0, 300)]
-    genes_uni = [f'g{i:03}' for i in range(300, 600)]
-    genes_out = [f'g{i:03}' for i in range(600, 900)]
-
-    df_genes = pd.DataFrame({
-        'gene': np.r_[genes_sig, genes_uni],
-        'p_value': np.r_[
-            np.random.beta(0.1, 1, size=len(genes_sig)),
-            np.random.beta(1, 1, size=len(genes_uni))
-        ]
-    })
-
     # generate terms
-    N = 100
+    generator = DataGenerator(900)
+
     frac_list = [[x, 1-x, 0]  # sig, uni, out
                  for x in np.arange(0.5, 1, .01)]
 
     for i in trange(10):
         df_list = []
         for j, fracs in enumerate(frac_list):
-            assert sum(fracs) == 1
-
-            gs_set = [genes_sig, genes_uni, genes_out]
-            assert len(fracs) == len(gs_set)
-
-            term_genes = np.concatenate([np.random.choice(
-                gs, size=int(round(N*f)), replace=False)
-                                         for f, gs in zip(fracs, gs_set)])
-            assert len(term_genes) == N
-
-            tmp = pd.DataFrame({
-                'term': f'gs_{j:02}',
-                'gene': term_genes
-            })
+            tmp = generator.generate_term(*fracs, f'gs_{j:02}', 100)
             df_list.append(tmp)
         df_terms = pd.concat(df_list)
 
@@ -172,7 +180,7 @@ def scoring_check(output_dir):
         shutil.rmtree(target_dir, ignore_errors=True)
         os.makedirs(target_dir)
 
-        df_genes.to_csv(os.path.join(target_dir, 'input.csv'), index=False)
+        generator.df_genes.to_csv(os.path.join(target_dir, 'input.csv'), index=False)
         df_terms.to_csv(os.path.join(target_dir, 'terms.csv'), index=False)
         df_expected.to_csv(os.path.join(target_dir, 'expected_terms.csv'), index=False)
 
