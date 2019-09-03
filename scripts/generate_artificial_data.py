@@ -117,8 +117,72 @@ def sanity_check(output_dir):
         df_expected.to_csv(os.path.join(target_dir, 'expected_terms.csv'), index=False)
 
 
+def scoring_check(output_dir):
+    """Check final tool scoring schemeself.
+
+    Data with meaningful output rankings.
+    """
+    # generate gene set
+    genes_sig = [f'g{i:03}' for i in range(0, 300)]
+    genes_uni = [f'g{i:03}' for i in range(300, 600)]
+    genes_out = [f'g{i:03}' for i in range(600, 900)]
+
+    df_genes = pd.DataFrame({
+        'gene': np.r_[genes_sig, genes_uni],
+        'p_value': np.r_[
+            np.random.beta(0.1, 1, size=len(genes_sig)),
+            np.random.beta(1, 1, size=len(genes_uni))
+        ]
+    })
+
+    # generate terms
+    N = 100
+    frac_list = [[x, 1-x, 0]  # sig, uni, out
+                 for x in np.arange(0.5, 1, .01)]
+
+    for i in trange(10):
+        df_list = []
+        for j, fracs in enumerate(frac_list):
+            assert sum(fracs) == 1
+
+            gs_set = [genes_sig, genes_uni, genes_out]
+            assert len(fracs) == len(gs_set)
+
+            term_genes = np.concatenate([np.random.choice(
+                gs, size=int(round(N*f)), replace=False)
+                                         for f, gs in zip(fracs, gs_set)])
+            assert len(term_genes) == N
+
+            tmp = pd.DataFrame({
+                'term': f'gs_{j:02}',
+                'gene': term_genes
+            })
+            df_list.append(tmp)
+        df_terms = pd.concat(df_list)
+
+        # dummy ranking expectations
+        df_expected = pd.DataFrame({
+            'term': df_terms['term'].unique()[::-1],
+            'relevance.score': [(i+1)*10
+                                for i in reversed(range(df_terms['term'].unique().size))],
+        })
+
+        # save results
+        target_dir = os.path.join(output_dir, f'scoring_check_{i:02}')
+        shutil.rmtree(target_dir, ignore_errors=True)
+        os.makedirs(target_dir)
+
+        df_genes.to_csv(os.path.join(target_dir, 'input.csv'), index=False)
+        df_terms.to_csv(os.path.join(target_dir, 'terms.csv'), index=False)
+        df_expected.to_csv(os.path.join(target_dir, 'expected_terms.csv'), index=False)
+
+
 def main(output_dir):
-    data_generators = [sanity_check, scoring_check]
+    data_generators = [
+        sanity_check,
+        scoring_check
+    ]
+
     for func in data_generators:
         name = func.__name__
         print(f' >> {name} <<')
