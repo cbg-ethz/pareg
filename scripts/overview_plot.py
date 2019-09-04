@@ -14,6 +14,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 
+from bioinf_common.plotting import corrplot
+
 from tool_handlers import TRANSFORMER_DICT
 
 
@@ -119,17 +121,25 @@ def pvalue_scatterplots(df, out_dir):
         axis=1)
 
     # plot
-    with sns.plotting_context('talk', font_scale=2):
-        g = sns.PairGrid(df_wide.dropna(), diag_sharey=False, height=5)
 
-        g.map_upper(annotate_correlation, method='spearman')
-        g.map_diag(
-            sns.distplot, kde=False,
-            bins=np.linspace(
-                df_wide.drop(['source', 'term'], axis=1).values.ravel().min(),
-                df_wide.drop(['source', 'term'], axis=1).values.ravel().max(),
-                50))
-        g.map_lower(sns.scatterplot, rasterized=True)
+    with sns.plotting_context('talk', font_scale=2):
+        g = corrplot(
+            df_wide.dropna(),
+            corr_method='spearman',
+            diag_kws=dict(
+                kde=False,
+                bins=np.linspace(
+                    (df_wide.drop(['source', 'term'], axis=1)
+                        .values
+                        .ravel()
+                        .min()),
+                    (df_wide.drop(['source', 'term'], axis=1)
+                        .values
+                        .ravel()
+                        .max()),
+                    50)),
+            lower_kws=dict(rasterized=True),
+            diag_sharey=False, height=5)
 
         g.map_lower(format_axis)
         g.map_diag(format_axis)  # [format_axis(ax=ax) for ax in g.diag_axes] # TODO: why does this not work?
