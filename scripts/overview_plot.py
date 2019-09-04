@@ -24,10 +24,12 @@ sns.set_context('talk')
 
 @FuncFormatter
 def format_seconds(x, pos):
+    """Convert seconds to readable timestamp."""
     return str(datetime.timedelta(seconds=round(x)))
 
 
 def read_result_data(input_dirs):
+    """Parse all generated data."""
     df_list = []
     for dir_ in input_dirs:
         df = pd.read_csv(os.path.join(dir_, 'result.csv'))
@@ -42,6 +44,7 @@ def read_result_data(input_dirs):
 
 
 def pvalue_histograms(df, out_dir):
+    """Plot p-value histograms."""
     g = sns.FacetGrid(
         df, col='source', row='tool',
         row_order=df.loc[df['tool'].str.lower().argsort(), 'tool'].unique(),
@@ -108,6 +111,7 @@ def format_axis(*args, ax=None, **kwargs):
 
 
 def pvalue_scatterplots(df, out_dir):
+    """Plot scatterplots between all p-value distributions."""
     # prepare data
     df['idx'] = df['source'] + '|' + df['term']
     df_wide = (df.pivot(index='idx', columns='tool', values='trans_p_value')
@@ -148,6 +152,7 @@ def pvalue_scatterplots(df, out_dir):
 
 
 def runtime_overview(input_dirs, out_dir):
+    """Plot execution duration by tool."""
     # read data
     tmp = []
     for dir_ in input_dirs:
@@ -187,6 +192,7 @@ def runtime_overview(input_dirs, out_dir):
 
 
 def significant_term_counts(df, out_dir):
+    """Plot percentage of significant terms by tool."""
     # gather
     # df.groupby(['tool', 'source'])['p_value'].apply(lambda x: multipletests(x, method='fdr_bh')[1])
 
@@ -226,6 +232,7 @@ def significant_term_counts(df, out_dir):
 
 
 def main(input_dirs, out_dir):
+    """Execute all plotting functions."""
     # read data
     df = read_result_data(input_dirs)
     df.to_csv(os.path.join(out_dir, 'results.csv'), index=False)
