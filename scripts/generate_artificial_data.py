@@ -145,9 +145,12 @@ def sanity_check(output_dir):
         shutil.rmtree(target_dir, ignore_errors=True)
         os.makedirs(target_dir)
 
-        generator.df_genes.to_csv(os.path.join(target_dir, 'input.csv'), index=False)
-        df_terms.to_csv(os.path.join(target_dir, 'terms.csv'), index=False)
-        df_expected.to_csv(os.path.join(target_dir, 'expected_terms.csv'), index=False)
+        generator.df_genes.to_csv(
+            os.path.join(target_dir, 'input.csv'), index=False)
+        df_terms.to_csv(
+            os.path.join(target_dir, 'terms.csv'), index=False)
+        df_expected.to_csv(
+            os.path.join(target_dir, 'expected_terms.csv'), index=False)
 
 
 def scoring_check(output_dir):
@@ -180,15 +183,69 @@ def scoring_check(output_dir):
         shutil.rmtree(target_dir, ignore_errors=True)
         os.makedirs(target_dir)
 
-        generator.df_genes.to_csv(os.path.join(target_dir, 'input.csv'), index=False)
-        df_terms.to_csv(os.path.join(target_dir, 'terms.csv'), index=False)
-        df_expected.to_csv(os.path.join(target_dir, 'expected_terms.csv'), index=False)
+        generator.df_genes.to_csv(
+            os.path.join(target_dir, 'input.csv'), index=False)
+        df_terms.to_csv(
+            os.path.join(target_dir, 'terms.csv'), index=False)
+        df_expected.to_csv(
+            os.path.join(target_dir, 'expected_terms.csv'), index=False)
+
+
+def robustness_check(output_dir):
+    """Check robustness of tools for decreasing signal.
+
+    Generate "(dis)similar" terms and vary input to reduce overlap.
+    """
+    # prepare data generation
+    generator = DataGenerator(1000)
+
+    # "central" term
+    df_central = generator.generate_term(
+        frac_sig=.9, frac_uni=.1, frac_out=0,
+        name='master', term_size=100)
+
+    # connectedness is defined during enrichment computation
+    # (using network regularization)
+    for i, x in enumerate(tqdm(np.arange(0.5, 1, .1))):
+        df_list = [df_central]
+        for j in range(3):
+            # generate terms
+            df_connected = generator.generate_term(
+                frac_sig=x, frac_uni=1-x, frac_out=0,
+                name=f'connected_{j:02}', term_size=100)
+            # df_isolated = generator.generate_term(
+            #     frac_sig=x, frac_uni=1-x, frac_out=0,
+            #     name=f'isolated_{j:02}', term_size=100)
+
+            df_list.extend([df_connected])  # df_isolated
+
+        df_terms = pd.concat(df_list)
+
+        # dummy ranking expectations
+        df_expected = pd.DataFrame({
+            'term': df_terms['term'].unique()[::-1],
+            'relevance.score': [(i+1)*10
+                                for i in reversed(range(df_terms['term'].unique().size))],
+        })
+
+        # save results
+        target_dir = os.path.join(output_dir, f'robustness_check_{i:02}')
+        shutil.rmtree(target_dir, ignore_errors=True)
+        os.makedirs(target_dir)
+
+        generator.df_genes.to_csv(
+            os.path.join(target_dir, 'input.csv'), index=False)
+        df_terms.to_csv(
+            os.path.join(target_dir, 'terms.csv'), index=False)
+        df_expected.to_csv(
+            os.path.join(target_dir, 'expected_terms.csv'), index=False)
 
 
 def main(output_dir):
     data_generators = [
         sanity_check,
-        scoring_check
+        scoring_check,
+        robustness_check
     ]
 
     for func in data_generators:

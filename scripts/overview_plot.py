@@ -231,6 +231,28 @@ def significant_term_counts(df, out_dir):
     plt.savefig(os.path.join(out_dir, 'term_counts.pdf'))
 
 
+def robustness_plot(df, out_dir):
+    """Investigate enrichment strength variation over data sets."""
+    # prepare data
+    tmp = df >> separate('term', ['term_new']) >> rename(term=X.term_new)
+
+    # plot
+    s = 1.5
+    plt.figure(figsize=(s*8, s*6))
+
+    sns.lineplot(
+        x='source', y='trans_p_value',
+        hue='tool', style='term',
+        marker='o', ci='sd',
+        data=tmp)
+
+    plt.xticks(rotation=90)
+    plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0)
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, 'robustness_plot.pdf'))
+
+
 def main(input_dirs, out_dir):
     """Execute all plotting functions."""
     # read data
@@ -248,6 +270,7 @@ def main(input_dirs, out_dir):
     pvalue_histograms(df, out_dir)
     pvalue_scatterplots(df, out_dir)
     significant_term_counts(df, out_dir)
+    robustness_plot(df, out_dir)
 
     runtime_overview(input_dirs, out_dir)
 
