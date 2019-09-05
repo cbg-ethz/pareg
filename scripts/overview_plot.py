@@ -242,7 +242,8 @@ def robustness_plot(df, out_dir):
 
     sns.lineplot(
         x='source', y='trans_p_value',
-        hue='tool', style='term',
+        hue='tool',
+        style='term' if tmp['term'].nunique() < 5 else None,
         marker='o', ci='sd',
         data=tmp)
 
