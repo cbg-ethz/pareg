@@ -1,31 +1,28 @@
 library(tidyverse)
-library(rstanarm)
+library(netReg)
+
 
 pareg <- function (df.genes, df.terms, ...) {
   # generate design matrix
   df.model <- create_model_df(df.genes, df.terms)
   # print(df.model)
 
-  # create formula
+  # setup data
   covariates <- df.model %>%
     select(ends_with(".member")) %>%
     names
 
-  form <- as.formula(paste0("pvalue ~ `", paste(covariates, collapse="`+`"), "`"))
+  X <- df.model %>% select(covariates) %>% as.matrix
+  Y <- df.model[,"pvalue"] %>% as.matrix
 
   # fit model
-  bfit <- rstanarm::stan_betareg(
-    formula=form, data=df.model,
-    ...
-  )
-  # print(summary(bfit))
+  fit <- edgenet(X, Y, lambda=0, psigx=0, psigy=0, family=mgcv::betar())
 
-  # extract enrichments
-  df.enrich <- as.data.frame(coef(bfit)) %>%
-    rownames_to_column %>%
-    filter(grepl(".memberTRUE$", rowname)) %>%
-    extract(rowname, "name", "(.*).memberTRUE") %>%
-    rename(enrichment=`coef(bfit)`)
+  df.enrich <- as.data.frame(coef(fit)) %>%
+    mutate(rowname=c("intercept", covariates)) %>%
+    filter(grepl(".member$", rowname)) %>%
+    extract(rowname, "name", "(.*).member") %>%
+    rename(enrichment=`y[1]`)
 
   return(df.enrich)
 }
