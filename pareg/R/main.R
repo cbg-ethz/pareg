@@ -2,10 +2,12 @@ library(tidyverse)
 library(netReg)
 
 
-pareg <- function (df.genes, df.terms, term.network=NULL) {
+pareg <- function (
+  df.genes, df.terms,
+  term.network=NULL, truncate.response=FALSE
+) {
   # generate design matrix
   df.model <- create_model_df(df.genes, df.terms)
-  # print(df.model)
 
   # setup data
   covariates <- df.model %>%
@@ -14,6 +16,13 @@ pareg <- function (df.genes, df.terms, term.network=NULL) {
 
   X <- df.model %>% select(covariates) %>% as.matrix
   Y <- df.model[,"pvalue"] %>% as.matrix
+
+  # truncate response if requested
+  if (truncate.response) {
+    eps <- .Machine$double.eps * 1e9 # see ?mgcv::betar
+    Y[Y > 1 - eps] <- 1 - eps
+    Y[Y < eps] <- eps
+  }
 
   # fit model
   fit <- netReg::edgenet(X, Y, G.X=term.network, family=mgcv::betar())
