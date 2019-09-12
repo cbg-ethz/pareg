@@ -2,7 +2,7 @@ library(tidyverse)
 library(netReg)
 
 
-pareg <- function (df.genes, df.terms, ...) {
+pareg <- function (df.genes, df.terms, term.network=NULL) {
   # generate design matrix
   df.model <- create_model_df(df.genes, df.terms)
   # print(df.model)
@@ -16,7 +16,7 @@ pareg <- function (df.genes, df.terms, ...) {
   Y <- df.model[,"pvalue"] %>% as.matrix
 
   # fit model
-  fit <- edgenet(X, Y, lambda=0, psigx=0, psigy=0, family=mgcv::betar())
+  fit <- netReg::edgenet(X, Y, G.X=term.network, family=mgcv::betar())
 
   df.enrich <- as.data.frame(coef(fit)) %>%
     mutate(rowname=c("intercept", covariates)) %>%
