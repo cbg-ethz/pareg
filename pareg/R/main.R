@@ -4,6 +4,7 @@ library(netReg)
 
 pareg <- function (
   df.genes, df.terms,
+  lasso.param=1, network.param=1,
   term.network=NULL, truncate.response=FALSE
 ) {
   # generate design matrix
@@ -25,7 +26,11 @@ pareg <- function (
   }
 
   # fit model
-  fit <- netReg::edgenet(X, Y, G.X=term.network, family=mgcv::betar())
+  fit <- netReg::edgenet(
+    X, Y,
+    G.X=term.network,
+    lambda=lasso.param, psigx=network.param, psigy=0,
+    family=mgcv::betar())
 
   df.enrich <- as.data.frame(coef(fit)) %>%
     mutate(rowname=c("intercept", covariates)) %>%
