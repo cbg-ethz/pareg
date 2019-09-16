@@ -228,53 +228,53 @@ def robustness_check(output_dir):
     # prepare data generation
     generator = DataGenerator(1000)
 
-    # "central" term
-    df_central = generator.generate_term(
-        frac_sig=.9, frac_uni=.1, frac_out=0,
-        name='master', term_size=100)
-
-    # connectedness is defined during enrichment computation
-    # (using network regularization)
-    for i, x in enumerate(tqdm(np.arange(0.5, 1, .1))):
-        df_list = [df_central]
+    for i, x in enumerate(tqdm(np.linspace(0.5, 1., 4))):
         for j in range(3):
-            # generate terms
+            df_list = []
+
+            # "master" terms
+            for k in range(2):
+                df_master = generator.generate_term(
+                    frac_sig=.9, frac_uni=.1, frac_out=0,
+                    name=f'master_{k:02}', term_size=100)
+                df_list.append(df_master)
+
+            # generate other terms
             df_connected = generator.generate_term(
                 frac_sig=x, frac_uni=1-x, frac_out=0,
-                name=f'connected_{j:02}', term_size=100)
+                name=f'connected', term_size=50)
             # df_isolated = generator.generate_term(
             #     frac_sig=x, frac_uni=1-x, frac_out=0,
-            #     name=f'isolated_{j:02}', term_size=100)
-
+            #     name=f'isolated', term_size=50)
             df_list.extend([df_connected])  # df_isolated
 
-        df_terms = pd.concat(df_list)
+            df_terms = pd.concat(df_list)
 
-        # term network
-        term_network = generator.generate_term_network(df_terms)
+            # term network
+            term_network = generator.generate_term_network(df_terms)
 
-        # dummy ranking expectations
-        df_expected = pd.DataFrame({
-            'term': df_terms['term'].unique()[::-1],
-            'relevance.score': [(i+1)*10
-                                for i in reversed(range(df_terms['term'].unique().size))],
-        })
+            # dummy ranking expectations
+            df_expected = pd.DataFrame({
+                'term': df_terms['term'].unique()[::-1],
+                'relevance.score': [(i+1)*10
+                                    for i in reversed(range(df_terms['term'].unique().size))],
+            })
 
-        # save results
-        target_dir = os.path.join(output_dir, f'robustness_check_{i:02}')
-        shutil.rmtree(target_dir, ignore_errors=True)
-        os.makedirs(target_dir)
+            # save results
+            target_dir = os.path.join(output_dir, f'robustness_check_{i:02}__{j:02}')
+            shutil.rmtree(target_dir, ignore_errors=True)
+            os.makedirs(target_dir)
 
-        generator.df_genes.to_csv(
-            os.path.join(target_dir, 'input.csv'), index=False)
-        df_terms.to_csv(
-            os.path.join(target_dir, 'terms.csv'), index=False)
+            generator.df_genes.to_csv(
+                os.path.join(target_dir, 'input.csv'), index=False)
+            df_terms.to_csv(
+                os.path.join(target_dir, 'terms.csv'), index=False)
 
-        term_network.to_csv(
-            os.path.join(target_dir, 'term_network.csv'))
+            term_network.to_csv(
+                os.path.join(target_dir, 'term_network.csv'))
 
-        df_expected.to_csv(
-            os.path.join(target_dir, 'expected_terms.csv'), index=False)
+            df_expected.to_csv(
+                os.path.join(target_dir, 'expected_terms.csv'), index=False)
 
 
 def main(output_dir):

@@ -54,35 +54,6 @@ def pvalue_histograms(df, out_dir):
     g.savefig(os.path.join(out_dir, 'pvalue_histograms.pdf'))
 
 
-def annotate_correlation(x, y, *args, method='spearman', **kwargs):
-    """Plot correlation.
-
-    Adapted from https://github.com/mwaskom/seaborn/issues/1444
-    """
-    # compute correlation
-    corr_r = x.corr(y, method)
-    corr_text = f'{corr_r:2.2f}'.replace('0.', '.')
-
-    # visualize correlation
-    ax = plt.gca()
-    ax.set_axis_off()
-
-    if len(ax.collections) > 0:
-        # TODO: handle this gracefully
-        return
-
-    marker_size = abs(corr_r) * 10000
-    ax.scatter(
-        .5, .5, marker_size, corr_r, alpha=0.6,
-        cmap='vlag_r', vmin=-1, vmax=1,  # bwr_r
-        transform=ax.transAxes)
-
-    ax.annotate(
-        corr_text,
-        [.5, .5], xycoords='axes fraction',
-        ha='center', va='center', fontsize=20)
-
-
 def gentle_limit(limit_func, data, offset_scale=.05):
     """Set limits without cutting of data."""
     min_ = data.min()
@@ -234,7 +205,13 @@ def significant_term_counts(df, out_dir):
 def robustness_plot(df, out_dir):
     """Investigate enrichment strength variation over data sets."""
     # prepare data
-    tmp = df >> separate('term', ['term_new']) >> rename(term=X.term_new)
+    tmp = (
+        df >>
+            separate('term', ['term_new'], sep='_') >>
+            rename(term=X.term_new) >>
+            separate('source', ['source_new'], sep='__') >>
+            rename(source=X.source_new)
+    )
 
     # plot
     s = 1.5
