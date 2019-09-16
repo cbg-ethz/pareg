@@ -112,6 +112,21 @@ class DataGenerator:
 
         return df_term
 
+    def generate_term_network(self, df_terms):
+        """Generate adjacency matrix for term network.
+
+        Given a concatenated term dataframe, generate a network with weights.
+        """
+        term_num = df_terms['term'].nunique()
+        adja_mat = pd.DataFrame(np.ones(shape=(term_num, term_num)))
+        np.fill_diagonal(adja_mat.values, 0)
+
+        unique_terms = df_terms['term'].unique()
+        adja_mat.index = unique_terms
+        adja_mat.columns = unique_terms
+
+        return adja_mat
+
 
 def sanity_check(output_dir):
     """Generate artificial data.
@@ -134,6 +149,9 @@ def sanity_check(output_dir):
             df_list.append(tmp)
         df_terms = pd.concat(df_list)
 
+        # term network
+        term_network = generator.generate_term_network(df_terms)
+
         # dummy ranking expectations
         df_expected = pd.DataFrame({
             'term': ['gs_09', 'gs_01', 'gs_00'],
@@ -149,6 +167,10 @@ def sanity_check(output_dir):
             os.path.join(target_dir, 'input.csv'), index=False)
         df_terms.to_csv(
             os.path.join(target_dir, 'terms.csv'), index=False)
+
+        term_network.to_csv(
+            os.path.join(target_dir, 'term_network.csv'))
+
         df_expected.to_csv(
             os.path.join(target_dir, 'expected_terms.csv'), index=False)
 
@@ -171,6 +193,9 @@ def scoring_check(output_dir):
             df_list.append(tmp)
         df_terms = pd.concat(df_list)
 
+        # term network
+        term_network = generator.generate_term_network(df_terms)
+
         # dummy ranking expectations
         df_expected = pd.DataFrame({
             'term': df_terms['term'].unique()[::-1],
@@ -187,6 +212,10 @@ def scoring_check(output_dir):
             os.path.join(target_dir, 'input.csv'), index=False)
         df_terms.to_csv(
             os.path.join(target_dir, 'terms.csv'), index=False)
+
+        term_network.to_csv(
+            os.path.join(target_dir, 'term_network.csv'))
+
         df_expected.to_csv(
             os.path.join(target_dir, 'expected_terms.csv'), index=False)
 
@@ -221,6 +250,9 @@ def robustness_check(output_dir):
 
         df_terms = pd.concat(df_list)
 
+        # term network
+        term_network = generator.generate_term_network(df_terms)
+
         # dummy ranking expectations
         df_expected = pd.DataFrame({
             'term': df_terms['term'].unique()[::-1],
@@ -237,6 +269,10 @@ def robustness_check(output_dir):
             os.path.join(target_dir, 'input.csv'), index=False)
         df_terms.to_csv(
             os.path.join(target_dir, 'terms.csv'), index=False)
+
+        term_network.to_csv(
+            os.path.join(target_dir, 'term_network.csv'))
+
         df_expected.to_csv(
             os.path.join(target_dir, 'expected_terms.csv'), index=False)
 

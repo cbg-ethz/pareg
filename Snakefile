@@ -55,7 +55,8 @@ rule execute:
         export PYTHONPATH="$inc_dir:$PYTHONPATH"
         python3 {input.script} \
             $work_dir/{input.data}/input.csv \
-            $work_dir/{input.data}/terms.csv
+            $work_dir/{input.data}/terms.csv \
+            $work_dir/{input.data}/term_network.csv
         """
 
 rule summarize:

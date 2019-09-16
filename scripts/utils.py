@@ -14,10 +14,16 @@ def load_terms(fname):
     return pd.read_csv(fname, dtype={'gene': str})
 
 
+def load_network(fname):
+    return pd.read_csv(fname, index_col=0)
+
+
 class Executor(ABC):
     def __init__(self, input_file, term_file):
         self.df_inp = load_input(input_file)
         self.df_terms = load_terms(term_file)
+
+        self.df_network = None
 
         self.reference_set = \
             set(self.df_inp['gene'].tolist()) | \
@@ -25,6 +31,9 @@ class Executor(ABC):
 
         self.meta_data = {}
         self.df_result = None
+
+    def set_term_network(self, network_file):
+        self.df_network = load_network(network_file)
 
     def setup(self):
         pass
