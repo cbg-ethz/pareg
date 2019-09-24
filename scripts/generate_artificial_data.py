@@ -112,7 +112,8 @@ class DataGenerator:
 
         return df_term
 
-    def generate_term_network(self, df_terms):
+    @staticmethod
+    def generate_term_network(df_terms):
         """Generate adjacency matrix for term network.
 
         Given a concatenated term dataframe, generate a network with weights.
@@ -176,7 +177,7 @@ def sanity_check(output_dir):
 
 
 def scoring_check(output_dir):
-    """Check final tool scoring schemeself.
+    """Check final tool scoring scheme.
 
     Data with meaningful output rankings.
     """
