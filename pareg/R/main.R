@@ -16,7 +16,7 @@ pareg <- function (
     names
 
   X <- df.model %>% select(covariates) %>% as.matrix
-  Y <- df.model[,"pvalue"] %>% as.matrix
+  Y <- df.model %>% select("pvalue") %>% as.matrix
 
   # truncate response if requested
   if (truncate.response) {
@@ -32,6 +32,7 @@ pareg <- function (
     lambda=lasso.param, psigx=network.param, psigy=0,
     family=mgcv::betar())
 
+  # extract coefficients
   df.enrich <- as.data.frame(coef(fit)) %>%
     mutate(rowname=c("intercept", covariates)) %>%
     filter(grepl(".member$", rowname)) %>%
