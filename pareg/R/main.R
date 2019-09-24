@@ -4,7 +4,7 @@ library(netReg)
 
 pareg <- function (
   df.genes, df.terms,
-  lasso.param=1, network.param=1,
+  lasso.param=0, network.param=0,
   term.network=NULL, truncate.response=FALSE
 ) {
   # generate design matrix
