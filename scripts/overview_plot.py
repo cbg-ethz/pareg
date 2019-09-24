@@ -17,6 +17,7 @@ from matplotlib.ticker import FuncFormatter
 from bioinf_common.plotting import corrplot
 
 from tool_handlers import TRANSFORMER_DICT
+from label_aliases import LABEL_ALIASES
 
 
 sns.set_context('talk')
@@ -95,8 +96,17 @@ def pvalue_scatterplots(df, out_dir):
             ['source', 'term']],
         axis=1)
 
-    # plot
+    df_wide['source_label'] = df_wide['source'].replace(LABEL_ALIASES)
 
+    # get source labels sorted by source
+    source_label_order = (df.drop_duplicates('source')
+                            .sort_values(by='source')['source_label']
+                            .tolist())
+
+    df_wide['source_label'] = pd.Categorical(
+        df_wide['source_label'], categories=source_label_order, ordered=True)
+
+    # plot
     with sns.plotting_context('talk', font_scale=2):
         g = corrplot(
             df_wide.dropna(),
@@ -104,11 +114,11 @@ def pvalue_scatterplots(df, out_dir):
             diag_kws=dict(
                 kde=False,
                 bins=np.linspace(
-                    (df_wide.drop(['source', 'term'], axis=1)
+                    (df_wide.drop(['source', 'source_label', 'term'], axis=1)
                         .values
                         .ravel()
                         .min()),
-                    (df_wide.drop(['source', 'term'], axis=1)
+                    (df_wide.drop(['source', 'source_label', 'term'], axis=1)
                         .values
                         .ravel()
                         .max()),
@@ -243,6 +253,8 @@ def main(input_dirs, out_dir):
         axis=1)
     df['trans_p_value'] = (df.groupby(['tool', 'source'])['trans_p_value']
                              .transform(lambda x: x.fillna(x.max())))
+
+    df['source_label'] = df['source'].replace(LABEL_ALIASES)  # `.map` is faster
 
     # plot data
     pvalue_histograms(df, out_dir)
