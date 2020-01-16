@@ -23,7 +23,7 @@ X.mt <- dce::simulate_data_better(cell.mt, n=10)
 # merge data
 df.cts <- bind_cols(
   X.wt %>% t %>% as.data.frame %>% rename_all(list(~ paste0("WT_", .))),
-  X.wt %>% t %>% as.data.frame %>% rename_all(list(~ paste0("MT_", .)))
+  X.mt %>% t %>% as.data.frame %>% rename_all(list(~ paste0("MT_", .)))
 )
 rownames(df.cts) <- colnames(X.wt)
 
