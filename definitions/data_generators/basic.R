@@ -13,12 +13,12 @@ pathway2 <- dce::create_random_DAG(
 
 pathway2.mt <- dce::resample_edge_weights(pathway2, lB=c(1.5, 2), uB=c(1.5, 2))
 
-cell.wt <- graph_union(pathway1, pathway2)
-cell.mt <- graph_union(pathway1, pathway2.mt)
+cell.wt <- dce::graph_union(pathway1, pathway2)
+cell.mt <- dce::graph_union(pathway1, pathway2.mt)
 
 # simulate data
-X.wt <- dce::simulate_data_better(cell.wt, n=10)
-X.mt <- dce::simulate_data_better(cell.mt, n=10)
+X.wt <- dce::simulate_data(cell.wt, n=10)
+X.mt <- dce::simulate_data(cell.mt, n=10)
 
 # merge data
 df.cts <- bind_cols(
