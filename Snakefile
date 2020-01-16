@@ -13,6 +13,7 @@ workdir: 'pipeline_run'
 rule all:
     input:
         expand('comparison/{source}/', source=data_sources),
+        expand('data/{source}/data_stats/', source=data_sources),
         expand('data/{source}/dea_stats/', source=data_sources)
 
 
@@ -30,6 +31,18 @@ rule generate_data:
             "{output.expr_fname}" \
             "{output.info_fname}"
         """
+
+
+rule analyze_synthetic_data:
+    input:
+        expr_fname = 'data/{source}/expression_matrix.csv',
+        info_fname = 'data/{source}/condition_info.csv'
+    output:
+        out_dir = directory('data/{source}/data_stats/')
+    log:
+        notebook = 'notebooks/AnalyzeSyntheticData.{source}.ipynb'
+    notebook:
+        'notebooks/AnalyzeSyntheticData.ipynb'
 
 
 rule perform_dea:
