@@ -23,12 +23,16 @@ class MyExecutor(Executor):
         for term, gset in self.pathway_dict.items():
             # print(self.genes, term, gset)
 
+            gene_list = []
+            pvalue_list = []
+            for g, p in self.gene_dict.items():
+                gene_list.append(g)
+                pvalue_list.append(p)
+
             df = pd.DataFrame({
-                'y': np.array([1
-                               if g in gset
-                               else 0
-                               for g in self.gene_dict.keys()]),
-                'X': -np.log10(np.array(list(self.gene_dict.values())))
+                'y': np.array([1 if g in gset else 0
+                               for g in gene_list]),
+                'X': -np.log10(np.array(pvalue_list))
             })
             # print(df)
 
