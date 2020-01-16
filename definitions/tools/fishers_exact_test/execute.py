@@ -10,19 +10,15 @@ class MyExecutor(Executor):
     def setup(self):
         threshold = .05
 
-        self.genes = set(
-            self.df_inp.loc[self.df_inp['p_value'] < threshold, 'gene']
-                       .tolist()
-        )
-        self.grouping = (self.df_terms.groupby('term')['gene']
-                                      .apply(set)
-                                      .to_dict())
+        self.de_genes = set(self.df_dea.loc[
+            self.df_dea['pvalue'] <= threshold, 'node'
+        ].tolist())
 
     def execute(self):
         sec = SetEnrichmentComputer(
-            self.grouping, self.reference_set,
+            self.pathway_dict, self.reference_set,
             alternative_hypothesis='two-sided')
-        res = sec.get_terms(self.genes)
+        res = sec.get_terms(self.de_genes)
 
         self.df_result = (res[['group_name', 'p_value']]
                           .rename(columns={'group_name': 'term'})
@@ -30,5 +26,5 @@ class MyExecutor(Executor):
 
 
 if __name__ == '__main__':
-    ex = MyExecutor(sys.argv[1], sys.argv[2])
+    ex = MyExecutor(*sys.argv[1:])
     ex.run()

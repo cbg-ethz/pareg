@@ -15,17 +15,17 @@ class MyExecutor(Executor):
     def setup(self):
         # create ranked gene input
         self.gene_rank_file = 'genes.rnk'
-        self.df_inp.sort_values('p_value').to_csv(
+        self.df_dea.sort_values('pvalue')[['node', 'pvalue']].to_csv(
             self.gene_rank_file, sep='\t', index=False, header=False)
 
         # store terms as gmt file (https://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29)
         self.term_file = 'terms.gmt'
 
         with open(self.term_file, 'w') as fd:
-            for term, group in self.df_terms.groupby('term'):
+            for term, genes in self.pathway_dict.items():
                 line = term + '\t'
                 line += 'dummy_description\t'
-                line += '\t'.join(group['gene'])
+                line += '\t'.join(genes)
 
                 fd.write(line + '\n')
 
@@ -73,12 +73,12 @@ class MyExecutor(Executor):
         })
 
         # fix GSEA putting term-names in all capital letters
-        actual_terms = self.df_terms['term'].unique()
+        actual_terms = self.pathway_dict.keys()
         self.df_result['term'] = self.df_result['term'].apply(
             lambda x: x.lower() if x.lower() in actual_terms else np.nan)
         assert not self.df_result['term'].isnull().values.any()
 
 
 if __name__ == '__main__':
-    ex = MyExecutor(sys.argv[1], sys.argv[2])
+    ex = MyExecutor(*sys.argv[1:])
     ex.run()

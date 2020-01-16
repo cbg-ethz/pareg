@@ -16,20 +16,19 @@ from utils import Executor
 
 class MyExecutor(Executor):
     def setup(self):
-        self.genes = self.df_inp.set_index('gene').to_dict()['p_value']
-        self.grouping = self.df_terms.groupby('term')['gene'].apply(set).to_dict()
+        self.gene_dict = self.df_dea.set_index('node').to_dict()['pvalue']
 
     def execute(self):
         results = []
-        for term, gset in self.grouping.items():
+        for term, gset in self.pathway_dict.items():
             # print(self.genes, term, gset)
 
             df = pd.DataFrame({
                 'y': np.array([1
                                if g in gset
                                else 0
-                               for g in self.genes.keys()]),
-                'X': -np.log10(np.array(list(self.genes.values())))
+                               for g in self.gene_dict.keys()]),
+                'X': -np.log10(np.array(list(self.gene_dict.values())))
             })
             # print(df)
 
@@ -51,5 +50,5 @@ class MyExecutor(Executor):
 
 
 if __name__ == '__main__':
-    ex = MyExecutor(sys.argv[1], sys.argv[2])
+    ex = MyExecutor(*sys.argv[1:])
     ex.run()

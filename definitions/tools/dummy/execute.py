@@ -8,14 +8,14 @@ from utils import Executor
 
 class MyExecutor(Executor):
     def execute(self):
-        term_list = self.df_terms['term'].unique()
+        term_list = list(self.pathway_dict.keys())
 
         self.df_result = pd.DataFrame({
             'term': term_list,
-            'p_value': np.random.uniform(0, 1, size=term_list.size)
+            'p_value': np.random.uniform(0, 1, size=len(term_list))
         })
 
 
 if __name__ == '__main__':
-    ex = MyExecutor(sys.argv[1], sys.argv[2])
+    ex = MyExecutor(*sys.argv[1:])
     ex.run()

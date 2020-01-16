@@ -1,77 +1,78 @@
-import itertools
-
-
 ###
 # setup
 
 tool_list, = glob_wildcards('definitions/tools/{tool}/execute.py')
+data_sources, = glob_wildcards('definitions/data_generators/{source}.R')
 
 workdir: 'pipeline_run'
+
 
 ###
 # rule definitions
 
-def aggregate_input(wildcards):
-    """Generate run-path for each tool/group/dataset."""
-    checkpoint_output = checkpoints.provide_data.get(**wildcards).output.out_dir
-
-    match = glob_wildcards(
-        os.path.join(checkpoint_output, '{group}', '{dataset,[^./]+}/'))
-
-    return [os.path.join('runs/', *p) + '/'
-            for p in itertools.product(tool_list, [os.path.join(*p)
-                                                   for p in zip(*match)])]
-
-
 rule all:
     input:
-        'overview_plots/',
-        'performance/'
+        expand('comparison/{source}/', source=data_sources)
 
-checkpoint provide_data:
+
+rule generate_data:
+    input:
+        script = srcdir('definitions/data_generators/{source}.R')
     output:
-        out_dir = directory('data/')
+        cell_fname = 'data/{source}/cell_matrix.csv',
+        expr_fname = 'data/{source}/expression_matrix.csv',
+        info_fname = 'data/{source}/condition_info.csv'
     shell:
         """
-        # artifical data
-        python3 {workflow.basedir}/scripts/generate_artificial_data.py {output.out_dir}
-
-        # real data
-        Rscript {workflow.basedir}/scripts/load_benchmark_data.R {output.out_dir}/real_data/
+        Rscript "{input.script}" \
+            "{output.cell_fname}" \
+            "{output.expr_fname}" \
+            "{output.info_fname}"
         """
 
-rule execute:
+
+rule perform_dea:
+    input:
+        expr_fname = 'data/{source}/expression_matrix.csv',
+        info_fname = 'data/{source}/condition_info.csv'
+    output:
+        dea_fname = 'data/{source}/dea_result.csv'
+    script:
+        'scripts/perform_dea.R'
+
+
+rule execute_tool:
     input:
         script = srcdir('definitions/tools/{tool}/execute.py'),
-        data = 'data/{group}/{dataset}/'
+        cell_fname = 'data/{source}/cell_matrix.csv',
+        expr_fname = 'data/{source}/expression_matrix.csv',
+        info_fname = 'data/{source}/condition_info.csv',
+        dea_fname = 'data/{source}/dea_result.csv'
     output:
-        directory('runs/{tool}/{group}/{dataset}/')
+        run_dir = directory('runs/{tool}/{source}/run_dir'),
+        result_fname = 'runs/{tool}/{source}/enrichment_result.csv'
     shell:
         """
         work_dir=$(pwd)
         inc_dir=$(cd {workflow.basedir}/scripts && pwd)
-        cd {output}
 
         export PYTHONPATH="$inc_dir:$PYTHONPATH"
         python3 {input.script} \
-            $work_dir/{input.data}/input.csv \
-            $work_dir/{input.data}/terms.csv \
-            $work_dir/{input.data}/term_network.csv
+            "$work_dir/{output.run_dir}" \
+            "$work_dir/{input.cell_fname}" \
+            "$work_dir/{input.expr_fname}" \
+            "$work_dir/{input.info_fname}" \
+            "$work_dir/{input.dea_fname}" \
+            "$work_dir/{output.result_fname}"
         """
 
-rule summarize:
-    input:
-        input_dirs = aggregate_input
-    output:
-        out_dir = directory('overview_plots/')
-    script:
-        'scripts/overview_plot.py'
 
-rule performance_evaluation:
+rule compare_tools:
     input:
-        input_dirs = aggregate_input,
-        data_dir = 'data/'
+        expand('runs/{tool}/{{source}}/enrichment_result.csv', tool=tool_list)
     output:
-        out_dir = directory('performance/')
-    script:
-        'scripts/compute_performance.py'
+        out_dir = directory('comparison/{source}/')
+    log:
+        notebook = 'notebooks/ToolComparison.{source}.ipynb'
+    notebook:
+        'notebooks/ToolComparison.ipynb'
