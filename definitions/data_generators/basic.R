@@ -1,6 +1,8 @@
 library(tidyverse)
 
 
+set.seed(42)
+
 # generate pathways which constitute cell
 pathway1 <- dce::create_random_DAG(
     10, prob=.8, lB=c(0.5, 1), uB=c(0.5, 1),
