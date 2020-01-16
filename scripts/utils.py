@@ -28,7 +28,7 @@ class Executor(ABC):
         run_dir,
         cell_fname,
         expr_fname, info_fname, dea_fname,
-        result_fname
+        result_fname, meta_fname
     ):
         self.cell_fname = cell_fname
         self.expr_fname = expr_fname
@@ -37,6 +37,7 @@ class Executor(ABC):
 
         self.run_dir = run_dir
         self.result_fname = result_fname
+        self.meta_fname = meta_fname
 
         # read data
         self.df_cell = (pd.read_csv(cell_fname, dtype={'gene': str})
@@ -65,7 +66,7 @@ class Executor(ABC):
 
     def _finalize(self):
         # meta data
-        with open('meta.json', 'w') as fd:
+        with open(self.meta_fname, 'w') as fd:
             json.dump(self.meta_data, fd)
 
         # enrichment results
@@ -89,8 +90,8 @@ class Executor(ABC):
             self.execute()
             self.meta_data['exec_time'] = time.perf_counter() - start
 
-        # cleanup
-        self._finalize()
+            # cleanup
+            self._finalize()
 
     @abstractmethod
     def execute(self):

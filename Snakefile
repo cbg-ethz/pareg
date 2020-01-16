@@ -50,7 +50,8 @@ rule execute_tool:
         dea_fname = 'data/{source}/dea_result.csv'
     output:
         run_dir = directory('runs/{tool}/{source}/run_dir'),
-        result_fname = 'runs/{tool}/{source}/enrichment_result.csv'
+        result_fname = 'runs/{tool}/{source}/enrichment_result.csv',
+        meta_fname = 'runs/{tool}/{source}/meta.json'
     shell:
         """
         work_dir=$(pwd)
@@ -63,7 +64,8 @@ rule execute_tool:
             "$work_dir/{input.expr_fname}" \
             "$work_dir/{input.info_fname}" \
             "$work_dir/{input.dea_fname}" \
-            "$work_dir/{output.result_fname}"
+            "$work_dir/{output.result_fname}" \
+            "$work_dir/{output.meta_fname}"
         """
 
 
