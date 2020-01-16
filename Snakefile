@@ -12,7 +12,8 @@ workdir: 'pipeline_run'
 
 rule all:
     input:
-        expand('comparison/{source}/', source=data_sources)
+        expand('comparison/{source}/', source=data_sources),
+        expand('data/{source}/dea_stats/', source=data_sources)
 
 
 rule generate_data:
@@ -39,6 +40,17 @@ rule perform_dea:
         dea_fname = 'data/{source}/dea_result.csv'
     script:
         'scripts/perform_dea.R'
+
+
+rule analyze_dea:
+    input:
+        dea_fname = 'data/{source}/dea_result.csv'
+    output:
+        out_dir = directory('data/{source}/dea_stats/')
+    log:
+        notebook = 'notebooks/AnalyzeDEA.{source}.ipynb'
+    notebook:
+        'notebooks/AnalyzeDEA.ipynb'
 
 
 rule execute_tool:
