@@ -16,6 +16,14 @@ pathway2.mt <- dce::resample_edge_weights(pathway2, lB=c(1.5, 2), uB=c(1.5, 2))
 cell.wt <- dce::graph_union(pathway1, pathway2)
 cell.mt <- dce::graph_union(pathway1, pathway2.mt)
 
+# add background nodes
+cell.bg <- as(matrix(0, nrow=10, ncol=10), "graphNEL")
+nodes(cell.bg) <- paste0("bg_node", as.character(seq_len(10)))
+edgemode(cell.bg) <- "directed"
+
+cell.wt <- dce::graph_union(cell.wt, cell.bg)
+cell.mt <- dce::graph_union(cell.mt, cell.bg)
+
 # simulate data
 X.wt <- dce::simulate_data(cell.wt, n=10)
 X.mt <- dce::simulate_data(cell.mt, n=10)
