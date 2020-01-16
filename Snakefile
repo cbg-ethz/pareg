@@ -33,16 +33,16 @@ rule generate_data:
         """
 
 
-rule analyze_synthetic_data:
+rule analyze_expression_data:
     input:
         expr_fname = 'data/{source}/expression_matrix.csv',
         info_fname = 'data/{source}/condition_info.csv'
     output:
         out_dir = directory('data/{source}/data_stats/')
     log:
-        notebook = 'notebooks/AnalyzeSyntheticData.{source}.ipynb'
+        notebook = 'notebooks/AnalyzeExpressionData.{source}.ipynb'
     notebook:
-        'notebooks/AnalyzeSyntheticData.ipynb'
+        'notebooks/AnalyzeExpressionData.ipynb'
 
 
 rule perform_dea:
