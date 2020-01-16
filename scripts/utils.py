@@ -60,6 +60,17 @@ class Executor(ABC):
         self.meta_data = {}
         self.df_result = None
 
+    @property
+    def de_genes(self):
+        pvalue_threshold = .05
+        log2foldchange_threshold = 1
+
+        sub = self.df_dea[
+            (self.df_dea['pvalue'] <= pvalue_threshold) &
+            (abs(self.df_dea['log2FoldChange']) >= log2foldchange_threshold)
+        ]
+        return set(sub['node'])
+
     def setup(self):
         """Can be overwritten to implement required setup actions."""
         pass

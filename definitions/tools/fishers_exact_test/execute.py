@@ -7,13 +7,6 @@ from utils import Executor
 
 
 class MyExecutor(Executor):
-    def setup(self):
-        threshold = .05
-
-        self.de_genes = set(self.df_dea.loc[
-            self.df_dea['pvalue'] <= threshold, 'node'
-        ].tolist())
-
     def execute(self):
         sec = SetEnrichmentComputer(
             self.pathway_dict, self.reference_set,
