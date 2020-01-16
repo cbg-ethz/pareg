@@ -96,7 +96,8 @@ rule execute_tool:
 
 rule compare_tools:
     input:
-        expand('runs/{tool}/{{source}}/enrichment_result.csv', tool=tool_list)
+        result_files = expand('runs/{tool}/{{source}}/enrichment_result.csv', tool=tool_list),
+        meta_files = expand('runs/{tool}/{{source}}/meta.json', tool=tool_list)
     output:
         out_dir = directory('comparison/{source}/')
     log:
