@@ -35,7 +35,7 @@ purrr::map_dfr(pw.map, function (nodes) {
       pull(sample)
   ]
 
-  pval <- dce::compute_enrichment(graph, t(X.wt), t(X.mt))[[1]]
+  pval <- dce::compute_enrichment(graph, t(X.wt), t(X.mt))$p.value
 
   data.frame(pvalue=pval)
 }, .id="pathway") %>%
