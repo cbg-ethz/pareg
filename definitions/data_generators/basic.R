@@ -27,8 +27,8 @@ cell.wt <- dce::graph_union(cell.wt, cell.bg)
 cell.mt <- dce::graph_union(cell.mt, cell.bg)
 
 # simulate data
-X.wt <- dce::simulate_data(cell.wt, n=10)
-X.mt <- dce::simulate_data(cell.mt, n=10)
+X.wt <- dce::simulate_data(cell.wt, n=50)
+X.mt <- dce::simulate_data(cell.mt, n=50)
 
 # merge data
 df.cts <- bind_cols(
