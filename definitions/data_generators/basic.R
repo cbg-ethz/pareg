@@ -5,12 +5,12 @@ set.seed(42)
 
 # generate pathways which constitute cell
 pathway1 <- dce::create_random_DAG(
-    10, prob=.8, lB=c(0.5, 1), uB=c(0.5, 1),
-    node.labels = paste0("pw1_node", as.character(seq_len(10)))
+  10, prob=.8, lB=c(0.5, 1), uB=c(0.5, 1),
+  node.labels = paste0("pw1_node", as.character(seq_len(10)))
 )
 pathway2 <- dce::create_random_DAG(
-    10, prob=.8, lB=c(0.5, 1), uB=c(0.5, 1),
-    node.labels = paste0("pw2_node", as.character(seq_len(10)))
+  10, prob=.8, lB=c(0.5, 1), uB=c(0.5, 1),
+  node.labels = paste0("pw2_node", as.character(seq_len(10)))
 )
 
 pathway2.mt <- dce::resample_edge_weights(pathway2, lB=c(1.5, 2), uB=c(1.5, 2))
@@ -46,10 +46,10 @@ stopifnot(all(rownames(df.info) == colnames(df.cts)))
 # store data
 fname.pathway <- commandArgs(TRUE)[1]
 cell.wt %>%
-    as("matrix") %>%
-    as.data.frame %>%
-    rownames_to_column("node") %>%
-    write_csv(fname.pathway)
+  as("matrix") %>%
+  as.data.frame %>%
+  rownames_to_column("node") %>%
+  write_csv(fname.pathway)
 
 fname.expr <- commandArgs(TRUE)[2]
 df.cts %>% rownames_to_column("node") %>% write_csv(fname.expr)
