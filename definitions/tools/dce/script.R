@@ -20,7 +20,12 @@ for (node in rownames(df.expr)) {
 
 # compute enrichment
 purrr::map_dfr(pw.map, function (nodes) {
-  graph <- as(as.matrix(df.cell[nodes, nodes]), "graphNEL")
+  graph <- igraph::igraph.to.graphNEL(
+    igraph::graph_from_adjacency_matrix(
+      df.cell[nodes, nodes] %>% as.matrix,
+      weighted=TRUE
+    )
+  )
 
   X.wt <- df.expr[
     nodes,
