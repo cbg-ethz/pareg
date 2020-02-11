@@ -3,34 +3,40 @@ library(tidyverse)
 
 set.seed(42)
 
+# helper functions
+create <- function(num, lB, uB, pathway_name_template) {
+  purrr::map(seq_len(num), function(i) {
+    dce::create_random_DAG(
+      10, prob=.8, lB=lB, uB=uB,
+      node.labels = paste0(glue::glue(pathway_name_template), as.character(seq_len(10)))
+    )
+  })
+}
+
+resample <- function(graph_list, lB, uB) {
+  purrr::map(graph_list, dce::resample_edge_weights, lB, uB)
+}
+
+
 # generate pathways which constitute cell
-pathway1 <- dce::create_random_DAG(
-  10, prob=.8, lB=c(0.5, 1), uB=c(0.5, 1),
-  node.labels = paste0("pw1weak_node", as.character(seq_len(10)))
-)
-pathway2 <- dce::create_random_DAG(
-  10, prob=.8, lB=c(0.5, 1), uB=c(0.5, 1),
-  node.labels = paste0("pw2medium_node", as.character(seq_len(10)))
-)
-pathway3 <- dce::create_random_DAG(
-  10, prob=.8, lB=c(0.5, 1), uB=c(0.5, 1),
-  node.labels = paste0("pw3strong_node", as.character(seq_len(10)))
-)
+pathways.weak <- create(10, c(-0.1, 0), c(0, 0.1), "pw{i}weak_node")
+pathways.medium <- create(10, c(-0.1, 0), c(0, 0.1), "pw{i}medium_node")
+pathways.strong <- create(10, c(-0.1, 0), c(0, 0.1), "pw{i}strong_node")
 
-pathway1.mt <- dce::resample_edge_weights(pathway1, lB=c(0.5, 1), uB=c(.5, 1))
-pathway2.mt <- dce::resample_edge_weights(pathway2, lB=c(1, 1.5), uB=c(1, 1.5))
-pathway3.mt <- dce::resample_edge_weights(pathway3, lB=c(1.5, 2), uB=c(1.5, 2))
+pathways.weak.mt <- resample(pathways.weak, lB=c(-0.5, -0.1), uB=c(0.1, 0.5))
+pathways.medium.mt <- resample(pathways.medium, lB=c(-1, -0.5), uB=c(0.5, 1))
+pathways.strong.mt <- resample(pathways.strong, lB=c(-2, -1), uB=c(1, 2))
 
-cell.wt <- dce::graph_union(dce::graph_union(pathway1, pathway2), pathway3)
-cell.mt <- dce::graph_union(dce::graph_union(pathway1.mt, pathway2.mt), pathway3.mt)
+cell.wt <- dce::graph_union(c(pathways.weak, pathways.medium, pathways.strong))
+cell.mt <- dce::graph_union(c(pathways.weak.mt, pathways.medium.mt, pathways.strong.mt))
 
 # add background nodes
 cell.bg <- as(matrix(0, nrow=10, ncol=10), "graphNEL")
 nodes(cell.bg) <- paste0("bg_node", as.character(seq_len(10)))
 edgemode(cell.bg) <- "directed"
 
-cell.wt <- dce::graph_union(cell.wt, cell.bg)
-cell.mt <- dce::graph_union(cell.mt, cell.bg)
+cell.wt <- dce::graph_union(c(cell.wt, cell.bg))
+cell.mt <- dce::graph_union(c(cell.mt, cell.bg))
 
 # simulate data
 X.wt <- dce::simulate_data(cell.wt, n=50)
