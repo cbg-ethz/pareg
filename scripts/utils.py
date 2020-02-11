@@ -54,7 +54,7 @@ class Executor(ABC):
             self.pathway_dict.setdefault(pw, set()).add(node)
 
         self.reference_set = \
-            set(self.df_expr.columns) | set(self.df_cell.index)
+            set(self.df_expr.index) | set(self.df_cell.index)
 
         # misc
         self.meta_data = {}
