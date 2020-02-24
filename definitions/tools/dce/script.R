@@ -40,15 +40,7 @@ purrr::map_dfr(pw.map, function (nodes) {
       pull(sample)
   ]
 
-  pval <- tryCatch(
-    dce::compute_enrichment(graph, t(X.wt), t(X.mt), link.log.base=0)$p.value,
-    error=function(cond) {
-      message(cond)
-      message("Returning NA")
-      return(NA)
-    }
-  )
-
+  pval <- dce::dce.nb(graph, t(X.wt), t(X.mt))$pathway.pvalue
   data.frame(pvalue=pval)
 }, .id="pathway") %>%
   write_csv("result.csv")
