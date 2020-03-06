@@ -28,11 +28,15 @@ class MyExecutor(Executor):
             for g, p in self.gene_dict.items():
                 gene_list.append(g)
                 pvalue_list.append(p)
+            pvalue_list = np.asarray(pvalue_list)
+
+            # fix zero p-values
+            pvalue_list[pvalue_list == 0] = pvalue_list[pvalue_list != 0].min()
 
             df = pd.DataFrame({
                 'y': np.array([1 if g in gset else 0
                                for g in gene_list]),
-                'X': -np.log10(np.array(pvalue_list))
+                'X': -np.log10(pvalue_list)
             })
             # print(df)
 
