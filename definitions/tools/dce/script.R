@@ -1,5 +1,5 @@
 library(tidyverse)
-
+library(dce)
 
 # read data
 fname.cell <- commandArgs(TRUE)[1]
