@@ -9,10 +9,16 @@ from utils import Executor
 
 class MyExecutor(Executor):
     def setup(self):
-        (self.df_inp.rename(columns={'p_value': 'pvalue'})
+        (self.df_dea.rename(columns={'p_value': 'pvalue', 'node': 'gene'})
+                    .loc[:, ['gene', 'pvalue']]
                     .to_csv('genes.csv', index=False))
-        (self.df_terms.rename(columns={'term': 'name'})
-                      .to_csv('terms.csv', index=False))
+
+        (pd.DataFrame.from_dict(self.pathway_dict, orient='index')
+                     .reset_index()
+                     .melt(id_vars=['index']).drop('variable', axis=1)
+                     .rename(columns={'index': 'name', 'value': 'gene'})
+                     .sort_values('name')
+                     .to_csv('terms.csv', index=False))
 
     def execute(self):
         root = os.path.dirname(os.path.realpath(__file__))
@@ -27,5 +33,5 @@ class MyExecutor(Executor):
 
 
 if __name__ == '__main__':
-    ex = MyExecutor(sys.argv[1], sys.argv[2])
+    ex = MyExecutor(*sys.argv[1:])
     ex.run()
