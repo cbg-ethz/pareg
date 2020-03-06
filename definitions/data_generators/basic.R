@@ -5,26 +5,24 @@ set.seed(42)
 
 # generate pathways which constitute cell
 pathway1 <- dce::create_random_DAG(
-  10, prob=.8, lB=c(0.5, 1), uB=c(0.5, 1),
+  10, prob=.8, lB=c(-1, 0), uB=c(0, 1),
   node.labels = paste0("pw1_node", as.character(seq_len(10)))
 )
 pathway2 <- dce::create_random_DAG(
-  10, prob=.8, lB=c(0.5, 1), uB=c(0.5, 1),
+  10, prob=.8, lB=c(-1, 0), uB=c(0, 1),
   node.labels = paste0("pw2_node", as.character(seq_len(10)))
 )
 
-pathway2.mt <- dce::resample_edge_weights(pathway2, lB=c(1.5, 2), uB=c(1.5, 2))
-
-cell.wt <- dce::graph_union(pathway1, pathway2)
-cell.mt <- dce::graph_union(pathway1, pathway2.mt)
+pathway2.mt <- dce::resample_edge_weights(pathway2, lB=c(-3, -2), uB=c(2, 3))
 
 # add background nodes
 cell.bg <- as(matrix(0, nrow=10, ncol=10), "graphNEL")
 nodes(cell.bg) <- paste0("bg_node", as.character(seq_len(10)))
 edgemode(cell.bg) <- "directed"
 
-cell.wt <- dce::graph_union(cell.wt, cell.bg)
-cell.mt <- dce::graph_union(cell.mt, cell.bg)
+# merge into cell
+cell.wt <- dce::graph_union(c(pathway1, pathway2, cell.bg))
+cell.mt <- dce::graph_union(c(pathway1, pathway2.mt, cell.bg))
 
 # simulate data
 X.wt <- dce::simulate_data(cell.wt, n=50)
