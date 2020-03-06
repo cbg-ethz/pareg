@@ -1,5 +1,6 @@
 library(tidyverse)
 library(graph)
+library(dce)
 
 set.seed(42)
 
@@ -31,7 +32,7 @@ cell.wt <- dce::graph_union(c(pathways.weak, pathways.medium, pathways.strong))
 cell.mt <- dce::graph_union(c(pathways.weak.mt, pathways.medium.mt, pathways.strong.mt))
 
 # add background nodes
-cell.bg <- as(matrix(0, nrow=10, ncol=10), "graphNEL")
+cell.bg <- create_random_DAG(10, prob = .8, lB = c(0,0), uB = c(0,0))
 nodes(cell.bg) <- paste0("bg_node", as.character(seq_len(10)))
 edgemode(cell.bg) <- "directed"
 
@@ -58,7 +59,7 @@ stopifnot(all(rownames(df.info) == colnames(df.cts)))
 # store data
 fname.pathway <- commandArgs(TRUE)[1]
 cell.wt %>%
-  as("matrix") %>%
+  as.adjmat %>%
   as.data.frame %>%
   rownames_to_column("node") %>%
   write_csv(fname.pathway)
