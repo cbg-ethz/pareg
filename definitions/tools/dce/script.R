@@ -40,7 +40,31 @@ purrr::map_dfr(pw.map, function (nodes) {
       pull(sample)
   ]
 
-  pval <- dce::dce.nb(graph, t(X.wt), t(X.mt))$pathway.pvalue
+  pval <- dce::dce.nb(graph, t(X.wt), t(X.mt), p.method = "meanp")$pathway.pvalue
+
+  ## this does throw up an error in the solver:
+  ## Error in while ((iter <- iter + 1) <= control$maxit && (abs(Lm0 - Lm)/d1 +  : 
+  ## missing value where TRUE/FALSE needed
+  ## pvals <- NULL
+  ## dn <- t(X.wt)
+  ## dt <- t(X.mt)
+  ## pruns <- 100
+  ## for (i in seq_len(pruns)) {
+  ##     dnp <- dn
+  ##     colnames(dnp) <- sample(colnames(dn), ncol(dn))
+  ##     dtp <- dt
+  ##     colnames(dtp) <- sample(colnames(dt), ncol(dt))
+  ##     dnp <- dnp[, naturalsort::naturalorder(colnames(dnp))]
+  ##     dtp <- dtp[, naturalsort::naturalorder(colnames(dtp))]
+  ##     pvalp <- try(dce::dce.nb(graph, dnp, dtp)$pathway.pvalue)
+  ##     if (length(grep("Error", pvalp)) > 0) {
+  ##         save(dnp, dtp, graph, file = "temp.rda")
+  ##     } else {
+  ##         pvals <- c(pvals, pvalp)
+  ##     }
+  ## }
+  ## pval <- sum(pvals <= pval)/pruns
+  
   data.frame(pvalue=pval)
 }, .id="pathway") %>%
   write_csv("result.csv")

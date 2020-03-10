@@ -14,8 +14,8 @@ create <- function(num, lB, uB, pathway_name_template) {
   })
 }
 
-resample <- function(graph_list, lB, uB) {
-  purrr::map(graph_list, dce::resample_edge_weights, lB, uB)
+resample <- function(graph_list, lB, uB, tp) {
+  purrr::map(graph_list, dce::resample_edge_weights, lB, uB, tp)
 }
 
 
@@ -24,9 +24,9 @@ pathways.weak <- create(10, c(-0.1, 0), c(0, 0.1), "pw{i}weak_node")
 pathways.medium <- create(10, c(-0.1, 0), c(0, 0.1), "pw{i}medium_node")
 pathways.strong <- create(10, c(-0.1, 0), c(0, 0.1), "pw{i}strong_node")
 
-pathways.weak.mt <- resample(pathways.weak, lB=c(-0.5, -0.1), uB=c(0.1, 0.5))
-pathways.medium.mt <- resample(pathways.medium, lB=c(-1, -0.5), uB=c(0.5, 1))
-pathways.strong.mt <- resample(pathways.strong, lB=c(-2, -1), uB=c(1, 2))
+pathways.weak.mt <- resample(pathways.weak, lB=c(-0.5, -0.1), uB=c(0.1, 0.5), tp = 1)
+pathways.medium.mt <- resample(pathways.medium, lB=c(-1, -0.5), uB=c(0.5, 1), tp = 1)
+pathways.strong.mt <- resample(pathways.strong, lB=c(-2, -1), uB=c(1, 2), tp = 1)
 
 cell.wt <- dce::graph_union(c(pathways.weak, pathways.medium, pathways.strong))
 cell.mt <- dce::graph_union(c(pathways.weak.mt, pathways.medium.mt, pathways.strong.mt))
