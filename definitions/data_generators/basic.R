@@ -13,7 +13,7 @@ pathway2 <- dce::create_random_DAG(
   node.labels = paste0("pw2_node", as.character(seq_len(10)))
 )
 
-pathway2.mt <- dce::resample_edge_weights(pathway2, lB=c(-3, -2), uB=c(2, 3))
+pathway2.mt <- dce::resample_edge_weights(pathway2, tp=1, mineff=2, maxeff=3)
 
 # add background nodes
 cell.bg <- as(matrix(0, nrow=10, ncol=10), "graphNEL")
