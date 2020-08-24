@@ -30,7 +30,7 @@ pareg <- function (
     X, Y,
     G.X=term.network,
     lambda=lasso.param, psigx=network.param, psigy=0,
-    family=mgcv::betar())
+    family=netReg::beta)
 
   # extract coefficients
   df.enrich <- as.data.frame(coef(fit)) %>%
