@@ -15,7 +15,7 @@ pareg <- function (
     select(ends_with(".member")) %>%
     names
 
-  X <- df.model %>% select(covariates) %>% as.matrix
+  X <- df.model %>% select(all_of(covariates)) %>% as.matrix
   Y <- df.model %>% select("pvalue") %>% as.matrix
 
   # truncate response if requested
