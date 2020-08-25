@@ -9,7 +9,7 @@ create <- function(num, lB, uB, pathway_name_template) {
   purrr::map(seq_len(num), function(i) {
     dce::create_random_DAG(
       10, prob=.8, lB=lB, uB=uB,
-      node.labels = paste0(glue::glue(pathway_name_template), as.character(seq_len(10)))
+      node_labels = paste0(glue::glue(pathway_name_template), as.character(seq_len(10)))
     )
   })
 }
@@ -59,7 +59,7 @@ stopifnot(all(rownames(df.info) == colnames(df.cts)))
 # store data
 fname.pathway <- commandArgs(TRUE)[1]
 cell.wt %>%
-  as.adjmat %>%
+  as_adjmat %>%
   as.data.frame %>%
   rownames_to_column("node") %>%
   write_csv(fname.pathway)

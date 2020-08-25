@@ -6,11 +6,11 @@ set.seed(42)
 # generate pathways which constitute cell
 pathway1 <- dce::create_random_DAG(
   10, prob=.8, lB=c(-1, 0), uB=c(0, 1),
-  node.labels = paste0("pw1_node", as.character(seq_len(10)))
+  node_labels = paste0("pw1_node", as.character(seq_len(10)))
 )
 pathway2 <- dce::create_random_DAG(
   10, prob=.8, lB=c(-1, 0), uB=c(0, 1),
-  node.labels = paste0("pw2_node", as.character(seq_len(10)))
+  node_labels = paste0("pw2_node", as.character(seq_len(10)))
 )
 
 pathway2.mt <- dce::resample_edge_weights(pathway2, tp=1, mineff=2, maxeff=3)
