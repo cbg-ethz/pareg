@@ -39,8 +39,9 @@ test_that("idea works", {
   })
 
   # validation plot
-  ggplot(df_enr %>% filter(name == "foo"), aes(x = x, y = enrichment)) +
+  ggplot(df_enr, aes(x = x, y = enrichment)) +
     geom_line() +
+    facet_grid(~ name) +
     theme_minimal()
 
   # assertions
