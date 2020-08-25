@@ -2,24 +2,24 @@ library(tidyverse)
 library(netReg)
 
 
-pareg <- function (
-  df.genes, df.terms,
-  lasso.param=0, network.param=0,
-  term.network=NULL, truncate.response=FALSE
+pareg <- function(
+  df_genes, df_terms,
+  lasso_param = 0, network_param = 0,
+  term_network = NULL, truncate_response = FALSE
 ) {
   # generate design matrix
-  df.model <- create_model_df(df.genes, df.terms)
+  df_model <- create_model_df(df_genes, df_terms)
 
   # setup data
-  covariates <- df.model %>%
+  covariates <- df_model %>%
     select(ends_with(".member")) %>%
     names
 
-  X <- df.model %>% select(all_of(covariates)) %>% as.matrix
-  Y <- df.model %>% select("pvalue") %>% as.matrix
+  X <- df_model %>% select(all_of(covariates)) %>% as.matrix
+  Y <- df_model %>% select("pvalue") %>% as.matrix
 
   # truncate response if requested
-  if (truncate.response) {
+  if (truncate_response) {
     eps <- .Machine$double.eps * 1e9 # see ?mgcv::betar
     Y[Y > 1 - eps] <- 1 - eps
     Y[Y < eps] <- eps
@@ -28,16 +28,17 @@ pareg <- function (
   # fit model
   fit <- netReg::edgenet(
     X, Y,
-    G.X=term.network,
-    lambda=lasso.param, psigx=network.param, psigy=0,
-    family=netReg::beta)
+    G.X = term_network,
+    lambda = lasso_param, psigx = network_param, psigy = 0,
+    family = netReg::beta
+  )
 
   # extract coefficients
-  df.enrich <- as.data.frame(coef(fit)) %>%
-    mutate(rowname=c("intercept", covariates)) %>%
+  df_enrich <- as.data.frame(coef(fit)) %>%
+    mutate(rowname = c("intercept", covariates)) %>%
     filter(grepl(".member$", rowname)) %>%
     extract(rowname, "name", "(.*).member") %>%
-    rename(enrichment=`y[1]`)
+    rename(enrichment = `y[1]`)
 
-  return(df.enrich)
+  return(df_enrich)
 }
