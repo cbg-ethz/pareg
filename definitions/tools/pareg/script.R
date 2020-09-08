@@ -1,10 +1,10 @@
 library(pareg)
 
 # setup data
-df.genes <- read.csv("genes.csv")
-df.terms <- read.csv("terms.csv")
+df_genes <- read.csv("genes.csv")
+df_terms <- read.csv("terms.csv")
 
 # run model
-df.enr <- pareg::pareg(df.genes, df.terms, truncate.response=TRUE)
+df_enr <- pareg::pareg(df_genes, df_terms, truncate_response = TRUE)
 
-write.csv(df.enr, file="enrichment_result.csv", row.names=FALSE)
+write.csv(df_enr, file = "enrichment_result.csv", row.names = FALSE)
