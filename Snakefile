@@ -50,7 +50,8 @@ rule perform_dea:
         expr_fname = 'data/{source}/expression_matrix.csv',
         info_fname = 'data/{source}/condition_info.csv'
     output:
-        dea_fname = 'data/{source}/dea_result.csv'
+        dea_fname = 'data/{source}/dea_result.csv',
+        out_dir = directory('data/{source}/dea_misc/')
     script:
         'scripts/perform_dea.R'
 
