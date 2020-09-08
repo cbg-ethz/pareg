@@ -17,7 +17,7 @@ pathway2.mt <- dce::resample_edge_weights(pathway2, tp=1, mineff=2, maxeff=3)
 
 # add background nodes
 cell.bg <- as(matrix(0, nrow=10, ncol=10), "graphNEL")
-nodes(cell.bg) <- paste0("bg_node", as.character(seq_len(10)))
+nodes(cell.bg) <- paste0("pw1bg_node", as.character(seq_len(10)))
 edgemode(cell.bg) <- "directed"
 
 # merge into cell

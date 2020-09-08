@@ -20,7 +20,7 @@ df_res <- DESeq2::results(dds)
 
 # sanity checks
 gene_list <- c(
-  "bg1_node1",
+  "pw1bg_node1",
   "pw1weak_node1", "pw1medium_node1", "pw1strong_node1"
 )
 

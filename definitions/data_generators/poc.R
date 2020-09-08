@@ -33,7 +33,7 @@ cell.mt <- dce::graph_union(c(pathways.weak.mt, pathways.medium.mt, pathways.str
 
 # add background nodes
 cell.bg <- dce::create_random_DAG(10, prob = .8, lB = c(0,0), uB = c(0,0))
-nodes(cell.bg) <- paste0("bg_node", as.character(seq_len(10)))
+nodes(cell.bg) <- paste0("pw1bg_node", as.character(seq_len(10)))
 edgemode(cell.bg) <- "directed"
 
 cell.wt <- dce::graph_union(c(cell.wt, cell.bg))

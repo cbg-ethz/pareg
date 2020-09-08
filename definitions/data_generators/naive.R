@@ -70,7 +70,7 @@ df_cts <- bind_rows(
 
   generate_count_matrix(
     1, 500, count_mean,
-    1, "bg{i}_node"
+    1, "pw{i}bg_node"
   )
 )
 
