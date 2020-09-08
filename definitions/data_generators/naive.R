@@ -29,7 +29,12 @@ generate_count_matrix <- function(
     # compute mutant counts
     perturbation_vector <- if_else(
       runif(node_num * condition_size) > perturbation_parameter,
-      3, 1
+      truncnorm::rtruncnorm(
+        node_num * condition_size,
+        a = 2, b = 4,
+        mean = 3, sd = 1
+      ),
+      1
     )
     mt_block <- matrix(
       rnbinom(
