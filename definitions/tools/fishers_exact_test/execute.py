@@ -19,5 +19,13 @@ class MyExecutor(Executor):
 
 
 if __name__ == '__main__':
-    ex = MyExecutor(*sys.argv[1:])
+    exec_mode = sys.argv[1]
+
+    if exec_mode == 'expression_mode':
+        ex = MyExecutor(*sys.argv[2:])
+    elif exec_mode == 'genelist_mode':
+        ex = MyExecutor.from_gene_lists(*sys.argv[2:])
+    else:
+        raise RuntimeError(f'Invalid execution mode: {exec_mode}')
+
     ex.run()

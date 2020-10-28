@@ -85,13 +85,14 @@ rule execute_tool:
 
         export PYTHONPATH="$inc_dir:$PYTHONPATH"
         python3 {input.script} \
+            expression_mode \
             "$work_dir/{output.run_dir}" \
+            "$work_dir/{output.result_fname}" \
+            "$work_dir/{output.meta_fname}" \
             "$work_dir/{input.cell_fname}" \
             "$work_dir/{input.expr_fname}" \
             "$work_dir/{input.info_fname}" \
-            "$work_dir/{input.dea_fname}" \
-            "$work_dir/{output.result_fname}" \
-            "$work_dir/{output.meta_fname}"
+            "$work_dir/{input.dea_fname}"
         """
 
 

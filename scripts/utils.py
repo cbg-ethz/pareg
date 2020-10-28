@@ -25,43 +25,97 @@ def chdir(dir_: str):
 class Executor(ABC):
     def __init__(
         self,
-        run_dir,
-        cell_fname,
-        expr_fname, info_fname, dea_fname,
-        result_fname, meta_fname
-    ):
-        self.cell_fname = cell_fname
-        self.expr_fname = expr_fname
-        self.info_fname = info_fname
-        self.dea_fname = dea_fname
+        run_dir, result_fname, meta_fname,
 
+        pathway_dict, reference_set,
+
+        explicit_de_genes=None,  # genelist mode
+        df_cell=None, df_expr=None, df_info=None, df_dea=None  # expression mode
+    ):
         self.run_dir = run_dir
         self.result_fname = result_fname
         self.meta_fname = meta_fname
 
-        # read data
-        self.df_cell = (pd.read_csv(cell_fname, dtype={'gene': str})
-                          .set_index('node'))
-        self.df_expr = (pd.read_csv(expr_fname, dtype={'node': str})
-                          .set_index('node'))
-        self.df_info = pd.read_csv(info_fname)
-        self.df_dea = pd.read_csv(dea_fname, dtype={'node': str})
+        # store input
+        self.pathway_dict = pathway_dict
+        self.reference_set = reference_set
 
-        # compute helpful extra information
-        self.pathway_dict = {}
-        for node in self.df_cell.index:
-            pw = node.split('_')[0]
-            self.pathway_dict.setdefault(pw, set()).add(node)
+        self.explicit_de_genes = explicit_de_genes
 
-        self.reference_set = \
-            set(self.df_expr.index) | set(self.df_cell.index)
+        self.df_cell = df_cell
+        self.df_expr = df_expr
+        self.df_info = df_info
+        self.df_dea = df_dea
 
         # misc
         self.meta_data = {}
         self.df_result = None
 
+    @classmethod
+    def from_expression_data(
+        cls,
+        run_dir, fname_result, fname_meta,
+        cell_fname, expr_fname, info_fname, dea_fname
+    ):
+        # read data
+        df_cell = (pd.read_csv(cell_fname, dtype={'gene': str})
+                     .set_index('node'))
+        df_expr = (pd.read_csv(expr_fname, dtype={'node': str})
+                     .set_index('node'))
+        df_info = pd.read_csv(info_fname)
+        df_dea = pd.read_csv(dea_fname, dtype={'node': str})
+
+        # construct pathway mapping
+        pathway_dict = {}
+        for node in df_cell.index:
+            pw = node.split('_')[0]
+            pathway_dict.setdefault(pw, set()).add(node)
+
+        # get reference geneset
+        reference_set = set(df_expr.index) | set(df_cell.index)
+
+        # contruct object
+        return cls(
+            run_dir, fname_result, fname_meta,
+            pathway_dict, reference_set,
+            df_cell=df_cell, df_expr=df_expr, df_info=df_info, df_dea=df_dea
+        )
+
+    @classmethod
+    def from_gene_lists(
+        cls,
+        run_dir, fname_result, fname_meta,
+        fname_geneset, fname_termdatabase
+    ):
+        # load genesets
+        df_genes = pd.read_csv(fname_geneset)
+
+        explicit_de_genes = set(df_genes.loc[
+            df_genes['type'] == 'study',
+            'gene'
+        ].to_list())
+        reference_set = set(df_genes.loc[
+            df_genes['type'] == 'all',
+            'gene'
+        ].to_list())
+
+        # load term database
+        df_terms = pd.read_csv(fname_termdatabase)
+        pathway_dict = df_terms.groupby('term')['gene'].apply(set).to_dict()
+
+        # contruct object
+        return cls(
+            run_dir, fname_result, fname_meta,
+            pathway_dict, reference_set,
+            explicit_de_genes=explicit_de_genes
+        )
+
     @property
     def de_genes(self):
+        if self.explicit_de_genes is not None:
+            return self.explicit_de_genes
+
+        # custom computation
         pvalue_threshold = .05
         log2foldchange_threshold = 1
 

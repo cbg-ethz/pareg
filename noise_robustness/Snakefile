@@ -1,0 +1,60 @@
+tool_list = ['fishers_exact_test']
+
+workdir: 'pipeline_run'
+
+
+rule all:
+    input:
+        expand('performance/{tool}', tool=tool_list)
+
+
+rule download_msigdb:
+    output:
+        fname = 'resources/all_genesets.csv.gz'
+    script:
+        'scripts/download_msigdb.R'
+
+
+rule generate_data:
+    input:
+        fname = 'resources/all_genesets.csv.gz'
+    output:
+        fname_geneset = 'artificial_data/geneset.csv.gz',
+        fname_termdatabase = 'artificial_data/term_database.csv.gz'
+    script:
+        'scripts/generate_data.R'
+
+
+rule execute_tool:
+    input:
+        script = srcdir('../definitions/tools/{tool}/execute.py'),
+        fname_geneset = 'artificial_data/geneset.csv.gz',
+        fname_termdatabase = 'artificial_data/term_database.csv.gz'
+    output:
+        run_dir = directory('runs/{tool}/run_dir'),
+        result_fname = 'runs/{tool}/enrichment_result.csv',
+        meta_fname = 'runs/{tool}/meta.json'
+    shell:
+        """
+        work_dir=$(pwd)
+        inc_dir=$(cd {workflow.basedir}/../scripts && pwd)
+
+        export PYTHONPATH="$inc_dir:$PYTHONPATH"
+        python3 {input.script} \
+            genelist_mode \
+            "$work_dir/{output.run_dir}" \
+            "$work_dir/{output.result_fname}" \
+            "$work_dir/{output.meta_fname}" \
+            "$work_dir/{input.fname_geneset}" \
+            "$work_dir/{input.fname_termdatabase}"
+        """
+
+
+rule compute_performance:
+    input:
+        fname_result = 'runs/{tool}/enrichment_result.csv',
+        fname_termdatabase = 'artificial_data/term_database.csv.gz'
+    output:
+        outdir = directory('performance/{tool}')
+    script:
+        'scripts/compute_performance.py'
