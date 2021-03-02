@@ -1,0 +1,63 @@
+import pandas as pd
+
+from snakemake.utils import Paramspace
+
+
+configfile: 'config/config.yaml'
+paramspace = Paramspace(pd.read_csv('config/params.csv'))
+
+
+rule all:
+    input:
+        expand('results/plots/{params}/{replicate}/', params=paramspace.instance_patterns, replicate=range(config['replicate_count']))
+
+
+rule retrieve_terms:
+    output:
+        fname='results/term_database.csv'
+    params:
+        term_filter=config['term_filter']
+    script:
+        'scripts/retrieve_terms.R'
+
+
+rule compute_term_similarities:
+    input:
+        fname_terms='results/term_database.csv'
+    output:
+        fname='results/term_similarities.csv'
+    script:
+        'scripts/compute_term_similarities.R'
+
+
+rule create_synthetic_study:
+    input:
+        fname_terms='results/term_database.csv'
+    output:
+        fname_rds=f'results/studies/{paramspace.wildcard_pattern}/{{replicate}}/study.rds'
+    params:
+        params=paramspace.instance,
+        on_term_count=config['on_term_count']
+    script:
+        'scripts/create_synthetic_study.R'
+
+
+rule compute_enrichments:
+    input:
+        fname_study=f'results/studies/{paramspace.wildcard_pattern}/{{replicate}}/study.rds',
+        fname_terms='results/term_database.csv',
+        fname_term_sim='results/term_similarities.csv'
+    output:
+        fname=f'results/enrichments/{paramspace.wildcard_pattern}/{{replicate}}/enr.csv'
+    script:
+        'scripts/compute_enrichments.R'
+
+
+rule visualize_results:
+    input:
+        fname_enr=f'results/enrichments/{paramspace.wildcard_pattern}/{{replicate}}/enr.csv',
+        fname_study=f'results/studies/{paramspace.wildcard_pattern}/{{replicate}}/study.rds'
+    output:
+        outdir=directory(f'results/plots/{paramspace.wildcard_pattern}/{{replicate}}/')
+    script:
+        'scripts/visualize_results.R'

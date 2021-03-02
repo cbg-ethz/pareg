@@ -1,0 +1,9 @@
+---
+
+term_filter:
+    min_size: 10
+    max_size: 100
+    sample_num: 4000
+
+on_term_count: 5
+replicate_count: 10

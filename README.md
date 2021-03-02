@@ -1,8 +1,3 @@
 # Tool benchmarking
 
-## Usage:
-
-Run:
-```bash
-$ snakemake -pr
-```
+A collection of Snakemake workflows to benchmark pathway enrichment methods.
