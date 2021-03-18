@@ -27,7 +27,7 @@ gs_selection <- df_terms %>%
   group_by(gs_name) %>%
   tally %>%
   filter(term_filter_params$min_size < n & n < term_filter_params$max_size) %>%
-  sample_n(term_filter_params$sample_num) %>%
+  sample_n(min(term_filter_params$sample_num, n())) %>%
   pull(gs_name)
 
 gs_selection %>%
