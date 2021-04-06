@@ -16,10 +16,7 @@ df_enr %>%
 
 # comparison plot
 df_enr %>%
-  mutate(
-    p_value = ifelse(method == "FET", -log10(p_value), p_value)
-  ) %>%
-  ggplot(aes(x = is_on_term, y = p_value, fill = method)) +
+  ggplot(aes(x = is_on_term, y = enrichment, fill = method)) +
     geom_boxplot() +
     ylab("Enrichment measure") +
     theme_minimal()
@@ -27,10 +24,7 @@ ggsave(file.path(outdir, "comparison.pdf"))
 
 # ROC curves
 df_enr %>%
-  mutate(
-    p_value = ifelse(method == "FET", -log10(p_value), p_value)
-  ) %>%
-  ggplot(aes(m = p_value, d = is_on_term, color = method)) +
+  ggplot(aes(m = enrichment, d = is_on_term, color = method)) +
     geom_roc() +
     theme_minimal()
 ggsave(file.path(outdir, "roc_curves.pdf"))

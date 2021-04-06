@@ -45,7 +45,7 @@ df_enr <- df_terms %>%
 
     # store results
     bind_rows(
-      data.frame(method = "FET", term = term, p_value = fet_p_value)
+      data.frame(method = "FET", term = term, enrichment = -log10(fet_p_value))
     )
   }) %>%
   { do.call(rbind.data.frame, .) }
@@ -100,7 +100,7 @@ fit <- mgsa::mgsa(study_genes, term_list)
 df_mgsa <- fit@setsResults %>%
   rownames_to_column("term") %>%
   mutate(method = "MGSA") %>%
-  rename(p_value = estimate) %>%
+  rename(enrichment = estimate) %>%
   select(-inPopulation, -inStudySet, -std.error)
 df_mgsa %>% head
 
@@ -108,10 +108,10 @@ df_mgsa %>% head
 df_enr_all <- bind_rows(
   df_pareg %>%
     mutate(method = "pareg", enrichment = abs(enrichment)) %>%
-    rename(term = name, p_value = enrichment),
+    rename(term = name),
   df_pareg_network %>%
     mutate(method = "pareg_network", enrichment = abs(enrichment)) %>%
-    rename(term = name, p_value = enrichment),
+    rename(term = name),
   df_mgsa,
   df_enr
 )
