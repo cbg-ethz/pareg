@@ -91,6 +91,19 @@ df_pareg_network <- pareg::pareg(
 )
 df_pareg_network %>% arrange(desc(abs(enrichment))) %>% head
 
+# MGSA
+term_list <- df_terms %>%
+  { split(.$gene_symbol, .$gs_name) }
+
+fit <- mgsa::mgsa(study_genes, term_list)
+
+df_mgsa <- fit@setsResults %>%
+  rownames_to_column("term") %>%
+  mutate(method = "MGSA") %>%
+  rename(p_value = estimate) %>%
+  select(-inPopulation, -inStudySet, -std.error)
+df_mgsa %>% head
+
 # combine results
 df_enr_all <- bind_rows(
   df_pareg %>%
@@ -99,6 +112,7 @@ df_enr_all <- bind_rows(
   df_pareg_network %>%
     mutate(method = "pareg_network", enrichment = abs(enrichment)) %>%
     rename(term = name, p_value = enrichment),
+  df_mgsa,
   df_enr
 )
 
