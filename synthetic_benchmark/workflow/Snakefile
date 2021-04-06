@@ -49,6 +49,8 @@ rule compute_enrichments:
         fname_term_sim='results/term_similarities.csv'
     output:
         fname=f'results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/enr.csv'
+    resources:
+        mem_mb = 15_000
     script:
         'scripts/compute_enrichments.R'
 
