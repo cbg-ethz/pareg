@@ -64,7 +64,9 @@ df_pareg <- pareg::pareg(
     select(gs_name, gene_symbol) %>%
     rename(name = gs_name, gene = gene_symbol),
   truncate_response = TRUE
-)
+) %>%
+  mutate(method = "pareg", enrichment = abs(enrichment)) %>%
+  rename(term = name)
 df_pareg %>% arrange(desc(abs(enrichment))) %>% head
 
 # pareg with network
@@ -88,7 +90,9 @@ df_pareg_network <- pareg::pareg(
     rename(name = gs_name, gene = gene_symbol),
   network_param = 0.9, term_network = term_similarities_sub,
   truncate_response = TRUE
-)
+) %>%
+  mutate(method = "pareg_network", enrichment = abs(enrichment)) %>%
+  rename(term = name)
 df_pareg_network %>% arrange(desc(abs(enrichment))) %>% head
 
 # MGSA
@@ -106,14 +110,10 @@ df_mgsa %>% head
 
 # combine results
 df_enr_all <- bind_rows(
-  df_pareg %>%
-    mutate(method = "pareg", enrichment = abs(enrichment)) %>%
-    rename(term = name),
-  df_pareg_network %>%
-    mutate(method = "pareg_network", enrichment = abs(enrichment)) %>%
-    rename(term = name),
-  df_mgsa,
-  df_enr
+  df_enr,
+  df_pareg,
+  df_pareg_network,
+  df_mgsa
 )
 
 df_enr_all %>%
