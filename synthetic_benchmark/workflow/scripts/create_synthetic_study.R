@@ -5,13 +5,15 @@ library(tidyverse)
 fname_terms <- snakemake@input$fname_terms
 fname_rds <- snakemake@output$fname_rds
 
+category <- snakemake@params$params$category
 alpha <- snakemake@params$params$alpha # false positive rate
 beta <- snakemake@params$params$beta # false negative rate
 
 on_term_count <- snakemake@params$on_term_count
 
 # read data
-df_terms <- read_csv(fname_terms, col_types = cols(gs_url = col_character()))
+df_terms <- read_csv(fname_terms, col_types = cols(gs_url = col_character())) %>%
+  filter(gs_cat == category)
 
 # create synthetic studies
 on_terms <- df_terms %>%

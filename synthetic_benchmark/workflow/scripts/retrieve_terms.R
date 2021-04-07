@@ -10,10 +10,11 @@ term_filter_params <- snakemake@params$term_filter
 
 # overview
 msigdbr_species()
-msigdbr_collections()
+msigdbr_collections() %>%
+  arrange(desc(num_genesets))
 
 # retrieve terms
-df_terms <- msigdbr(category = "C2")
+df_terms <- msigdbr(species = "Homo sapiens")
 
 df_terms %>%
   head
