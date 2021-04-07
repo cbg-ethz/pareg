@@ -6,7 +6,15 @@ fname_terms <- snakemake@input$fname_terms
 fname_out <- snakemake@output$fname
 
 # read data
-df_terms <- read_csv(fname_terms, col_types = cols(gs_url = col_character()))
+df_terms <- read_csv(
+  fname_terms,
+  col_types = cols(
+    gs_url = col_character(),
+    gs_exact_source = col_character(),
+    gs_geoid = col_character(),
+    gs_pmid = col_character()
+  )
+)
 
 # define distance measure
 jaccard <- function(x, y) {

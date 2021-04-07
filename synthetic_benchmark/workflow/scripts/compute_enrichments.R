@@ -14,7 +14,15 @@ study <- readRDS(fname_study)
 study_genes <- study$study_genes
 nonstudy_genes <- study$nonstudy_genes
 
-df_terms <- read_csv(fname_terms, col_types = cols(gs_url = col_character()))
+df_terms <- read_csv(
+  fname_terms,
+  col_types = cols(
+    gs_url = col_character(),
+    gs_exact_source = col_character(),
+    gs_geoid = col_character(),
+    gs_pmid = col_character()
+  )
+)
 
 term_similarities <- read.csv(fname_term_sim, row.names = 1)
 
