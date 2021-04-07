@@ -6,4 +6,4 @@ term_filter:
     sample_num: null
 
 on_term_count: 5
-replicate_count: 10
+replicate_count: 100
