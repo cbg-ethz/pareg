@@ -9,43 +9,43 @@ paramspace = Paramspace(pd.read_csv('config/params.csv'))
 
 rule all:
     input:
-        expand('results/plots/{params}/', params=paramspace.instance_patterns)
+        expand('results/plots/{params}/', params=paramspace.instance_patterns),
 
 
 rule retrieve_terms:
     output:
-        fname='results/term_database.csv'
+        fname='results/term_database.csv',
     params:
-        term_filter=config['term_filter']
+        term_filter=config['term_filter'],
     resources:
-        mem_mb = 15_000
+        mem_mb=15_000,
     script:
         'scripts/retrieve_terms.R'
 
 
 rule compute_term_similarities:
     input:
-        fname_terms='results/term_database.csv'
+        fname_terms='results/term_database.csv',
     output:
-        fname=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv'
+        fname=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv',
     params:
-        params=paramspace.instance
+        params=paramspace.instance,
     resources:
-        mem_mb = 15_000
+        mem_mb=15_000,
     script:
         'scripts/compute_term_similarities.R'
 
 
 rule create_synthetic_study:
     input:
-        fname_terms='results/term_database.csv'
+        fname_terms='results/term_database.csv',
     output:
-        fname_rds=f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds'
+        fname_rds=f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds',
     params:
         params=paramspace.instance,
-        on_term_count=config['on_term_count']
+        on_term_count=config['on_term_count'],
     resources:
-        mem_mb = 5_000
+        mem_mb=5_000,
     script:
         'scripts/create_synthetic_study.R'
 
@@ -54,11 +54,13 @@ rule compute_enrichments:
     input:
         fname_study=f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds',
         fname_terms='results/term_database.csv',
-        fname_term_sim=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv'
+        fname_term_sim=(
+            f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv'
+        ),
     output:
-        fname=f'results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/enr.csv'
+        fname=f'results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/enr.csv',
     resources:
-        mem_mb = 15_000
+        mem_mb=15_000,
     script:
         'scripts/compute_enrichments.R'
 
@@ -67,22 +69,24 @@ rule aggregate_results:
     input:
         fname_list_enr=expand(
             f'results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/enr.csv',
-            replicate=range(config['replicate_count']), allow_missing=True
+            replicate=range(config['replicate_count']),
+            allow_missing=True,
         ),
         fname_list_study=expand(
             f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds',
-            replicate=range(config['replicate_count']), allow_missing=True
-        )
+            replicate=range(config['replicate_count']),
+            allow_missing=True,
+        ),
     output:
-        fname=f'results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv'
+        fname=f'results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv',
     script:
         'scripts/aggregate_results.R'
 
 
 rule visualize_results:
     input:
-        fname_enr=f'results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv'
+        fname_enr=f'results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv',
     output:
-        outdir=directory(f'results/plots/{paramspace.wildcard_pattern}/')
+        outdir=directory(f'results/plots/{paramspace.wildcard_pattern}/'),
     script:
         'scripts/visualize_results.R'
