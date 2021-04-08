@@ -5,6 +5,8 @@ library(tidyverse)
 fname_terms <- snakemake@input$fname_terms
 fname_out <- snakemake@output$fname
 
+category <- snakemake@params$params$category
+
 # read data
 df_terms <- read_csv(
   fname_terms,
@@ -14,7 +16,8 @@ df_terms <- read_csv(
     gs_geoid = col_character(),
     gs_pmid = col_character()
   )
-)
+) %>%
+  filter(gs_cat == category)
 
 # define distance measure
 jaccard <- function(x, y) {

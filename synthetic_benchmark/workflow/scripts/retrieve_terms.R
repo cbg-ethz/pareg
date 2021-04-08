@@ -8,7 +8,7 @@ fname_out <- snakemake@output$fname
 
 term_filter_params <- snakemake@params$term_filter
 
-# overview
+# overview (http://www.gsea-msigdb.org/gsea/msigdb/collections.jsp)
 msigdbr_species()
 msigdbr_collections() %>%
   arrange(desc(num_genesets))

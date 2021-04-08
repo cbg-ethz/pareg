@@ -25,7 +25,9 @@ rule compute_term_similarities:
     input:
         fname_terms='results/term_database.csv'
     output:
-        fname='results/term_similarities.csv'
+        fname=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv'
+    params:
+        params=paramspace.instance
     script:
         'scripts/compute_term_similarities.R'
 
@@ -46,7 +48,7 @@ rule compute_enrichments:
     input:
         fname_study=f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds',
         fname_terms='results/term_database.csv',
-        fname_term_sim='results/term_similarities.csv'
+        fname_term_sim=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv'
     output:
         fname=f'results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/enr.csv'
     resources:
