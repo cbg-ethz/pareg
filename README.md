@@ -1,3 +1,9 @@
-# Tool benchmarking
+# Pathway enrichment benchmarking
 
-A collection of Snakemake workflows to benchmark pathway enrichment methods.
+Snakemake workflow to benchmark pathway enrichment methods.
+
+## Usage
+
+```bash
+snakemake -prj1
+```
