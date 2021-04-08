@@ -17,6 +17,8 @@ rule retrieve_terms:
         fname='results/term_database.csv'
     params:
         term_filter=config['term_filter']
+    resources:
+        mem_mb = 15_000
     script:
         'scripts/retrieve_terms.R'
 
@@ -28,6 +30,8 @@ rule compute_term_similarities:
         fname=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv'
     params:
         params=paramspace.instance
+    resources:
+        mem_mb = 15_000
     script:
         'scripts/compute_term_similarities.R'
 
@@ -40,6 +44,8 @@ rule create_synthetic_study:
     params:
         params=paramspace.instance,
         on_term_count=config['on_term_count']
+    resources:
+        mem_mb = 5_000
     script:
         'scripts/create_synthetic_study.R'
 
