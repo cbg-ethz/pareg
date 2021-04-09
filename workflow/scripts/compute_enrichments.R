@@ -9,6 +9,8 @@ fname_term_sim <- snakemake@input$fname_term_sim
 
 fname_out <- snakemake@output$fname
 
+category <- snakemake@params$params$category
+
 # read data
 study <- readRDS(fname_study)
 study_genes <- study$study_genes
@@ -22,7 +24,8 @@ df_terms <- read_csv(
     gs_geoid = col_character(),
     gs_pmid = col_character()
   )
-)
+) %>%
+  filter(gs_cat == category)
 
 term_similarities <- read.csv(fname_term_sim, row.names = 1)
 

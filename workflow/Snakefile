@@ -59,6 +59,8 @@ rule compute_enrichments:
         ),
     output:
         fname=f'results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/enr.csv',
+    params:
+        params=paramspace.instance,
     resources:
         mem_mb=15_000,
     script:
