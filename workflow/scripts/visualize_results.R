@@ -19,6 +19,7 @@ df_enr %>%
   ggplot(aes(x = is_on_term, y = enrichment, fill = method)) +
     geom_boxplot() +
     ylab("Enrichment measure") +
+    facet_wrap(~method, scales = "free") +
     theme_minimal()
 ggsave(file.path(outdir, "comparison.pdf"))
 
