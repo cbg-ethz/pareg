@@ -90,5 +90,7 @@ rule visualize_results:
         fname_enr=f'results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv',
     output:
         outdir=directory(f'results/plots/{paramspace.wildcard_pattern}/'),
+    resources:
+        mem_mb=5_000,
     script:
         'scripts/visualize_results.R'
