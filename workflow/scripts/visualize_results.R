@@ -66,5 +66,5 @@ cowplot::plot_grid(
 )
 cowplot::save_plot(
   file.path(outdir, "performance_curves.pdf"), last_plot(),
-  ncol = 2 , nrow = 1
+  ncol = 2, nrow = 1
 )
