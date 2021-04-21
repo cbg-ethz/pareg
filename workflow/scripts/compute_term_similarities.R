@@ -5,6 +5,9 @@ library(tidyverse)
 fname_terms <- snakemake@input$fname_terms
 fname_out <- snakemake@output$fname
 
+plotdir <- snakemake@output$plotdir
+dir.create(plotdir, recursive = TRUE)
+
 category <- snakemake@params$params$category
 
 # read data
@@ -39,3 +42,18 @@ term_similarities <- 1 - proxy::dist(
 # save result
 term_similarities %>%
   write.csv(fname_out)
+
+# visualize result
+df_sim <- data.frame(similarity = term_similarities[upper.tri(term_similarities)])
+
+df_sim %>%
+  arrange(desc(similarity)) %>%
+  head
+
+df_sim %>%
+ggplot(aes(x =  similarity)) +
+  geom_histogram(bins = 100) +
+  xlim(0, 1) +
+  scale_y_sqrt() +
+  theme_minimal()
+ggsave(file.path(plotdir, "similarity_histogram.pdf"))

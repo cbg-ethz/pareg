@@ -28,6 +28,7 @@ rule compute_term_similarities:
         fname_terms='results/term_database.csv',
     output:
         fname=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv',
+        plotdir=directory(f'results/terms/{paramspace.wildcard_pattern}/plots/'),
     params:
         params=paramspace.instance,
     resources:
