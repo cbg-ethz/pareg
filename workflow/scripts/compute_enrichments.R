@@ -106,6 +106,33 @@ df_pareg_network <- pareg::pareg(
   rename(term = name)
 df_pareg_network %>% arrange(desc(abs(enrichment))) %>% head
 
+# pareg with network and cv
+term_names <- df_terms %>%
+  distinct(gs_name) %>%
+  pull(gs_name)
+term_similarities_sub <- term_similarities[term_names, term_names] %>%
+  as.matrix
+
+df_pareg_network_cv <- pareg::pareg(
+  data.frame(
+    gene = all_genes,
+    pvalue = ifelse(
+      all_genes %in% study_genes,
+      rbeta(length(all_genes), 0.1, 1),
+      rbeta(length(all_genes), 1, 1)
+    )
+  ),
+  df_terms %>%
+    select(gs_name, gene_symbol) %>%
+    rename(name = gs_name, gene = gene_symbol),
+  term_network = term_similarities_sub,
+  truncate_response = TRUE,
+  cv = TRUE
+) %>%
+  mutate(method = "pareg_network_cv", enrichment = abs(enrichment)) %>%
+  rename(term = name)
+df_pareg_network_cv %>% arrange(desc(abs(enrichment))) %>% head
+
 # MGSA
 term_list <- df_terms %>%
   { split(.$gene_symbol, .$gs_name) }
@@ -124,6 +151,7 @@ df_enr_all <- bind_rows(
   df_enr,
   df_pareg,
   df_pareg_network,
+  df_pareg_network_cv,
   df_mgsa
 )
 
