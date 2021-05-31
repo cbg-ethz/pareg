@@ -10,7 +10,7 @@ create_model_df <- function(df_genes, df_terms) {
     right_join(
       df_genes %>% mutate_at(vars(gene), as.character), by = "gene"
     ) %>%
-    spread(key = name, value = member, fill = FALSE) %>%
+    pivot_wider(names_from = name, values_from = member, values_fill = FALSE) %>%
     select(
       -one_of("<NA>") # use `one_of` to handle case where <NA> does not exist
     ) %>%
