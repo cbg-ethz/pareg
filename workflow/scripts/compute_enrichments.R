@@ -13,8 +13,6 @@ category <- snakemake@params$params$category
 
 # read data
 study <- readRDS(fname_study)
-study_genes <- study$study_genes
-nonstudy_genes <- study$nonstudy_genes
 
 df_terms <- read_csv(
   fname_terms,
@@ -35,11 +33,19 @@ df_terms %>% head
 
 term_similarities <- read.csv(fname_term_sim, row.names = 1)
 
+# prepare data
+study_genes <- study$df %>%
+  filter(pvalue <= 0.05) %>%
+  pull(gene)
+
+nonstudy_genes <- study$df %>%
+  filter(pvalue > 0.05) %>%
+  pull(gene)
+
 all_genes <- df_terms %>%
   distinct(gene) %>%
   pull(gene)
-
-#all_genes <- c(study_genes, nonstudy_genes)
+# all_genes <- c(study_genes, nonstudy_genes)
 
 # single-term methods
 df_enr <- df_terms %>%
