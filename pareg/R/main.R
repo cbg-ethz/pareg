@@ -4,8 +4,9 @@ library(netReg)
 
 pareg <- function(
   df_genes, df_terms,
-  lasso_param = 0, network_param = 0,
-  term_network = NULL, truncate_response = FALSE
+  lasso_param = NA_real_, network_param = NA_real_,
+  term_network = NULL, truncate_response = FALSE,
+  cv = FALSE
 ) {
   # generate design matrix
   df_model <- create_model_df(df_genes, df_terms)
@@ -26,7 +27,20 @@ pareg <- function(
   }
 
   # fit model
-  fit <- netReg::edgenet(
+  if (cv) {
+    fit_func <- netReg::cv.edgenet
+  } else {
+    fit_func <- netReg::edgenet
+
+    if (is.na(lasso_param)) {
+      lasso_param <- 0
+    }
+    if (is.na(network_param)) {
+      network_param <- 0
+    }
+  }
+
+  fit <- fit_func(
     X, Y,
     G.X = term_network,
     lambda = lasso_param, psigx = network_param, psigy = 0,
