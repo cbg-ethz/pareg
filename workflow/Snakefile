@@ -4,7 +4,7 @@ from snakemake.utils import Paramspace
 
 
 configfile: 'config/config.yaml'
-paramspace = Paramspace(pd.read_csv('config/params.csv'))
+paramspace = Paramspace(pd.read_csv('config/params.csv'), filename_params='*')
 
 
 rule all:
