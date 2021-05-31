@@ -25,23 +25,28 @@ df_terms <- read_csv(
     gs_pmid = col_character()
   )
 ) %>%
-  filter(gs_cat == category)
+  filter(gs_cat == category) %>%
+  select(gs_name, gene_symbol) %>%
+  rename(name = gs_name, gene = gene_symbol) %>%
+  distinct(.keep_all = TRUE)
+
+df_terms %>% dim
+df_terms %>% head
 
 term_similarities <- read.csv(fname_term_sim, row.names = 1)
 
 all_genes <- df_terms %>%
-  distinct(gene_symbol) %>%
-  pull(gene_symbol)
+  distinct(gene) %>%
+  pull(gene)
 
 #all_genes <- c(study_genes, nonstudy_genes)
 
 # single-term methods
 df_enr <- df_terms %>%
-  select(gs_name, gene_symbol) %>%
-  group_by(gs_name) %>%
+  group_by(name) %>%
   group_map(function(sub, key) {
-    term <- key %>% pull(gs_name)
-    term_genes <- sub %>% pull(gene_symbol)
+    term <- key %>% pull(name)
+    term_genes <- sub %>% pull(gene)
 
     nonterm_genes <- setdiff(all_genes, term_genes)
 
@@ -71,9 +76,7 @@ df_pareg <- pareg::pareg(
       rbeta(length(all_genes), 1, 1)
     )
   ),
-  df_terms %>%
-    select(gs_name, gene_symbol) %>%
-    rename(name = gs_name, gene = gene_symbol),
+  df_terms,
   truncate_response = TRUE
 ) %>%
   mutate(method = "pareg", enrichment = abs(enrichment)) %>%
@@ -82,8 +85,8 @@ df_pareg %>% arrange(desc(abs(enrichment))) %>% head
 
 # pareg with network
 term_names <- df_terms %>%
-  distinct(gs_name) %>%
-  pull(gs_name)
+  distinct(name) %>%
+  pull(name)
 term_similarities_sub <- term_similarities[term_names, term_names] %>%
   as.matrix
 
@@ -96,9 +99,7 @@ df_pareg_network <- pareg::pareg(
       rbeta(length(all_genes), 1, 1)
     )
   ),
-  df_terms %>%
-    select(gs_name, gene_symbol) %>%
-    rename(name = gs_name, gene = gene_symbol),
+  df_terms,
   network_param = 0.9, term_network = term_similarities_sub,
   truncate_response = TRUE
 ) %>%
@@ -108,8 +109,8 @@ df_pareg_network %>% arrange(desc(abs(enrichment))) %>% head
 
 # pareg with network and cv
 term_names <- df_terms %>%
-  distinct(gs_name) %>%
-  pull(gs_name)
+  distinct(name) %>%
+  pull(name)
 term_similarities_sub <- term_similarities[term_names, term_names] %>%
   as.matrix
 
@@ -122,9 +123,7 @@ df_pareg_network_cv <- pareg::pareg(
       rbeta(length(all_genes), 1, 1)
     )
   ),
-  df_terms %>%
-    select(gs_name, gene_symbol) %>%
-    rename(name = gs_name, gene = gene_symbol),
+  df_terms,
   term_network = term_similarities_sub,
   truncate_response = TRUE,
   cv = TRUE
@@ -135,7 +134,7 @@ df_pareg_network_cv %>% arrange(desc(abs(enrichment))) %>% head
 
 # MGSA
 term_list <- df_terms %>%
-  { split(.$gene_symbol, .$gs_name) }
+  { split(.$gene, .$name) }
 
 fit <- mgsa::mgsa(study_genes, term_list)
 
