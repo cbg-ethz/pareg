@@ -12,7 +12,7 @@ create_model_df <- function(df_genes, df_terms) {
     ) %>%
     pivot_wider(names_from = term, values_from = member, values_fill = FALSE) %>%
     select(
-      -one_of("<NA>") # use `one_of` to handle case where <NA> does not exist
+      -one_of("NA") # use `one_of` to handle case where NA does not exist (happens when a gene appears in no term)
     ) %>%
     rename_at(vars(-gene, -pvalue), ~ paste0(., ".member")) %>%
     mutate_at(
