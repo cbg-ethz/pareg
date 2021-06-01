@@ -31,5 +31,6 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
     mutate(rowname = c("intercept", x$covariates)) %>%
     filter(grepl(".member$", rowname)) %>%
     extract(rowname, "term", "(.*).member") %>%
-    rename(enrichment = `y[1]`)
+    rename(enrichment = `y[1]`) %>%
+    arrange(desc(enrichment))
 }
