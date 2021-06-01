@@ -2,6 +2,7 @@ library(tidyverse)
 library(netReg)
 
 
+#' @export
 pareg <- function(
   df_genes, df_terms,
   lasso_param = NA_real_, network_param = NA_real_,
@@ -47,12 +48,17 @@ pareg <- function(
     family = netReg::beta
   )
 
-  # extract coefficients
-  df_enrich <- as.data.frame(coef(fit)) %>%
-    mutate(rowname = c("intercept", covariates)) %>%
-    filter(grepl(".member$", rowname)) %>%
-    extract(rowname, "name", "(.*).member") %>%
-    rename(enrichment = `y[1]`)
-
-  return(df_enrich)
+  # return structured object
+  return(structure(list(
+    fit = fit,
+    term_network = term_network,
+    df_terms = df_terms,
+    covariates = covariates,
+    params = list(
+      lasso_param = lasso_param,
+      network_param = network_param,
+      cv = cv,
+      truncate_response = truncate_response
+    )
+  ), class = "pareg"))
 }

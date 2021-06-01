@@ -19,3 +19,17 @@ create_model_df <- function(df_genes, df_terms) {
       vars(gene), factor # gene is character if select statement is executed
     )
 }
+
+
+#' @export
+as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
+  if (!is.null(row.names) || optional) {
+    stop("row.names and optional arguments not supported")
+  }
+
+  as.data.frame(coef(x$fit)) %>%  # nolint
+    mutate(rowname = c("intercept", x$covariates)) %>%
+    filter(grepl(".member$", rowname)) %>%
+    extract(rowname, "name", "(.*).member") %>%
+    rename(enrichment = `y[1]`)
+}
