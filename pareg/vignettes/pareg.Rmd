@@ -1,0 +1,132 @@
+---
+title: "Get started"
+author: "Kim Philipp Jablonski"
+date: "`r Sys.Date()`"
+graphics: yes
+output: BiocStyle::html_document
+bibliography: bibliography.bib
+vignette: >
+    %\VignetteIndexEntry{Get started}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+# Overview
+
+Pathway enrichment.
+
+# Installation
+
+```{r eval=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("pareg")
+```
+
+# Load required packages
+
+Load `pareg` package and other required libraries.
+
+```{r message=FALSE}
+library(ggraph)
+library(tidyverse)
+
+library(msigdbr)
+
+library(pareg)
+
+set.seed(42)
+```
+
+# Introductory example
+
+## Retrieve pathway database
+
+We start by constructing a dataframe containing pathway information.
+
+```{r}
+df_terms <- msigdbr(species = "Homo sapiens", category = "C2") %>%
+  select(gs_name, gene_symbol) %>%
+  rename(term = gs_name, gene = gene_symbol)
+
+selected_terms <- df_terms %>%
+  group_by(term) %>%
+  summarize(size = n()) %>%
+  filter(size >= 10 & size <= 20) %>%
+  arrange(desc(size)) %>%
+  sample_n(5) %>%
+  pull(term)
+
+df_terms <- df_terms %>%
+  filter(term %in% selected_terms) %>%
+  distinct
+
+df_terms %>%
+  group_by(term) %>%
+  summarize(size = n()) %>%
+  arrange(desc(size)) %>%
+  knitr::kable()
+```
+
+## Create synthetic study
+
+We then select a subset of genes to serve as the differentially expressed genes of our synthetic study.
+
+```{r}
+active_term <- df_terms %>%
+  sample_n(1) %>%
+  pull(term)
+active_term
+
+de_genes <- df_terms %>%
+  filter(term == active_term) %>%
+  distinct(gene) %>%
+  pull(gene)
+
+other_genes <- df_terms %>%
+  distinct(gene) %>%
+  pull(gene) %>%
+  setdiff(de_genes)
+```
+
+For these genes, we can generate artificial p-values.
+
+```{r}
+df_study <- data.frame(
+  gene = c(de_genes, other_genes),
+  pvalue = c(rbeta(length(de_genes), 0.1, 1), rbeta(length(other_genes), 1, 1)),
+  in_study = c(
+    rep(TRUE, length(de_genes)),
+    rep(FALSE, length(other_genes))
+  )
+)
+
+table(df_study$pvalue <= 0.05, df_study$in_study, dnn = c("sig. p-value", "in study"))
+```
+
+## Enrichment analysis
+
+We start the pathway enrichment analysis by computing term similarities with `pareg`'s helper functions.
+
+```{r}
+term_network <- compute_term_similarities(df_terms)
+
+hist(term_network)
+```
+
+We can then compute our pathway enrichment values.
+
+```{r}
+res <- pareg(df_study %>% select(-in_study), df_terms, term_network = term_network)
+
+res %>%
+  as.data.frame %>%
+  head %>%
+  knitr::kable()
+```
+
+And finally, we can visualize the obtained results.
+
+```{r}
+plot(res)
+```
