@@ -12,11 +12,11 @@ test_that("package doesn't crash for trivial case", {
 
   df_terms <- rbind(
     data.frame(
-      name = "foo",
+      term = "foo",
       gene = paste("g", 1:10, sep = "")
     ),
     data.frame(
-      name = "bar",
+      term = "bar",
       gene = paste("g", 11:20, sep = "")
     )
   )
@@ -26,7 +26,7 @@ test_that("package doesn't crash for trivial case", {
 
   # check results
   expect_lt(
-    res %>% as.data.frame %>% filter(name == "foo") %>% pull(enrichment),
-    res %>% as.data.frame %>% filter(name == "bar") %>% pull(enrichment)
+    res %>% as.data.frame %>% filter(term == "foo") %>% pull(enrichment),
+    res %>% as.data.frame %>% filter(term == "bar") %>% pull(enrichment)
   )
 })

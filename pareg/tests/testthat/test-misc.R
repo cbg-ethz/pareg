@@ -5,11 +5,11 @@ test_that("idea works", {
   # setup terms
   df_terms <- rbind(
     data.frame(
-      name = "foo",
+      term = "foo",
       gene = paste("g", 100:200, sep = "")
     ),
     data.frame(
-      name = "control",
+      term = "control",
       gene = c(paste("g", 10:20, sep = ""), "g90")
     )
   )
@@ -41,18 +41,18 @@ test_that("idea works", {
   # validation plot
   ggplot(df_enr, aes(x = x, y = enrichment)) +
     geom_line() +
-    facet_grid(~ name) +
+    facet_grid(~ term) +
     theme_minimal()
 
   # assertions
   expect_true(
     df_enr %>%
-      filter(x == 0 & name == "foo") %>%
+      filter(x == 0 & term == "foo") %>%
       pull("enrichment") > 0
   )
   expect_true(
     df_enr %>%
-    filter(x == 10 & name == "foo") %>%
+    filter(x == 10 & term == "foo") %>%
     pull("enrichment") < 0
   )
 })

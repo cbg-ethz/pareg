@@ -4,7 +4,7 @@ test_that("model creation works with only common genes", {
     pvalue = c(0.1, 0.2)
   )
   df_terms <- data.frame(
-    name = c("A", "A", "B", "B", "C"),
+    term = c("A", "A", "B", "B", "C"),
     gene = c("g1", "g2", "g1", "g2", "g2")
   )
 
@@ -26,7 +26,7 @@ test_that("model creation works with gene which is in no term", {
     pvalue = c(0.1, 0.2, 0.3)
   )
   df_terms <- data.frame(
-    name = c("A", "A", "B", "B", "C"),
+    term = c("A", "A", "B", "B", "C"),
     gene = c("g1", "g2", "g1", "g2", "g2")
   )
 

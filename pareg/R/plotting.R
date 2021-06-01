@@ -6,7 +6,7 @@ plot.pareg <- function(x, show_term_names = TRUE) {
   term_network <- x$term_network
 
   term_sizes <- df_terms %>%
-    group_by(name) %>%
+    group_by(term) %>%
     summarize(size = n())
 
   if (is.null(term_network)) {
