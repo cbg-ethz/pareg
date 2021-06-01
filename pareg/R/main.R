@@ -20,6 +20,13 @@ pareg <- function(
   X <- df_model %>% select(all_of(covariates)) %>% as.matrix
   Y <- df_model %>% select("pvalue") %>% as.matrix
 
+  # check data format
+  database_terms <- df_terms %>%
+    distinct(term) %>%
+    pull(term)
+  network_terms <- rownames(term_network)
+  stopifnot(all(database_terms == network_terms))
+
   # truncate response if requested
   if (truncate_response) {
     eps <- .Machine$double.eps * 1e9 # see ?mgcv::betar
