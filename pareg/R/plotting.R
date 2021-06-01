@@ -24,7 +24,6 @@ plot.pareg <- function(x, show_term_names = TRUE) {
     activate(nodes) %>%
     mutate(
       enrichment = df_enr$enrichment,
-      label = df_enr$name,
       termsize = term_sizes$size,
     ) %>%
     activate(edges) %>%
@@ -47,7 +46,7 @@ plot.pareg <- function(x, show_term_names = TRUE) {
       )
 
   if (show_term_names) {
-    p <- p + geom_node_text(aes(label = .data$label))
+    p <- p + geom_node_text(aes(label = .data$name))
   }
 
   return(p)
