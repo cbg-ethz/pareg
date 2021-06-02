@@ -2,7 +2,46 @@ library(tidyverse)
 library(netReg)
 
 
+#' @title Pathway enrichment using a regularized regression approach.
+#'
+#' @description Run model to compute pathway enrichments.
+#'  Can model inter-pathway relations, cross-validation and much more.
+#'
 #' @export
+#'
+#' @param df_genes Dataframe storing gene names and DE p-values.
+#' @param df_terms Dataframe storing pathway database.
+#' @param lasso_param Lasso regularization parameter.
+#' @param network_param Network regularization parameter.
+#' @param term_network Term similarity network as adjacency matrix.
+#' @param truncate_response Make sure response is in [0, 1].
+#' @param cv Estimate best regularization parameters using cross-validation.
+#' @param family Distribution family of response.
+#'
+#' @return An object of class \code{pareg}.
+#'
+#' @examples
+#' df_genes <- data.frame(
+#'   gene = paste("g", 1:20, sep = ""),
+#'   pvalue = c(
+#'     rbeta(10, .1, 1),
+#'     rbeta(10, 1, 1)
+#'   )
+#' )
+#' df_terms <- rbind(
+#'   data.frame(
+#'     term = "foo",
+#'     gene = paste("g", 1:10, sep = "")
+#'   ),
+#'   data.frame(
+#'     term = "bar",
+#'     gene = paste("g", 11:20, sep = "")
+#'   )
+#' )
+#' pareg(df_genes, df_terms)
+#'
+#' @importFrom dplyr select ends_with all_of distinct pull
+#' @importFrom netReg edgenet cv.edgenet beta
 pareg <- function(
   df_genes, df_terms,
   lasso_param = NA_real_, network_param = NA_real_,
