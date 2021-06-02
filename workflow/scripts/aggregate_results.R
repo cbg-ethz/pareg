@@ -14,7 +14,7 @@ purrr::transpose(list(
 )) %>%
   purrr::map_dfr(function(x) {
     parts <- (strsplit(x$fname_enr, "/")[[1]])
-    replicate <- parts[[length(parts) - 1]]
+    replicate <- parts[[length(parts) - 2]]
 
     study <- readRDS(x$fname_study)
     on_terms <- study$on_terms
