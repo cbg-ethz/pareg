@@ -25,7 +25,7 @@ df_terms <- read_csv(
 ) %>%
   filter(gs_cat == category) %>%
   select(gs_name, gene_symbol) %>%
-  rename(name = gs_name, gene = gene_symbol) %>%
+  rename(term = gs_name, gene = gene_symbol) %>%
   distinct(.keep_all = TRUE)
 
 df_terms %>% dim
@@ -49,9 +49,9 @@ all_genes <- df_terms %>%
 
 # single-term methods
 df_enr <- df_terms %>%
-  group_by(name) %>%
+  group_by(term) %>%
   group_map(function(sub, key) {
-    term <- key %>% pull(name)
+    term <- key %>% pull(term)
     term_genes <- sub %>% pull(gene)
 
     nonterm_genes <- setdiff(all_genes, term_genes)
@@ -78,14 +78,14 @@ df_pareg <- pareg::pareg(
   df_terms,
   truncate_response = TRUE
 ) %>%
-  mutate(method = "pareg", enrichment = abs(enrichment)) %>%
-  rename(term = name)
+  as.data.frame %>%
+  mutate(method = "pareg", enrichment = abs(enrichment))
 df_pareg %>% arrange(desc(abs(enrichment))) %>% head
 
 # pareg with network
 term_names <- df_terms %>%
-  distinct(name) %>%
-  pull(name)
+  distinct(term) %>%
+  pull(term)
 term_similarities_sub <- term_similarities[term_names, term_names] %>%
   as.matrix
 
@@ -95,14 +95,14 @@ df_pareg_network <- pareg::pareg(
   network_param = 0.9, term_network = term_similarities_sub,
   truncate_response = TRUE
 ) %>%
-  mutate(method = "pareg_network", enrichment = abs(enrichment)) %>%
-  rename(term = name)
+  as.data.frame %>%
+  mutate(method = "pareg_network", enrichment = abs(enrichment))
 df_pareg_network %>% arrange(desc(abs(enrichment))) %>% head
 
 # pareg with network and cv
 term_names <- df_terms %>%
-  distinct(name) %>%
-  pull(name)
+  distinct(term) %>%
+  pull(term)
 term_similarities_sub <- term_similarities[term_names, term_names] %>%
   as.matrix
 
@@ -113,14 +113,14 @@ df_pareg_network_cv <- pareg::pareg(
   truncate_response = TRUE,
   cv = TRUE
 ) %>%
-  mutate(method = "pareg_network_cv", enrichment = abs(enrichment)) %>%
-  rename(term = name)
+  as.data.frame %>%
+  mutate(method = "pareg_network_cv", enrichment = abs(enrichment))
 df_pareg_network_cv %>% arrange(desc(abs(enrichment))) %>% head
 
 # pareg with network and cv and BUM
 term_names <- df_terms %>%
-  distinct(name) %>%
-  pull(name)
+  distinct(term) %>%
+  pull(term)
 term_similarities_sub <- term_similarities[term_names, term_names] %>%
   as.matrix
 
@@ -132,13 +132,13 @@ df_pareg_network_cv_bum <- pareg::pareg(
   cv = TRUE,
   family = netReg::bum
 ) %>%
-  mutate(method = "pareg_network_cv_bum", enrichment = abs(enrichment)) %>%
-  rename(term = name)
+  as.data.frame %>%
+  mutate(method = "pareg_network_cv_bum", enrichment = abs(enrichment))
 df_pareg_network_cv_bum %>% arrange(desc(abs(enrichment))) %>% head
 
 # MGSA
 term_list <- df_terms %>%
-  { split(.$gene, .$name) }
+  { split(.$gene, .$term) }
 
 fit <- mgsa::mgsa(study_genes, term_list)
 
