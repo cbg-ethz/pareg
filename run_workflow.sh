@@ -10,5 +10,6 @@ snakemake \
   -pr \
   --cores 200 \
   --latency-wait 30 \
+  --restart-times 3 \
   --show-failed-logs \
   "$@"

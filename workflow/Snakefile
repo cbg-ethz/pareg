@@ -64,6 +64,7 @@ rule compute_enrichments:
         params=paramspace.instance,
     resources:
         mem_mb=15_000,
+        time_min=lambda wildcards, attempt: 60 * 4 * attempt,
     script:
         'scripts/compute_enrichments.R'
 
