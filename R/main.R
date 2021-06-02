@@ -7,7 +7,8 @@ pareg <- function(
   df_genes, df_terms,
   lasso_param = NA_real_, network_param = NA_real_,
   term_network = NULL, truncate_response = FALSE,
-  cv = FALSE
+  cv = FALSE,
+  family = netReg::beta
 ) {
   # generate design matrix
   df_model <- create_model_df(df_genes, df_terms)
@@ -52,7 +53,7 @@ pareg <- function(
     X, Y,
     G.X = term_network,
     lambda = lasso_param, psigx = network_param, psigy = 0,
-    family = netReg::beta
+    family = family
   )
 
   # return structured object
