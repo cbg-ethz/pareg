@@ -19,5 +19,4 @@ Compute Jaccard similarity between two sets.
 }
 \examples{
 jaccard(c(1, 2, 3), c(2, 3, 4))
-
 }

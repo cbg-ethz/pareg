@@ -9,8 +9,6 @@
 #'
 #' @examples
 #' jaccard(c(1, 2, 3), c(2, 3, 4))
-#'
-#' @importFrom rlang length intersect union
 jaccard <- function(x, y) {
   return(length(intersect(x, y)) / length(union(x, y)))
 }

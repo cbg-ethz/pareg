@@ -77,8 +77,9 @@ create_model_df <- function(df_genes, df_terms) {
 #' as.data.frame(fit)
 #'
 #' @importFrom rlang .data
-#' @importFrom dplyr mutate filter extract rename arrange desc
-#' @importFrom netReg coef
+#' @importFrom dplyr mutate filter rename arrange desc
+#' @importFrom tidyr extract
+#' @importFrom stats coef
 as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
   if (!is.null(row.names) || optional) {
     stop("row.names and optional arguments not supported")
