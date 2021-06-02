@@ -74,14 +74,7 @@ df_enr <- df_terms %>%
 
 # pareg no regularization
 df_pareg <- pareg::pareg(
-  data.frame(
-    gene = all_genes,
-    pvalue = ifelse(
-      all_genes %in% study_genes,
-      rbeta(length(all_genes), 0.1, 1),
-      rbeta(length(all_genes), 1, 1)
-    )
-  ),
+  study$df %>% select(-in_study),
   df_terms,
   truncate_response = TRUE
 ) %>%
@@ -97,14 +90,7 @@ term_similarities_sub <- term_similarities[term_names, term_names] %>%
   as.matrix
 
 df_pareg_network <- pareg::pareg(
-  data.frame(
-    gene = all_genes,
-    pvalue = ifelse(
-      all_genes %in% study_genes,
-      rbeta(length(all_genes), 0.1, 1),
-      rbeta(length(all_genes), 1, 1)
-    )
-  ),
+  study$df %>% select(-in_study),
   df_terms,
   network_param = 0.9, term_network = term_similarities_sub,
   truncate_response = TRUE
@@ -121,14 +107,7 @@ term_similarities_sub <- term_similarities[term_names, term_names] %>%
   as.matrix
 
 df_pareg_network_cv <- pareg::pareg(
-  data.frame(
-    gene = all_genes,
-    pvalue = ifelse(
-      all_genes %in% study_genes,
-      rbeta(length(all_genes), 0.1, 1),
-      rbeta(length(all_genes), 1, 1)
-    )
-  ),
+  study$df %>% select(-in_study),
   df_terms,
   term_network = term_similarities_sub,
   truncate_response = TRUE,
@@ -146,14 +125,7 @@ term_similarities_sub <- term_similarities[term_names, term_names] %>%
   as.matrix
 
 df_pareg_network_cv_bum <- pareg::pareg(
-  data.frame(
-    gene = all_genes,
-    pvalue = ifelse(
-      all_genes %in% study_genes,
-      rbeta(length(all_genes), 0.1, 1),
-      rbeta(length(all_genes), 1, 1)
-    )
-  ),
+  study$df %>% select(-in_study),
   df_terms,
   term_network = term_similarities_sub,
   truncate_response = TRUE,
