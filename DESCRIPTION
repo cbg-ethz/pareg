@@ -1,11 +1,44 @@
 Package: pareg
-Title: Pathway enrichment using regression
-Version: 0.0.1
-Authors@R: person("kp", "j", email = "kpjkpjkpjkpjkpjkpj@gmail.com", role = c("aut", "cre"))
-Description: This package uses a regularized regression to compute pathway enrichments for gene sets
-Depends: R (>= 3.6.0)
-License: MIT
+Title: Pathway enrichment using a regularized regression approach
+Version: 0.99.0
+Authors@R:
+    c(
+        person(
+            given = "Kim Philipp", family = "Jablonski",
+            role = c("aut", "cre"),
+            email = "kim.philipp.jablonski@gmail.com",
+            comment = c(ORCID = "0000-0002-4166-4343")
+        )
+    )
+Description: This package uses a regularized regression to compute pathway enrichments for gene sets while accounting for inter-pathway relations.
+URL: https://github.com/kpj/pareg
+BugReports: https://github.com/kpj/pareg/issues
+biocViews:
+    Software,
+    StatisticalMethod,
+    GraphAndNetwork,
+    Regression,
+    DifferentialExpression,
+    NetworkEnrichment,
+    Network
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Suggests: 
-    testthat (>= 2.1.0)
+Depends:
+    R (>= 4.0)
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat (>= 2.1.0),
+    BiocStyle,
+    formatR,
+    devtools
+VignetteBuilder: knitr
+RoxygenNote: 7.1.1
+Imports:
+    stats,
+    tidyverse,
+    tidygraph,
+    netReg,
+    igraph,
+    proxy
