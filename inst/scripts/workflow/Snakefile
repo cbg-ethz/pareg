@@ -1,0 +1,109 @@
+import pandas as pd
+
+from snakemake.utils import Paramspace
+
+
+configfile: 'config/config.yaml'
+
+
+paramspace = Paramspace(pd.read_csv('config/params.csv'), filename_params='*')
+
+(method_list,) = glob_wildcards('resources/method_definitions/{method}.R')
+print(method_list)
+
+
+rule all:
+    input:
+        expand('results/plots/{params}/', params=paramspace.instance_patterns),
+
+
+rule retrieve_terms:
+    output:
+        fname='results/term_database.csv',
+    params:
+        term_filter=config['term_filter'],
+    resources:
+        mem_mb=15_000,
+    script:
+        'scripts/retrieve_terms.R'
+
+
+rule compute_term_similarities:
+    input:
+        fname_terms='results/term_database.csv',
+    output:
+        fname=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv',
+        plotdir=directory(f'results/terms/{paramspace.wildcard_pattern}/plots/'),
+    params:
+        params=paramspace.instance,
+    resources:
+        mem_mb=15_000,
+    script:
+        'scripts/compute_term_similarities.R'
+
+
+rule create_synthetic_study:
+    input:
+        fname_terms='results/term_database.csv',
+    output:
+        fname_rds=f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds',
+    params:
+        params=paramspace.instance,
+        on_term_count=config['on_term_count'],
+    resources:
+        mem_mb=5_000,
+    script:
+        'scripts/create_synthetic_study.R'
+
+
+rule run_method:
+    input:
+        script='resources/method_definitions/{method}.R',
+        fname_study=f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds',
+        fname_terms='results/term_database.csv',
+        fname_term_sim=(
+            f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv'
+        ),
+    output:
+        fname=f'results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv',
+    params:
+        params=paramspace.instance,
+        script_name=lambda wildcards, input: '../' + input.script,
+        setup_code_fname='workflow/scripts/model_setup_code.R',
+    resources:
+        mem_mb=lambda wildcards: (15_000 if 'cv' in wildcards.method else 5000),
+        time_min=lambda wildcards, attempt: (
+            60 * 4 if 'cv' in wildcards.method else 60
+        ) * attempt,
+    script:
+        '{params.script_name}'
+
+
+rule aggregate_results:
+    input:
+        fname_list_enr=expand(
+            f'results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv',
+            replicate=range(config['replicate_count']),
+            method=method_list,
+            allow_missing=True,
+        ),
+        fname_list_study=[
+            f'results/studies/{paramspace.wildcard_pattern}/replicates/{replicate}/study.rds'
+            for replicate in range(config['replicate_count'])
+            for _ in method_list
+        ],
+    output:
+        fname=f'results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv',
+    script:
+        'scripts/aggregate_results.R'
+
+
+rule visualize_results:
+    input:
+        fname_enr=f'results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv',
+    output:
+        outdir=directory(f'results/plots/{paramspace.wildcard_pattern}/'),
+    resources:
+        mem_mb=5_000,
+    script:
+        'scripts/visualize_results.R'
