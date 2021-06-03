@@ -1,6 +1,6 @@
 library(tidyverse)
 
-library(pareg)
+devtools::load_all("../..") # library(pareg)
 
 
 # parameters
