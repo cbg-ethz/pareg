@@ -7,13 +7,13 @@ term_list <- df_terms %>%
 
 fit <- mgsa::mgsa(study_genes, term_list)
 
-df_mgsa <- fit@setsResults %>%
+df <- fit@setsResults %>%
   rownames_to_column("term") %>%
   mutate(method = "MGSA") %>%
   rename(enrichment = estimate) %>%
   select(-inPopulation, -inStudySet, -std.error)
 
-df_mgsa %>%
+df %>%
   head
 
 # save result
