@@ -3,13 +3,12 @@
 bsub \
   -N \
   -R 'rusage[mem=2000]' \
-  -W 20:00 \
+  -W 100:00 \
   -oo snake.out -eo snake.err \
 snakemake \
   --profile lsf \
   -pr \
   --cores 200 \
   --latency-wait 30 \
-  --restart-times 3 \
   --show-failed-logs \
   "$@"
