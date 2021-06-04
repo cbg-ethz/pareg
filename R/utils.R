@@ -86,6 +86,7 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
   }
 
   as.data.frame(coef(x$fit)) %>%  # nolint
+    rownames_to_column %>%
     mutate(rowname = c("intercept", x$covariates)) %>%
     filter(grepl(".member$", rowname)) %>%
     extract(rowname, "term", "(.*).member") %>%
