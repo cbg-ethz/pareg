@@ -57,7 +57,6 @@ plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
   term_network[term_network < min_similarity] <- 0
 
   # create plot
-  # TODO: make sure that node order checks out
   p <- as_tbl_graph(igraph::graph_from_adjacency_matrix(  # nolint
     term_network, weighted = TRUE
   )) %>%
