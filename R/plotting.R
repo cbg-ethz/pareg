@@ -66,7 +66,7 @@ plot.pareg <- function(x, show_term_names = TRUE) {
     mutate(
 
     ) %>%
-    ggraph(layout = "mds") +
+    ggraph(layout = "fr") +
       geom_edge_link() +
       geom_node_point(
         aes(size = .data$termsize, color = .data$enrichment)
