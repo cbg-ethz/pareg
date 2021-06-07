@@ -6,6 +6,7 @@
 #'
 #' @param x An object of class \code{pareg}.
 #' @param show_term_names Whether to plot node labels.
+#' @param min_similarity Don't plot edges for similarities below this value.
 #'
 #' @return ggplot object.
 #'
@@ -35,7 +36,7 @@
 #' @importFrom dplyr group_by summarize distinct pull
 #' @importFrom tidygraph as_tbl_graph activate mutate
 #' @importFrom ggplot2 aes theme element_rect coord_fixed
-plot.pareg <- function(x, show_term_names = TRUE) {
+plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
   # prepare data
   df_enr <- as.data.frame(x)
   df_terms <- x$df_terms
@@ -52,6 +53,9 @@ plot.pareg <- function(x, show_term_names = TRUE) {
     rownames(term_network) <- colnames(term_network) <- term_list
   }
 
+  # subset term network
+  term_network[term_network < min_similarity] <- 0
+
   # create plot
   # TODO: make sure that node order checks out
   p <- as_tbl_graph(igraph::graph_from_adjacency_matrix(  # nolint
@@ -60,22 +64,23 @@ plot.pareg <- function(x, show_term_names = TRUE) {
     activate(nodes) %>%
     mutate(
       enrichment = df_enr$enrichment,
-      termsize = term_sizes$size,
+      term_size = term_sizes$size,
     ) %>%
     activate(edges) %>%
     mutate(
-
+      term_similarity = weight
     ) %>%
     ggraph(layout = "fr") +
-      geom_edge_link() +
+      geom_edge_link(aes(alpha = .data$term_similarity)) +
       geom_node_point(
-        aes(size = .data$termsize, color = .data$enrichment)
+        aes(size = .data$term_size, color = .data$enrichment)
       ) +
       scale_size(range = c(2, 10)) +
       scale_color_gradient2(
         low = "red", mid = "grey", high = "blue", midpoint = 0,
         na.value = "black"
       ) +
+      scale_edge_alpha() +
       coord_fixed() +
       theme(
         panel.background = element_rect(fill = "white")
