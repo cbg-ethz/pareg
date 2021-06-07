@@ -63,8 +63,8 @@ plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
   )) %>%
     activate(nodes) %>%
     mutate(
-      enrichment = df_enr$enrichment,
-      term_size = term_sizes$size,
+      enrichment = data.frame(term = .data$name) %>% left_join(df_enr, by = "term") %>% pull(enrichment),
+      term_size = data.frame(term = .data$name) %>% left_join(term_sizes, by = "term") %>% pull(size),
     ) %>%
     activate(edges) %>%
     mutate(
