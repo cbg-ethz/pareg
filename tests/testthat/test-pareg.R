@@ -30,3 +30,16 @@ test_that("package doesn't crash for trivial case", {
     res %>% as.data.frame %>% filter(term == "bar") %>% pull(enrichment)
   )
 })
+
+test_that("term input network mismatch leads to crash", {
+  df_genes <- data.frame(gene = c("g1", "g2"), pvalue = c(0.1, 0.01))
+  df_terms <- data.frame(term = c("A", "B"), gene = c("g1", "g2"))
+
+  network <- matrix(c(1, 0.3, 0.3, 1), 2, 2)
+
+  rownames(network) <- colnames(network) <- c("A", "B")
+  res <- pareg(df_genes, df_terms, term_network = network)
+
+  rownames(network) <- colnames(network) <- c("A", "C")
+  expect_error(pareg(df_genes, df_terms, term_network = network), "subscript out of bounds")
+})
