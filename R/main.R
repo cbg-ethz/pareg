@@ -95,7 +95,7 @@ pareg <- function(
 
   # return structured object
   return(structure(list(
-    fit = fit,
+    obj = fit,
     term_network = term_network,
     df_terms = df_terms,
     covariates = covariates,

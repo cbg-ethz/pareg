@@ -85,7 +85,7 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
     stop("row.names and optional arguments not supported")
   }
 
-  as.data.frame(coef(x$fit)) %>%  # nolint
+  as.data.frame(coef(x$obj)) %>%  # nolint
     rownames_to_column %>%
     mutate(rowname = c("intercept", x$covariates)) %>%
     filter(grepl(".member$", rowname)) %>%
