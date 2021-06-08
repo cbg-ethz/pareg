@@ -53,6 +53,9 @@ jobs:
 
       - name: Install TensorFlow
         run: |
+          Rscript -e "remotes::install_github('rstudio/reticulate')"
+          Rscript -e "reticulate::install_miniconda()"
+          Rscript -e "reticulate::conda_create('r-reticulate', packages = c('python==3.6.9'))"
           Rscript -e "tfprobability::install_tfprobability(version='0.11', tensorflow='2.3.0')"
 
       - name: Deploy package
