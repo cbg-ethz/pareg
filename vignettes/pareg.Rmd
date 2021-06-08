@@ -45,26 +45,41 @@ set.seed(42)
 We start by constructing a dataframe containing pathway information.
 
 ```{r}
-df_terms <- msigdbr(species = "Homo sapiens", category = "C2") %>%
-  select(gs_name, gene_symbol) %>%
-  rename(term = gs_name, gene = gene_symbol)
+term_list <- list(
+  hub_1 = paste0("g", 1:100),
+  hub_2 = paste0("g", 71:170)
+)
 
-selected_terms <- df_terms %>%
-  group_by(term) %>%
-  summarize(size = n()) %>%
-  filter(size >= 10 & size <= 20) %>%
-  arrange(desc(size)) %>%
-  sample_n(5) %>%
-  pull(term)
+generate_term <- function(main_nodes, other_node_marker, term_count) {
+  function(x) {
+    other_nodes <- paste0(x, other_node_marker, 1:100)
 
-df_terms <- df_terms %>%
-  filter(term %in% selected_terms) %>%
-  distinct
+    term_size <- 50 + sample.int(20, 1) - 10 # random int in (40, 60]
+    c(
+      sample(main_nodes, round(x / term_count * term_size)),
+      sample(other_nodes, round((1 - x / term_count) * term_size))
+    )
+  }
+}
+
+term_count <- 5
+term_list <- c(
+  term_list,
+  set_names(seq_len(term_count), paste0("t1_", seq_len(term_count))) %>%
+    purrr::map(generate_term(term_list$hub_1, "_tg1_", term_count)),
+  set_names(seq_len(term_count), paste0("t2_", seq_len(term_count))) %>%
+    purrr::map(generate_term(term_list$hub_2, "_tg2_", term_count))
+)
+
+df_terms <- term_list %>%
+  enframe("term", "gene") %>%
+  unnest_longer(gene)
 
 df_terms %>%
   group_by(term) %>%
   summarize(size = n()) %>%
   arrange(desc(size)) %>%
+  head %>%
   knitr::kable()
 ```
 
@@ -73,13 +88,10 @@ df_terms %>%
 We then select a subset of genes to serve as the differentially expressed genes of our synthetic study.
 
 ```{r}
-active_term <- df_terms %>%
-  sample_n(1) %>%
-  pull(term)
-active_term
+active_terms <- c("hub_1", "hub_2")
 
 de_genes <- df_terms %>%
-  filter(term == active_term) %>%
+  filter(term %in% active_terms) %>%
   distinct(gene) %>%
   pull(gene)
 
@@ -111,16 +123,17 @@ We start the pathway enrichment analysis by computing term similarities with `pa
 ```{r}
 term_network <- compute_term_similarities(df_terms)
 
-hist(term_network)
+hist(term_network, xlab = "Term similarity")
 ```
 
 We can then compute our pathway enrichment values.
 
 ```{r}
-res <- pareg(df_study %>% select(-in_study), df_terms, term_network = term_network)
+fit <- pareg(df_study %>% select(-in_study), df_terms, network_param = 1, term_network = term_network)
 
-res %>%
+fit %>%
   as.data.frame %>%
+  arrange(desc(abs(enrichment))) %>%
   head %>%
   knitr::kable()
 ```
@@ -128,5 +141,5 @@ res %>%
 And finally, we can visualize the obtained results.
 
 ```{r}
-plot(res)
+plot(fit, min_similarity = 0.1)
 ```
