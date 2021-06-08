@@ -51,6 +51,10 @@ jobs:
       - name: Install package
         run: R CMD INSTALL .
 
+      - name: Install TensorFlow
+        run: |
+          Rscript -e "tfprobability::install_tfprobability(version='0.11', tensorflow='2.3.0')"
+
       - name: Deploy package
         run: |
           git config --local user.email "actions@github.com"
