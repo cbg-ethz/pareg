@@ -4,12 +4,14 @@
 \alias{plot.pareg}
 \title{Plot result of enrichment computation.}
 \usage{
-\method{plot}{pareg}(x, show_term_names = TRUE)
+\method{plot}{pareg}(x, show_term_names = TRUE, min_similarity = 0)
 }
 \arguments{
 \item{x}{An object of class \code{pareg}.}
 
 \item{show_term_names}{Whether to plot node labels.}
+
+\item{min_similarity}{Don't plot edges for similarities below this value.}
 }
 \value{
 ggplot object.

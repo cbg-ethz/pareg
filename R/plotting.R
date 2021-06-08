@@ -34,6 +34,7 @@
 #' @import tidyverse ggraph
 #' @importFrom rlang .data
 #' @importFrom dplyr group_by summarize distinct pull
+#' @importFrom magrittr %<>% extract2
 #' @importFrom tidygraph as_tbl_graph activate mutate
 #' @importFrom ggplot2 aes theme element_rect coord_fixed
 plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
@@ -57,20 +58,41 @@ plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
   term_network[term_network < min_similarity] <- 0
 
   # create plot
-  p <- as_tbl_graph(igraph::graph_from_adjacency_matrix(  # nolint
+  term_graph <- as_tbl_graph(igraph::graph_from_adjacency_matrix(  # nolint
     term_network, weighted = TRUE
   )) %>%
     activate(nodes) %>%
     mutate(
-      enrichment = data.frame(term = .data$name) %>% left_join(df_enr, by = "term") %>% pull(enrichment),
-      term_size = data.frame(term = .data$name) %>% left_join(term_sizes, by = "term") %>% pull(size),
-    ) %>%
+      enrichment = data.frame(term = .data$name) %>%
+        left_join(df_enr, by = "term") %>%
+        pull(enrichment),
+      term_size = data.frame(term = .data$name) %>%
+        left_join(term_sizes, by = "term") %>%
+        pull(size),
+    )
+
+  edge_count <- term_graph %>%
     activate(edges) %>%
-    mutate(
-      term_similarity = weight
-    ) %>%
-    ggraph(layout = "fr") +
-      geom_edge_link(aes(alpha = .data$term_similarity)) +
+    as_tibble %>%
+    dim %>%
+    extract2(1)
+
+  if (edge_count > 0) {
+    term_graph %<>%
+      activate(edges) %>%
+      mutate(
+        term_similarity = .data$weight
+      )
+  }
+
+  p <- term_graph %>%
+    ggraph(layout = "fr")
+
+  if (edge_count > 0) {
+    p <- p + geom_edge_link(aes(alpha = .data$term_similarity))
+  }
+
+  p <- p +
       geom_node_point(
         aes(size = .data$term_size, color = .data$enrichment)
       ) +
