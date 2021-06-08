@@ -47,3 +47,5 @@ Imports:
     ggraph,
     tidyr,
     rlang
+Remotes:
+    dirmeier/netReg@v1.12.0
