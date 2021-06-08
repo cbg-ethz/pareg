@@ -31,8 +31,6 @@ Load `pareg` package and other required libraries.
 library(ggraph)
 library(tidyverse)
 
-library(msigdbr)
-
 library(pareg)
 
 set.seed(42)
