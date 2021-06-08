@@ -26,7 +26,7 @@ pareg(
 
 \item{term_network}{Term similarity network as adjacency matrix.}
 
-\item{truncate_response}{Make sure response is in [0, 1].}
+\item{truncate_response}{Make sure response is in (0, 1).}
 
 \item{cv}{Estimate best regularization parameters using cross-validation.}
 

@@ -14,7 +14,7 @@ library(netReg)
 #' @param lasso_param Lasso regularization parameter.
 #' @param network_param Network regularization parameter.
 #' @param term_network Term similarity network as adjacency matrix.
-#' @param truncate_response Make sure response is in [0, 1].
+#' @param truncate_response Make sure response is in (0, 1).
 #' @param cv Estimate best regularization parameters using cross-validation.
 #' @param family Distribution family of response.
 #'
