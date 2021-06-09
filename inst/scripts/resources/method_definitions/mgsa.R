@@ -2,8 +2,9 @@
 source(snakemake@params$setup_code_fname)
 
 # run model
-term_list <- df_terms %>%
-  { split(.$gene, .$term) }
+term_list <- df_terms %>% {
+  split(.$gene, .$term)
+}
 
 fit <- mgsa::mgsa(study_genes, term_list)
 
@@ -14,7 +15,7 @@ df <- fit@setsResults %>%
   select(-inPopulation, -inStudySet, -std.error)
 
 df %>%
-  head
+  head()
 
 # save result
 df %>%

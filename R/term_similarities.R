@@ -32,7 +32,6 @@ jaccard <- function(x, y) {
 #'   gene = c("a", "b", "a", "b", "c", "a", "c", "d")
 #' )
 #' compute_term_similarities(df_terms)
-#'
 #' @importFrom rlang .data
 #' @importFrom dplyr select
 #' @importFrom proxy simil
@@ -42,8 +41,9 @@ compute_term_similarities <- function(
   max_similarity = 1
 ) {
   term_list_list <- df_terms %>%
-    select(term, gene) %>%
-    { split(.$gene, .$term) }
+    select(term, gene) %>% {
+        split(.$gene, .$term)
+    }
 
   term_similarities <- proxy::simil(
     x = term_list_list,

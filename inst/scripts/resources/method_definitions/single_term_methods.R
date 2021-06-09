@@ -24,10 +24,12 @@ df <- df_terms %>%
       data.frame(method = "FET", term = term, enrichment = -log10(fet_p_value))
     )
   }) %>%
-  { do.call(rbind.data.frame, .) }
+  {
+    do.call(rbind.data.frame, .)
+  }
 
 df %>%
-  head
+  head()
 
 # save result
 df %>%

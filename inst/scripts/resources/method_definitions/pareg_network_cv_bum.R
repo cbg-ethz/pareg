@@ -10,12 +10,12 @@ df <- pareg::pareg(
   cv = TRUE,
   family = netReg::bum
 ) %>%
-  as.data.frame %>%
+  as.data.frame() %>%
   mutate(method = "pareg_network_cv_bum", enrichment = abs(enrichment))
 
 df %>%
   arrange(desc(abs(enrichment))) %>%
-  head
+  head()
 
 # save result
 df %>%

@@ -39,7 +39,6 @@ library(netReg)
 #'   )
 #' )
 #' pareg(df_genes, df_terms)
-#'
 #' @importFrom dplyr select ends_with all_of distinct pull
 #' @importFrom netReg edgenet cv.edgenet beta
 pareg <- function(
@@ -55,13 +54,19 @@ pareg <- function(
   # setup data
   covariates <- df_model %>%
     select(ends_with(".member")) %>%
-    names
+    names()
 
-  X <- df_model %>% select(all_of(covariates)) %>% as.matrix
-  Y <- df_model %>% select("pvalue") %>% as.matrix
+  X <- df_model %>%
+    select(all_of(covariates)) %>%
+    as.matrix()
+  Y <- df_model %>%
+    select("pvalue") %>%
+    as.matrix()
 
   if (!is.null(term_network)) {
-    ordered_terms <- sapply(strsplit(covariates, ".", fixed = TRUE), function(x) { x[[1]] })
+    ordered_terms <- sapply(
+      strsplit(covariates, ".", fixed = TRUE), function(x) x[[1]]
+    )
     term_network <- term_network[ordered_terms, ordered_terms]
   }
 

@@ -18,8 +18,9 @@ Pathway enrichment.
 # Installation
 
 ```{r eval=FALSE}
-if (!require("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
+if (!require("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager")
+}
 BiocManager::install("pareg")
 ```
 
@@ -77,7 +78,7 @@ df_terms %>%
   group_by(term) %>%
   summarize(size = n()) %>%
   arrange(desc(size)) %>%
-  head %>%
+  head() %>%
   knitr::kable()
 ```
 
@@ -130,9 +131,9 @@ We can then compute our pathway enrichment values.
 fit <- pareg(df_study %>% select(-in_study), df_terms, network_param = 1, term_network = term_network)
 
 fit %>%
-  as.data.frame %>%
+  as.data.frame() %>%
   arrange(desc(abs(enrichment))) %>%
-  head %>%
+  head() %>%
   knitr::kable()
 ```
 

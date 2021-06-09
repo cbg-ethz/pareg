@@ -9,12 +9,12 @@ df <- pareg::pareg(
   truncate_response = TRUE,
   cv = TRUE
 ) %>%
-  as.data.frame %>%
+  as.data.frame() %>%
   mutate(method = "pareg_network_cv", enrichment = abs(enrichment))
 
 df %>%
   arrange(desc(abs(enrichment))) %>%
-  head
+  head()
 
 # save result
 df %>%

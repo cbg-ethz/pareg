@@ -19,17 +19,17 @@
 #'   gene = c("g1", "g2", "g1", "g2", "g2")
 #' )
 #' create_model_df(df_genes, df_terms)
-#'
 #' @import tidyverse
 #' @importFrom rlang .data
 create_model_df <- function(df_genes, df_terms) {
   df_terms %>%
     group_by(term) %>%
     mutate(member = gene %in% df_genes$gene) %>%
-    ungroup %>%
+    ungroup() %>%
     mutate_at(vars(gene), as.character) %>%
     right_join(
-      df_genes %>% mutate_at(vars(gene), as.character), by = "gene"
+      df_genes %>% mutate_at(vars(gene), as.character),
+      by = "gene"
     ) %>%
     pivot_wider(names_from = term, values_from = member, values_fill = FALSE) %>%
     select(
@@ -75,7 +75,6 @@ create_model_df <- function(df_genes, df_terms) {
 #' )
 #' fit <- pareg(df_genes, df_terms)
 #' as.data.frame(fit)
-#'
 #' @importFrom rlang .data
 #' @importFrom dplyr mutate filter rename arrange desc
 #' @importFrom tidyr extract
@@ -85,8 +84,8 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
     stop("row.names and optional arguments not supported")
   }
 
-  as.data.frame(coef(x$obj)) %>%  # nolint
-    rownames_to_column %>%
+  as.data.frame(coef(x$obj)) %>% # nolint
+    rownames_to_column() %>%
     mutate(rowname = c("intercept", x$covariates)) %>%
     filter(grepl(".member$", rowname)) %>%
     extract(rowname, "term", "(.*).member") %>%

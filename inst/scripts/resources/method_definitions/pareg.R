@@ -7,12 +7,12 @@ df <- pareg::pareg(
   df_terms,
   truncate_response = TRUE
 ) %>%
-  as.data.frame %>%
+  as.data.frame() %>%
   mutate(method = "pareg", enrichment = abs(enrichment))
 
 df %>%
   arrange(desc(abs(enrichment))) %>%
-  head
+  head()
 
 # save result
 df %>%

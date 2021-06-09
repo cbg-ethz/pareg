@@ -30,14 +30,16 @@ jaccard <- function(x, y) {
 # compute term overlaps
 term_list_list <- df_terms %>%
   select(gs_name, gene_symbol) %>%
-  { split(.$gene_symbol, .$gs_name) }
+  {
+    split(.$gene_symbol, .$gs_name)
+  }
 
 term_similarities <- 1 - proxy::dist(
   x = term_list_list,
   method = jaccard,
   diag = TRUE, pairwise = TRUE
 ) %>%
-  as.matrix
+  as.matrix()
 
 # save result
 term_similarities %>%
@@ -48,10 +50,10 @@ df_sim <- data.frame(similarity = term_similarities[upper.tri(term_similarities)
 
 df_sim %>%
   arrange(desc(similarity)) %>%
-  head
+  head()
 
 df_sim %>%
-ggplot(aes(x =  similarity)) +
+  ggplot(aes(x = similarity)) +
   geom_histogram(bins = 100) +
   xlim(0, 1) +
   scale_y_sqrt() +

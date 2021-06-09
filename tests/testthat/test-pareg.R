@@ -26,8 +26,8 @@ test_that("package doesn't crash for trivial case", {
 
   # check results
   expect_lt(
-    res %>% as.data.frame %>% filter(term == "foo") %>% pull(enrichment),
-    res %>% as.data.frame %>% filter(term == "bar") %>% pull(enrichment)
+    res %>% as.data.frame() %>% filter(term == "foo") %>% pull(enrichment),
+    res %>% as.data.frame() %>% filter(term == "bar") %>% pull(enrichment)
   )
 })
 

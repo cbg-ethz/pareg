@@ -21,17 +21,17 @@ msigdbr_collections() %>%
 df_terms <- msigdbr(species = "Homo sapiens")
 
 df_terms %>%
-  head
+  head()
 
 df_terms %>%
   group_by(gs_name) %>%
-  tally %>%
+  tally() %>%
   arrange(desc(n))
 
 # select terms of reasonable size
 gs_selection <- df_terms %>%
   group_by(gs_cat, gs_name) %>%
-  tally %>%
+  tally() %>%
   arrange(desc(n))
 
 if (!is.null(term_filter_params$min_size)) {
@@ -49,24 +49,24 @@ if (!is.null(term_filter_params$sample_num)) {
   gs_selection %<>%
     group_by(gs_cat) %>%
     sample_n(min(term_filter_params$sample_num, n())) %>%
-    ungroup
+    ungroup()
 }
 
 gs_selection %<>%
   pull(gs_name)
 
 gs_selection %>%
-  head
+  head()
 
 df_sel <- df_terms %>%
   filter(gs_name %in% gs_selection)
 
 df_sel %>%
-  head
+  head()
 
 df_sel %>%
   distinct(gs_name) %>%
-  dim
+  dim()
 
 # save result
 df_sel %>%

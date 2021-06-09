@@ -41,7 +41,7 @@ test_that("idea works", {
   # validation plot
   ggplot(df_enr, aes(x = x, y = enrichment)) +
     geom_line() +
-    facet_grid(~ term) +
+    facet_grid(~term) +
     theme_minimal()
 
   # assertions
@@ -52,7 +52,7 @@ test_that("idea works", {
   )
   expect_true(
     df_enr %>%
-    filter(x == 10 & term == "foo") %>%
-    pull("enrichment") < 0
+      filter(x == 10 & term == "foo") %>%
+      pull("enrichment") < 0
   )
 })

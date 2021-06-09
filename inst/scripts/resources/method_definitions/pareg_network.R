@@ -8,12 +8,12 @@ df <- pareg::pareg(
   network_param = 0.9, term_network = term_similarities_sub,
   truncate_response = TRUE
 ) %>%
-  as.data.frame %>%
+  as.data.frame() %>%
   mutate(method = "pareg_network", enrichment = abs(enrichment))
 
 df %>%
   arrange(desc(abs(enrichment))) %>%
-  head
+  head()
 
 # save result
 df %>%

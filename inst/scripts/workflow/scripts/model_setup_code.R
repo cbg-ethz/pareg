@@ -29,8 +29,8 @@ df_terms <- read_csv(
   rename(term = gs_name, gene = gene_symbol) %>%
   distinct(.keep_all = TRUE)
 
-df_terms %>% dim
-df_terms %>% head
+df_terms %>% dim()
+df_terms %>% head()
 
 term_similarities <- read.csv(fname_term_sim, row.names = 1)
 
@@ -52,4 +52,4 @@ term_names <- df_terms %>%
   distinct(term) %>%
   pull(term)
 term_similarities_sub <- term_similarities[term_names, term_names] %>%
-  as.matrix
+  as.matrix()
