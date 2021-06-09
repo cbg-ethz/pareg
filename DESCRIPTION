@@ -43,6 +43,7 @@ Imports:
     igraph,
     proxy,
     dplyr,
+    magrittr,
     ggplot2,
     ggraph,
     tidyr,
