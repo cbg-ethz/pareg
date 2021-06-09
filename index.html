@@ -72,7 +72,28 @@
 <div id="pareg" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#pareg" class="anchor"></a>pareg</h1></div>
-<p>Pathway enrichments while incorporating pathway similarities.</p>
+
+<p>Pathway enrichment computations using a regularized regression approach to incorporate inter-pathway relations in the statistical model.</p>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor"></a>Installation</h2>
+<p>Install the latest stable version from Bioconductor:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html">install</a></span><span class="op">(</span><span class="st">"pareg"</span><span class="op">)</span></code></pre></div>
+<p>Install the latest development version from GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"cbg-ethz/pareg"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="project-structure" class="section level2">
+<h2 class="hasAnchor">
+<a href="#project-structure" class="anchor"></a>Project structure</h2>
+<ul>
+<li>
+<code>.</code>: R package</li>
+<li>
+<code>inst/scripts/</code>: Snakemake workflows and other utilities</li>
+</ul>
+</div>
 </div>
   </div>
 
@@ -99,7 +120,15 @@
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/cbg-ethz/pareg/actions/workflows/mega-linter.yaml"><img src="https://github.com/cbg-ethz/pareg/actions/workflows/mega-linter.yaml/badge.svg" alt="Mega-Linter"></a></li>
+<li><a href="https://github.com/cbg-ethz/pareg/actions/workflows/check-bioc.yaml"><img src="https://github.com/cbg-ethz/pareg/actions/workflows/check-bioc.yaml/badge.svg" alt="check-bioc"></a></li>
+<li><a href="https://github.com/cbg-ethz/pareg/actions/workflows/pkgdown.yaml"><img src="https://github.com/cbg-ethz/pareg/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
