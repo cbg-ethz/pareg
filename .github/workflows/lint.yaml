@@ -8,7 +8,7 @@ on:
       - main
       - master
 
-name: lint
+name: lintr
 
 jobs:
   lint:

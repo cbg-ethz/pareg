@@ -1,5 +1,6 @@
 # pareg
 
+[![lintr](https://github.com/cbg-ethz/pareg/actions/workflows/lintr.yaml/badge.svg)](https://github.com/cbg-ethz/pareg/actions/workflows/lintr.yaml)
 [![Mega-Linter](https://github.com/cbg-ethz/pareg/actions/workflows/mega-linter.yaml/badge.svg)](https://github.com/cbg-ethz/pareg/actions/workflows/mega-linter.yaml)
 [![check-bioc](https://github.com/cbg-ethz/pareg/actions/workflows/check-bioc.yaml/badge.svg)](https://github.com/cbg-ethz/pareg/actions/workflows/check-bioc.yaml)
 [![pkgdown](https://github.com/cbg-ethz/pareg/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/cbg-ethz/pareg/actions/workflows/pkgdown.yaml)
