@@ -29,5 +29,4 @@ df_terms <- data.frame(
   gene = c("a", "b", "a", "b", "c", "a", "c", "d")
 )
 compute_term_similarities(df_terms)
-
 }

@@ -27,5 +27,4 @@ df_terms <- data.frame(
   gene = c("g1", "g2", "g1", "g2", "g2")
 )
 create_model_df(df_genes, df_terms)
-
 }

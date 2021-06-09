@@ -41,5 +41,4 @@ df_terms <- rbind(
 )
 fit <- pareg(df_genes, df_terms)
 as.data.frame(fit)
-
 }

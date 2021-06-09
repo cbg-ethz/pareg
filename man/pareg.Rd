@@ -58,5 +58,4 @@ df_terms <- rbind(
   )
 )
 pareg(df_genes, df_terms)
-
 }

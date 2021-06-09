@@ -39,7 +39,7 @@ library(netReg)
 #'   )
 #' )
 #' pareg(df_genes, df_terms)
-#' @importFrom dplyr select ends_with all_of distinct pull
+#' @import tidyverse
 #' @importFrom netReg edgenet cv.edgenet beta
 pareg <- function(
   df_genes, df_terms,
