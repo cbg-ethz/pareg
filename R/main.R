@@ -68,7 +68,7 @@ pareg <- function(
     ordered_terms <- sapply(
       strsplit(covariates, ".", fixed = TRUE),
       function(x) {
-        glue_collapse(x[1:(length(x)-1)], sep = ".")
+        glue_collapse(x[1:(length(x) - 1)], sep = ".")
       }
     )
 

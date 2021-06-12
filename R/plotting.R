@@ -30,7 +30,6 @@
 #' )
 #' fit <- pareg(df_genes, df_terms)
 #' plot(fit)
-#'
 #' @import tidyverse ggraph
 #' @importFrom rlang .data
 #' @importFrom dplyr group_by summarize distinct pull
@@ -49,7 +48,9 @@ plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
 
   if (is.null(term_network)) {
     # pareg was run without network regularization
-    term_list <- df_terms %>% distinct(term) %>% pull(term)
+    term_list <- df_terms %>%
+      distinct(term) %>%
+      pull(term)
     term_network <- matrix(0, length(term_list), length(term_list))
     rownames(term_network) <- colnames(term_network) <- term_list
   }
@@ -58,8 +59,9 @@ plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
   term_network[term_network < min_similarity] <- 0
 
   # create plot
-  term_graph <- as_tbl_graph(igraph::graph_from_adjacency_matrix(  # nolint
-    term_network, weighted = TRUE
+  term_graph <- as_tbl_graph(igraph::graph_from_adjacency_matrix( # nolint
+    term_network,
+    weighted = TRUE
   )) %>%
     activate(nodes) %>%
     mutate(
@@ -73,8 +75,8 @@ plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
 
   edge_count <- term_graph %>%
     activate(edges) %>%
-    as_tibble %>%
-    dim %>%
+    as_tibble() %>%
+    dim() %>%
     extract2(1)
 
   if (edge_count > 0) {
@@ -93,19 +95,19 @@ plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
   }
 
   p <- p +
-      geom_node_point(
-        aes(size = .data$term_size, color = .data$enrichment)
-      ) +
-      scale_size(range = c(2, 10)) +
-      scale_color_gradient2(
-        low = "red", mid = "grey", high = "blue", midpoint = 0,
-        na.value = "black"
-      ) +
-      scale_edge_alpha() +
-      coord_fixed() +
-      theme(
-        panel.background = element_rect(fill = "white")
-      )
+    geom_node_point(
+      aes(size = .data$term_size, color = .data$enrichment)
+    ) +
+    scale_size(range = c(2, 10)) +
+    scale_color_gradient2(
+      low = "red", mid = "grey", high = "blue", midpoint = 0,
+      na.value = "black"
+    ) +
+    scale_edge_alpha() +
+    coord_fixed() +
+    theme(
+      panel.background = element_rect(fill = "white")
+    )
 
   if (show_term_names) {
     p <- p + geom_node_text(aes(label = .data$name))
