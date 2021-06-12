@@ -47,6 +47,7 @@ Imports:
     ggplot2,
     ggraph,
     tidyr,
+    glue,
     rlang
 Remotes:
     dirmeier/netReg@v1.12.0

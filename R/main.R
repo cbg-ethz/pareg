@@ -41,6 +41,7 @@ library(netReg)
 #' pareg(df_genes, df_terms)
 #' @import tidyverse
 #' @importFrom netReg edgenet cv.edgenet beta
+#' @importFrom glue glue_collapse
 pareg <- function(
   df_genes, df_terms,
   lasso_param = NA_real_, network_param = NA_real_,
@@ -67,6 +68,12 @@ pareg <- function(
     ordered_terms <- sapply(
       strsplit(covariates, ".", fixed = TRUE), function(x) x[[1]]
     )
+
+    term_diff <- setdiff(ordered_terms, rownames(term_network))
+    if (length(term_diff) > 0) {
+      stop(paste("The following covariates do not appear in term network:", glue_collapse(term_diff, sep = ", ")))
+    }
+
     term_network <- term_network[ordered_terms, ordered_terms]
   }
 
