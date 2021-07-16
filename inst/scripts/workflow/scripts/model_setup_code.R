@@ -1,7 +1,5 @@
 library(tidyverse)
 
-devtools::load_all("../..") # library(pareg)
-
 
 # parameters
 fname_study <- snakemake@input$fname_study
