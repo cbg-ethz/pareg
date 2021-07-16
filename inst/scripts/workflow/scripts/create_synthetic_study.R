@@ -6,6 +6,7 @@ fname_terms <- snakemake@input$fname_terms
 fname_rds <- snakemake@output$fname_rds
 
 category <- snakemake@params$params$category
+subcategory <- snakemake@params$params$subcategory
 alpha <- snakemake@params$params$alpha # false positive rate
 beta <- snakemake@params$params$beta # false negative rate
 
@@ -21,7 +22,16 @@ df_terms <- read_csv(
     gs_pmid = col_character()
   )
 ) %>%
-  filter(gs_cat == category)
+  filter(gs_cat == category) %>%
+  {
+    if (subcategory != "nan") {
+      print("Filtering subcategory")
+      filter(., gs_subcat == subcategory)
+    } else {
+      print("Skipping subcategory filter")
+      .
+    }
+  }
 
 # select activated terms
 on_terms <- df_terms %>%

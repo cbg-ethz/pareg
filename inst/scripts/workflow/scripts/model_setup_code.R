@@ -8,7 +8,8 @@ fname_term_sim <- snakemake@input$fname_term_sim
 
 fname_out <- snakemake@output$fname
 
-category <- snakemake@params$params$category
+msc_category <- snakemake@params$params$category
+msc_subcategory <- snakemake@params$params$subcategory
 
 # read data
 study <- readRDS(fname_study)
@@ -22,7 +23,16 @@ df_terms <- read_csv(
     gs_pmid = col_character()
   )
 ) %>%
-  filter(gs_cat == category) %>%
+  filter(gs_cat == msc_category) %>%
+  {
+    if (msc_subcategory != "nan") {
+      print("Filtering subcategory")
+      filter(., gs_subcat == msc_subcategory)
+    } else {
+      print("Skipping subcategory filter")
+      .
+    }
+  } %>%
   select(gs_name, gene_symbol) %>%
   rename(term = gs_name, gene = gene_symbol) %>%
   distinct(.keep_all = TRUE)

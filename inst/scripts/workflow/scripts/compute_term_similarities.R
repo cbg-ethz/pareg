@@ -9,6 +9,7 @@ plotdir <- snakemake@output$plotdir
 dir.create(plotdir, recursive = TRUE)
 
 category <- snakemake@params$params$category
+subcategory <- snakemake@params$params$subcategory
 
 # read data
 df_terms <- read_csv(
@@ -20,7 +21,16 @@ df_terms <- read_csv(
     gs_pmid = col_character()
   )
 ) %>%
-  filter(gs_cat == category)
+  filter(gs_cat == category) %>%
+  {
+    if (subcategory != "nan") {
+      print("Filtering subcategory")
+      filter(., gs_subcat == subcategory)
+    } else {
+      print("Skipping subcategory filter")
+      .
+    }
+  }
 
 # define distance measure
 jaccard <- function(x, y) {
