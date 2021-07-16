@@ -1,6 +1,8 @@
 # prepare environment
 source(snakemake@params$setup_code_fname)
 
+devtools::load_all("../..")
+
 # run model
 df <- pareg::pareg(
   study$df %>% select(-in_study),
