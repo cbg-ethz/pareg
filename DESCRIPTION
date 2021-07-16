@@ -32,7 +32,9 @@ Suggests:
     testthat (>= 2.1.0),
     BiocStyle,
     formatR,
-    devtools
+    devtools,
+    plotROC,
+    PRROC
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Imports:
