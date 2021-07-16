@@ -19,7 +19,14 @@ purrr::transpose(list(
     study <- readRDS(x$fname_study)
     on_terms <- study$on_terms
 
-    read_csv(x$fname_enr) %>%
+    tmp <- read_csv(x$fname_enr)
+
+    if (dim(tmp)[[1]] == 0) {
+      # method execution was skipped
+      return(tmp)
+    }
+
+    tmp %>%
       mutate(
         replicate = replicate,
         is_on_term = term %in% on_terms
