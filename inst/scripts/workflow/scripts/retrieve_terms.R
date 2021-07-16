@@ -68,6 +68,12 @@ df_sel %>%
   distinct(gs_name) %>%
   dim()
 
+df_sel %>%
+  distinct(gs_cat)
+
+df_sel %>%
+  distinct(gs_subcat)
+
 # save result
 df_sel %>%
   write_csv(fname_out)
