@@ -24,7 +24,7 @@ df_terms <- read_csv(
 ) %>%
   filter(gs_cat == category) %>%
   {
-    if (subcategory != "nan") {
+    if (subcategory != "None") {
       print("Filtering subcategory")
       filter(., gs_subcat == subcategory)
     } else {
