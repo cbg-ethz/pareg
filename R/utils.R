@@ -92,3 +92,53 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
     rename(enrichment = `y[1]`) %>%
     arrange(desc(enrichment))
 }
+
+
+#' @title Sample elements based on similarity structure.
+#'
+#' @description Choose similar object more often,
+#' depending on `similarity_factor`.
+#'
+#' @export
+#' @param sim_mat Similarity matrix with samples as row/col names.
+#' @param size How many samples to draw.
+#' @param similarity_factor Uniform sampling for 0. Weights mixture of uniform
+#' and similarity vector for each draw.
+#'
+#' @return Vector of samples.
+#'
+#' @examples
+#' similarity_sample(matrix(runif(100), nrow = 10, ncol = 10), 3)
+#' @import progress
+similarity_sample <- function(sim_mat, size, similarity_factor = 1) {
+  # sanity check
+  stopifnot(all(rownames(sim_mat) == colnames(sim_mat)))
+
+  # handle matrices without row/col names
+  if (is.null(rownames(sim_mat))) {
+    sample_list <- seq_len(dim(sim_mat)[[1]])
+    rownames(sim_mat) <- colnames(sim_mat) <- sample_list
+  } else {
+    # trying to extract numeric rownames out will result in characters!?
+    sample_list <- rownames(sim_mat)
+  }
+  sample_num <- length(sample_list)
+
+  # prepare sampling
+  selected_samples <- c()
+  current_sample <- sample(sample_list, 1)
+
+  pb <- progress::progress_bar$new(total = size)
+  pb$tick(0)
+
+  # draw samples
+  for (i in seq_len(size)) {
+    pb$tick()
+
+    prob <- (1 - similarity_factor) * rep(1, sample_num) / sample_num + similarity_factor * sim_mat[current_sample, ]
+    current_sample <- sample(sample_list, 1, prob = prob)
+    selected_samples <- c(selected_samples, current_sample)
+  }
+
+  selected_samples
+}

@@ -1,14 +1,18 @@
 library(tidyverse)
 
+devtools::load_all("../..")
+
 
 # parameters
 fname_terms <- snakemake@input$fname_terms
+fname_sim <- snakemake@input$fname_sim
 fname_rds <- snakemake@output$fname_rds
 
 category <- snakemake@params$params$category
 subcategory <- snakemake@params$params$subcategory
 alpha <- snakemake@params$params$alpha # false positive rate
 beta <- snakemake@params$params$beta # false negative rate
+similarity_factor <- snakemake@params$params$similarity_factor
 
 on_term_count <- snakemake@params$on_term_count
 
@@ -33,11 +37,20 @@ df_terms <- read_csv(
     }
   }
 
+sim_mat <- read.csv(fname_sim, row.names = 1)
+
 # select activated terms
-on_terms <- df_terms %>%
-  distinct(gs_name) %>%
-  pull(gs_name) %>%
-  sample(on_term_count)
+# on_terms <- df_terms %>%
+#   distinct(gs_name) %>%
+#   pull(gs_name) %>%
+#   sample(on_term_count, replace = TRUE)
+on_terms <- pareg::similarity_sample(
+  sim_mat,
+  on_term_count,
+  similarity_factor = similarity_factor
+)
+
+on_terms <- unique(on_terms)
 
 # extract activated genes from activated terms
 study_genes_orig <- df_terms %>%

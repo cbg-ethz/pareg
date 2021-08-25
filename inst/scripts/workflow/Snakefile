@@ -45,6 +45,7 @@ rule compute_term_similarities:
 rule create_synthetic_study:
     input:
         fname_terms='results/term_database.csv',
+        fname_sim=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv',
     output:
         fname_rds=f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds',
     params:
