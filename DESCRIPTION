@@ -36,7 +36,9 @@ Suggests:
     plotROC,
     PRROC,
     mgsa,
-    topGO
+    topGO,
+    msigdbr,
+    Matrix
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
 Imports:
