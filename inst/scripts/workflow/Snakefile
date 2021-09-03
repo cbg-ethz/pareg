@@ -15,6 +15,7 @@ print(method_list)
 rule all:
     input:
         expand('results/plots/{params}/', params=paramspace.instance_patterns),
+        'results/aggregated_plots/'
 
 
 rule retrieve_terms:
@@ -108,3 +109,12 @@ rule visualize_results:
         mem_mb=5_000,
     script:
         'scripts/visualize_results.R'
+
+
+rule aggregated_visualizations:
+    input:
+        fname_list=expand('results/enrichments/{params}/all_enr.csv', params=paramspace.instance_patterns),
+    output:
+        outdir=directory('results/aggregated_plots/')
+    script:
+        'scripts/aggregated_visualization.R'

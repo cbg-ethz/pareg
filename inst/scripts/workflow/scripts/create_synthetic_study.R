@@ -12,7 +12,7 @@ category <- snakemake@params$params$category
 subcategory <- snakemake@params$params$subcategory
 alpha <- snakemake@params$params$alpha # false positive rate
 beta <- snakemake@params$params$beta # false negative rate
-similarity_factor <- snakemake@params$params$similarity_factor
+similarity_factor <- snakemake@params$params$similarityfactor
 
 on_term_count <- snakemake@params$on_term_count
 

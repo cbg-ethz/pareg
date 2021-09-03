@@ -26,6 +26,9 @@ ggsave(file.path(outdir, "comparison.pdf"))
 
 # ROC curves
 df_enr %>%
+  mutate(
+    is_on_term = recode(as.character(is_on_term), "FALSE" = 0, "TRUE" = 1)
+  ) %>%
   ggplot(aes(m = enrichment, d = is_on_term, color = method)) +
   geom_roc() +
   theme_minimal()
