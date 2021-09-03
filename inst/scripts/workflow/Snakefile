@@ -5,13 +5,21 @@ from snakemake.utils import Paramspace
 
 configfile: 'config/config.yaml'
 
-
-paramspace = Paramspace(pd.read_csv('config/params.csv'), filename_params='*')
-
 (method_list,) = glob_wildcards('resources/method_definitions/{method}.R')
 print(method_list)
 
 
+# setup paramspace
+df_params = pd.read_csv('config/params.csv')
+
+for param, values in config['parameters'].items():
+    df_tmp = pd.DataFrame({param: values, 'tmp_col': 1})
+    df_params = df_params.assign(tmp_col=1).merge(df_tmp, on='tmp_col').drop('tmp_col', axis=1)
+
+paramspace = Paramspace(df_params, filename_params='*')
+
+
+# rule definitions
 rule all:
     input:
         expand('results/plots/{params}/', params=paramspace.instance_patterns),
