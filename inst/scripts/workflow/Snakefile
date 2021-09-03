@@ -59,7 +59,6 @@ rule create_synthetic_study:
         fname_rds=f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds',
     params:
         params=paramspace.instance,
-        on_term_count=config['on_term_count'],
     resources:
         mem_mb=5_000,
     script:
