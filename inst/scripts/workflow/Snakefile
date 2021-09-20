@@ -3,125 +3,132 @@ import pandas as pd
 from snakemake.utils import Paramspace
 
 
-configfile: 'config/config.yaml'
+configfile: "config/config.yaml"
 
-(method_list,) = glob_wildcards('resources/method_definitions/{method}.R')
+
+(method_list,) = glob_wildcards("resources/method_definitions/{method}.R")
 print(method_list)
 
 
 # setup paramspace
-df_params = pd.read_csv('config/params.csv')
+df_params = pd.read_csv("config/params.csv")
 
-for param, values in config['parameters'].items():
-    df_tmp = pd.DataFrame({param: values, 'tmp_col': 1})
-    df_params = df_params.assign(tmp_col=1).merge(df_tmp, on='tmp_col').drop('tmp_col', axis=1)
+for param, values in config["parameters"].items():
+    df_tmp = pd.DataFrame({param: values, "tmp_col": 1})
+    df_params = (
+        df_params.assign(tmp_col=1).merge(df_tmp, on="tmp_col").drop("tmp_col", axis=1)
+    )
 
-paramspace = Paramspace(df_params, filename_params='*')
+paramspace = Paramspace(df_params, filename_params="*")
 
 
 # rule definitions
 rule all:
     input:
-        expand('results/plots/{params}/', params=paramspace.instance_patterns),
-        'results/aggregated_plots/'
+        expand("results/plots/{params}/", params=paramspace.instance_patterns),
+        "results/aggregated_plots/",
 
 
 rule retrieve_terms:
     output:
-        fname='results/term_database.csv',
+        fname="results/term_database.csv",
     params:
-        term_filter=config['term_filter'],
+        term_filter=config["term_filter"],
     resources:
         mem_mb=15_000,
     script:
-        'scripts/retrieve_terms.R'
+        "scripts/retrieve_terms.R"
 
 
 rule compute_term_similarities:
     input:
-        fname_terms='results/term_database.csv',
+        fname_terms="results/term_database.csv",
     output:
-        fname=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv',
-        plotdir=directory(f'results/terms/{paramspace.wildcard_pattern}/plots/'),
+        fname=f"results/terms/{paramspace.wildcard_pattern}/term_similarities.csv",
+        plotdir=directory(f"results/terms/{paramspace.wildcard_pattern}/plots/"),
     params:
         params=paramspace.instance,
     resources:
         mem_mb=15_000,
     script:
-        'scripts/compute_term_similarities.R'
+        "scripts/compute_term_similarities.R"
 
 
 rule create_synthetic_study:
     input:
-        fname_terms='results/term_database.csv',
-        fname_sim=f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv',
+        fname_terms="results/term_database.csv",
+        fname_sim=f"results/terms/{paramspace.wildcard_pattern}/term_similarities.csv",
     output:
-        fname_rds=f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds',
+        fname_rds=f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds",
     params:
         params=paramspace.instance,
     resources:
         mem_mb=5_000,
     script:
-        'scripts/create_synthetic_study.R'
+        "scripts/create_synthetic_study.R"
 
 
 rule run_method:
     input:
-        script='resources/method_definitions/{method}.R',
-        fname_study=f'results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds',
-        fname_terms='results/term_database.csv',
+        script="resources/method_definitions/{method}.R",
+        fname_study=f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds",
+        fname_terms="results/term_database.csv",
         fname_term_sim=(
-            f'results/terms/{paramspace.wildcard_pattern}/term_similarities.csv'
+            f"results/terms/{paramspace.wildcard_pattern}/term_similarities.csv"
         ),
     output:
-        fname=f'results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv',
+        fname=f"results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv",
     params:
         params=paramspace.instance,
-        script_name=lambda wildcards, input: '../' + input.script,
-        setup_code_fname='workflow/scripts/model_setup_code.R',
+        script_name=lambda wildcards, input: "../" + input.script,
+        setup_code_fname="workflow/scripts/model_setup_code.R",
     resources:
-        mem_mb=lambda wildcards: (15_000 if 'cv' in wildcards.method else 5000),
+        mem_mb=lambda wildcards: (15_000 if "cv" in wildcards.method else 5000),
         time_min=lambda wildcards, attempt: (
-            60 * 23 if 'cv' in wildcards.method else 60 * 10
-        ) * attempt,
+            60 * 23 if "cv" in wildcards.method else 60 * 10
+        )
+        * attempt,
     script:
-        '{params.script_name}'
+        "{params.script_name}"
 
 
 rule aggregate_results:
     input:
         fname_list_enr=expand(
-            f'results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv',
-            replicate=range(config['replicate_count']),
+            f"results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv",
+            replicate=range(config["replicate_count"]),
             method=method_list,
             allow_missing=True,
         ),
         fname_list_study=[
-            f'results/studies/{paramspace.wildcard_pattern}/replicates/{replicate}/study.rds'
-            for replicate in range(config['replicate_count'])
+            f"results/studies/{paramspace.wildcard_pattern}/replicates/{replicate}/study.rds"
+            for replicate in range(config["replicate_count"])
             for _ in method_list
         ],
     output:
-        fname=f'results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv',
+        fname=f"results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv",
     script:
-        'scripts/aggregate_results.R'
+        "scripts/aggregate_results.R"
 
 
 rule visualize_results:
     input:
-        fname_enr=f'results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv',
+        fname_enr=f"results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv",
     output:
-        outdir=directory(f'results/plots/{paramspace.wildcard_pattern}/'),
+        outdir=directory(f"results/plots/{paramspace.wildcard_pattern}/"),
     resources:
         mem_mb=5_000,
     script:
-        'scripts/visualize_results.R'
+        "scripts/visualize_results.R"
 
 
 rule aggregated_visualizations:
     input:
-        fname_list=expand('results/enrichments/{params}/all_enr.csv', params=paramspace.instance_patterns),
+        fname_list=expand(
+            "results/enrichments/{params}/all_enr.csv",
+            params=paramspace.instance_patterns,
+        ),
     output:
-        outdir=directory('results/aggregated_plots/')
+        outdir=directory("results/aggregated_plots/"),
     script:
-        'scripts/aggregated_visualization.R'
+        "scripts/aggregated_visualization.R"
