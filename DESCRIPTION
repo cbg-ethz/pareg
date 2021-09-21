@@ -11,8 +11,8 @@ Authors@R:
         )
     )
 Description: This package uses a regularized regression to compute pathway enrichments for gene sets while accounting for inter-pathway relations.
-URL: https://github.com/kpj/pareg
-BugReports: https://github.com/kpj/pareg/issues
+URL: https://github.com/cbg-ethz/pareg
+BugReports: https://github.com/cbg-ethz/pareg/issues
 biocViews:
     Software,
     StatisticalMethod,
