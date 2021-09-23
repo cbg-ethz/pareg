@@ -142,3 +142,23 @@ similarity_sample <- function(sim_mat, size, similarity_factor = 1) {
 
   selected_samples
 }
+
+
+#' @title Similarity matrix generation.
+#'
+#' @description Generate block-structured similarity matrices
+#' corresponding to cluster structures.
+#'
+#' @export
+#' @param cluster_sizes List of cluster sizes.
+#'
+#' @return Similarity matrix with samples as row-/colnames.
+#'
+#' @examples
+#' generate_similarity_matrix(c(1, 2, 3))
+#' @importFrom Matrix bdiag
+generate_similarity_matrix <- function(cluster_sizes) {
+  as.matrix(bdiag(
+    lapply(cluster_sizes, function(x) matrix(runif(x * x), nrow = x, ncol = x))
+  ))
+}

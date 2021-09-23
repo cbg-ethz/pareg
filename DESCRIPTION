@@ -54,6 +54,8 @@ Imports:
     ggraph,
     tidyr,
     glue,
-    rlang
+    rlang,
+    progress,
+    Matrix
 Remotes:
     dirmeier/netReg@v1.12.0

@@ -39,5 +39,4 @@ df_terms <- rbind(
 )
 fit <- pareg(df_genes, df_terms)
 plot(fit)
-
 }

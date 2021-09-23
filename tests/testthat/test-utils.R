@@ -44,9 +44,7 @@ test_that("model creation works with gene which is in no term", {
 
 test_that("similarity sampling works", {
   cluster_sizes <- c(5, 5, 10, 10, 10)
-  sim_mat <- as.matrix(Matrix::bdiag(
-    lapply(cluster_sizes, function(x) matrix(runif(x * x), nrow = x, ncol = x))
-  ))
+  sim_mat <- generate_similarity_matrix(cluster_sizes)
 
   df_sims <- rep(c(1, 0.5, 0), each = 10) %>%
     map_dfr(function(w) {
