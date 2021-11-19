@@ -14,6 +14,7 @@ alpha <- snakemake@params$params$alpha # false positive rate
 beta <- snakemake@params$params$beta # false negative rate
 similarity_factor <- snakemake@params$params$similarityfactor
 on_term_count <- snakemake@params$params$ontermcount
+sig_gene_scaling <- snakemake@params$params$sig_gene_scaling
 
 # read data
 df_terms <- read_csv(
@@ -78,8 +79,27 @@ nonstudy_genes <- df_terms %>%
   filter(!(gene_symbol %in% study_genes)) %>%
   pull(gene_symbol)
 
+# compute how many pathways each gene is a member of
+if (sig_gene_scaling == "member_count") {
+  member_count <- purrr::map_dfc(study_genes, function(gene) {
+    df_terms %>%
+      group_by(gs_name) %>%
+      summarise("{gene}" := gene %in% gene_symbol) %>%
+      select({{ gene }})
+  }) %>%
+    summarize(across(everything(), sum)) %>%
+    t %>%
+    as.data.frame %>%
+    pull(V1)
+
+  # +2 to have reasonable parameter with member_count=1
+  rbeta_shape1_param <- 2 ^ -(2 + member_count)
+} else {
+  rbeta_shape1_param <- as.numeric(sig_gene_scaling)
+}
+
 # compute "DE" p-values for active and inactive genes
-study_pvalues <- rbeta(length(study_genes), 0.1, 1) # peak at 0
+study_pvalues <- rbeta(length(study_genes), rbeta_shape1_param, 1) # peak at 0
 nonstudy_pvalues <- rbeta(length(nonstudy_genes), 1, 1) # uniform
 
 df <- data.frame(
