@@ -21,7 +21,7 @@
 #' create_model_df(df_genes, df_terms)
 #' @import tidyverse
 #' @importFrom rlang .data
-create_model_df <- function(df_genes, df_terms) {
+create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
   df_terms %>%
     group_by(term) %>%
     mutate(member = gene %in% df_genes$gene) %>%
@@ -38,6 +38,9 @@ create_model_df <- function(df_genes, df_terms) {
     rename_at(vars(-gene, -pvalue), ~ paste0(., ".member")) %>%
     mutate_at(
       vars(gene), factor # gene is character if select statement is executed
+    ) %>%
+    mutate(
+      pvalue_notsig = pvalue > pvalue_threshold
     )
 }
 

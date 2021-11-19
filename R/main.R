@@ -17,6 +17,8 @@ library(netReg)
 #' @param truncate_response Make sure response is in (0, 1).
 #' @param cv Estimate best regularization parameters using cross-validation.
 #' @param family Distribution family of response.
+#' @param response_column_name Which column of model dataframe
+#' to use as response.
 #'
 #' @return An object of class \code{pareg}.
 #'
@@ -47,7 +49,8 @@ pareg <- function(
   lasso_param = NA_real_, network_param = NA_real_,
   term_network = NULL, truncate_response = FALSE,
   cv = FALSE,
-  family = netReg::beta
+  family = netReg::beta,
+  response_column_name = "pvalue"
 ) {
   # generate design matrix
   df_model <- create_model_df(df_genes, df_terms)
@@ -61,7 +64,7 @@ pareg <- function(
     select(all_of(covariates)) %>%
     as.matrix()
   Y <- df_model %>%
-    select("pvalue") %>%
+    select(response_column_name) %>%
     as.matrix()
 
   if (!is.null(term_network)) {
