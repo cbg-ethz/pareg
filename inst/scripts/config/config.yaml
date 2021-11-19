@@ -10,4 +10,4 @@ replicate_count: 100
 parameters:
     similarityfactor: [0, 0.25, 0.5, 0.75, 1]
     ontermcount: [1, 5, 10, 50, 100]
-    sig_gene_scaling: ["member_count", 0.1, 0.001]
+    siggenescaling: ["membercount", 0.1, 0.001]

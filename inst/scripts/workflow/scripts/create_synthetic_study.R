@@ -14,7 +14,7 @@ alpha <- snakemake@params$params$alpha # false positive rate
 beta <- snakemake@params$params$beta # false negative rate
 similarity_factor <- snakemake@params$params$similarityfactor
 on_term_count <- snakemake@params$params$ontermcount
-sig_gene_scaling <- snakemake@params$params$sig_gene_scaling
+sig_gene_scaling <- snakemake@params$params$siggenescaling
 
 # read data
 df_terms <- read_csv(
@@ -80,7 +80,7 @@ nonstudy_genes <- df_terms %>%
   pull(gene_symbol)
 
 # compute how many pathways each gene is a member of
-if (sig_gene_scaling == "member_count") {
+if (sig_gene_scaling == "membercount") {
   member_count <- purrr::map_dfc(study_genes, function(gene) {
     df_terms %>%
       group_by(gs_name) %>%
