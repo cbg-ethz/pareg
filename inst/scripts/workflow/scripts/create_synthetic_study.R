@@ -60,7 +60,11 @@ study_genes_orig <- df_terms %>%
 
 # remove false negatives from activated genes
 fn_genes <- sample(seq_along(study_genes_orig), size = length(study_genes_orig) * beta)
-study_genes <- study_genes_orig[-fn_genes]
+if (length(fn_genes) > 0) {
+  study_genes <- study_genes_orig[-fn_genes]
+} else {
+  study_genes <- study_genes_orig
+}
 
 # add false positives to activated genes
 other_genes_orig <- df_terms %>%
