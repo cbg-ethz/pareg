@@ -74,7 +74,7 @@ other_genes_orig <- df_terms %>%
   setdiff(study_genes_orig)
 stopifnot(length(intersect(study_genes_orig, other_genes_orig)) == 0)
 
-fp_genes <- sample(seq_along(other_genes_orig), size = length(other_genes_orig) * alpha)
+fp_genes <- sample(seq_along(other_genes_orig), size = length(study_genes_orig) * alpha)
 study_genes <- c(study_genes, other_genes_orig[fp_genes])
 
 # find inactive genes
