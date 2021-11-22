@@ -112,9 +112,19 @@ df <- data.frame(
   in_study = c(
     rep(TRUE, length(study_genes)),
     rep(FALSE, length(nonstudy_genes))
+  ),
+  in_orig_study = c(
+    study_genes %in% study_genes_orig,
+    nonstudy_genes %in% study_genes_orig
   )
 )
+
 table(df$pvalue <= 0.05, df$in_study, dnn = c("sig. p-value", "in study"))
+table(
+  df$in_study,
+  df$in_orig_study,
+  dnn = c("gene in generated study", "gene in original study")
+)
 
 # save result
 saveRDS(
