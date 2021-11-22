@@ -1,6 +1,9 @@
 category,subcategory,alpha,beta
 C2,None,0.1,0.4
 C2,None,0.4,0.25
+C2,None,0,0
+C2,None,0.5,0.5
+C2,None,1,1
 C5,GO:BP,0.1,0.4
 C5,GO:BP,0.4,0.25
 C5,GO:CC,0.1,0.4
@@ -8,5 +11,5 @@ C5,GO:CC,0.4,0.25
 C5,GO:MF,0.1,0.4
 C5,GO:MF,0.4,0.25
 C5,GO:BP,0,0
-C5,GO:BP,0.8,0.8
+C5,GO:BP,0.5,0.5
 C5,GO:BP,1,1
