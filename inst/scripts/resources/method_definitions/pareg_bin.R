@@ -5,7 +5,7 @@ devtools::load_all("../..")
 
 # run model
 df <- pareg::pareg(
-  study$df %>% select(-in_study),
+  study$df %>% select(gene, pvalue),
   df_terms,
   family = netReg::poisson,
   response_column_name = "pvalue_notsig"

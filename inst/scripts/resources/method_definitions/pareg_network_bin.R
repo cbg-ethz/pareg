@@ -5,7 +5,7 @@ devtools::load_all("../..")
 
 # run model
 df <- pareg::pareg(
-  study$df %>% select(-in_study),
+  study$df %>% select(gene, pvalue),
   df_terms,
   network_param = 0.9, term_network = term_similarities_sub,
   family = netReg::poisson,
