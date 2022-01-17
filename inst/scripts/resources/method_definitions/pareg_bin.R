@@ -7,7 +7,7 @@ devtools::load_all("../..")
 df <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
-  family = netReg::poisson,
+  family = netReg::binomial,
   response_column_name = "pvalue_notsig"
 ) %>%
   as.data.frame() %>%
