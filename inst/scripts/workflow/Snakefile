@@ -31,10 +31,9 @@ rule all:
 
 rule create_term_database:
     output:
-        fname=f"results/terms/{paramspace.wildcard_pattern}/term_database.csv",
+        fname="results/terms/{termsource}/term_database.csv",
     params:
         term_filter=config["term_filter"],
-        params=paramspace.instance,
     resources:
         mem_mb=15_000,
     script:
@@ -43,10 +42,10 @@ rule create_term_database:
 
 rule compute_term_similarities:
     input:
-        fname_terms=f"results/terms/{paramspace.wildcard_pattern}/term_database.csv",
+        fname_terms="results/terms/{termsource}/term_database.csv",
     output:
-        fname=f"results/terms/{paramspace.wildcard_pattern}/term_similarities.csv",
-        plotdir=directory(f"results/terms/{paramspace.wildcard_pattern}/plots/"),
+        fname="results/terms/{termsource}/term_similarities.csv",
+        plotdir=directory("results/terms/{termsource}/plots/"),
     params:
         params=paramspace.instance,
     resources:
@@ -57,8 +56,8 @@ rule compute_term_similarities:
 
 rule create_synthetic_study:
     input:
-        fname_terms=f"results/terms/{paramspace.wildcard_pattern}/term_database.csv",
-        fname_sim=f"results/terms/{paramspace.wildcard_pattern}/term_similarities.csv",
+        fname_terms="results/terms/{termsource}/term_database.csv",
+        fname_sim="results/terms/{termsource}/term_similarities.csv",
     output:
         fname_rds=f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds",
     params:
@@ -73,8 +72,8 @@ rule run_method:
     input:
         script="resources/method_definitions/{method}.R",
         fname_study=f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds",
-        fname_terms=f"results/terms/{paramspace.wildcard_pattern}/term_database.csv",
-        fname_term_sim=f"results/terms/{paramspace.wildcard_pattern}/term_similarities.csv",
+        fname_terms="results/terms/{termsource}/term_database.csv",
+        fname_term_sim="results/terms/{termsource}/term_similarities.csv",
     output:
         fname=f"results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv",
     params:

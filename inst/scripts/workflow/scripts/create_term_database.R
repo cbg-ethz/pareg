@@ -7,7 +7,7 @@ library(msigdbr)
 fname_out <- snakemake@output$fname
 
 term_filter_params <- snakemake@params$term_filter
-termsource <- snakemake@params$params$termsource
+termsource <- snakemake@wildcards$termsource
 
 parts <- strsplit(termsource, ";")[[1]]
 
