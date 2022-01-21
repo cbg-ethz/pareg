@@ -47,30 +47,30 @@ if (parts[[1]] == "msigdb") {
 }
 
 # select terms of reasonable size
-term_selection <- df_terms %>%
+df_term_tally <- df_terms %>%
   group_by(term) %>%
   tally() %>%
   arrange(desc(n))
 
 if (!is.null(term_filter_params$min_size)) {
   print("Filtering pathway by min_size")
-  term_selection %<>%
+  df_term_tally %<>%
     filter(term_filter_params$min_size < n)
 }
 if (!is.null(term_filter_params$max_size)) {
   print("Filtering pathway by max_size")
-  term_selection %<>%
+  df_term_tally %<>%
     filter(n < term_filter_params$max_size)
 }
 if (!is.null(term_filter_params$sample_num)) {
   print("Sampling pathways")
-  term_selection %<>%
+  df_term_tally %<>%
     group_by(gs_cat) %>%
     sample_n(min(term_filter_params$sample_num, n())) %>%
     ungroup()
 }
 
-term_selection %<>%
+term_selection <- df_term_tally %>%
   pull(term)
 term_selection %>%
   head()
@@ -82,10 +82,12 @@ df_sub <- df_terms %>%
 df_sub %>%
   head()
 
+print("Distinct term count:")
 df_sub %>%
   distinct(term) %>%
   dim()
 
+print("Genes per term:")
 df_sub %>%
   group_by(term) %>%
   tally() %>%
