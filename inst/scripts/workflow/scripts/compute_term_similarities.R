@@ -52,3 +52,17 @@ df_sim %>%
   scale_y_sqrt() +
   theme_minimal()
 ggsave(file.path(plotdir, "similarity_histogram.pdf"))
+
+png(
+  file.path(plotdir, "similarity_clustermap.png"),
+  width = 20,
+  height = 20,
+  units = "in",
+  res = 300
+)
+ComplexHeatmap::Heatmap(
+  term_similarities,
+  name = "similarity",
+  col = circlize::colorRamp2(c(0, 1), c("white", "black"))
+)
+dev.off()
