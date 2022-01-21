@@ -1,5 +1,9 @@
 ---
 
+# `null` will execut all methods
+# list of strings will execute selected methods
+method_list: null
+
 term_filter:
     min_size: null
     max_size: null

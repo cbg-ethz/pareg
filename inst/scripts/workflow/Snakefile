@@ -3,10 +3,16 @@ import pandas as pd
 from snakemake.utils import Paramspace
 
 
+# setup config
 configfile: "config/config.yaml"
 
 
-(method_list,) = glob_wildcards("resources/method_definitions/{method}.R")
+# method selection
+if config["method_list"] is None:
+    (method_list,) = glob_wildcards("resources/method_definitions/{method}.R")
+else:
+    method_list = config["method_list"]
+
 print(method_list)
 
 
