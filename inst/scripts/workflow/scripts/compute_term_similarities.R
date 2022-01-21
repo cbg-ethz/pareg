@@ -2,35 +2,18 @@ library(tidyverse)
 
 
 # parameters
+fname_terms <- "results/term_database.csv"
+category <- "C2"
+
+
 fname_terms <- snakemake@input$fname_terms
 fname_out <- snakemake@output$fname
 
 plotdir <- snakemake@output$plotdir
 dir.create(plotdir, recursive = TRUE)
 
-category <- snakemake@params$params$category
-subcategory <- snakemake@params$params$subcategory
-
 # read data
-df_terms <- read_csv(
-  fname_terms,
-  col_types = cols(
-    gs_url = col_character(),
-    gs_exact_source = col_character(),
-    gs_geoid = col_character(),
-    gs_pmid = col_character()
-  )
-) %>%
-  filter(gs_cat == category) %>%
-  {
-    if (subcategory != "None") {
-      print("Filtering subcategory")
-      filter(., gs_subcat == subcategory)
-    } else {
-      print("Skipping subcategory filter")
-      .
-    }
-  }
+df_terms <- read_csv(fname_terms)
 
 # define distance measure
 jaccard <- function(x, y) {
@@ -39,9 +22,9 @@ jaccard <- function(x, y) {
 
 # compute term overlaps
 term_list_list <- df_terms %>%
-  select(gs_name, gene_symbol) %>%
+  select(term, gene) %>%
   {
-    split(.$gene_symbol, .$gs_name)
+    split(.$gene, .$term)
   }
 
 term_similarities <- 1 - proxy::dist(

@@ -7,6 +7,8 @@ library(msigdbr)
 fname_out <- snakemake@output$fname
 
 term_filter_params <- snakemake@params$term_filter
+category <- snakemake@params$params$category
+subcategory <- snakemake@params$params$subcategory
 
 # overview (http://www.gsea-msigdb.org/gsea/msigdb/collections.jsp)
 msigdbr_species()
@@ -68,11 +70,29 @@ df_sel %>%
   distinct(gs_name) %>%
   dim()
 
+# apply term source options
+df_sel <- df_sel %>%
+  filter(gs_cat == category) %>%
+  {
+    if (subcategory != "None") {
+      print("Filtering subcategory")
+      filter(., gs_subcat == subcategory)
+    } else {
+      print("Skipping subcategory filter")
+      .
+    }
+  } %>%
+  select(gs_name, gene_symbol) %>%
+  rename(term = gs_name, gene = gene_symbol) %>%
+  distinct(.keep_all = TRUE)
+
+# data overview
 df_sel %>%
-  distinct(gs_cat)
+  head()
 
 df_sel %>%
-  distinct(gs_subcat)
+  distinct(term) %>%
+  dim()
 
 # save result
 df_sel %>%

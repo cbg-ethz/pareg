@@ -8,34 +8,10 @@ fname_term_sim <- snakemake@input$fname_term_sim
 
 fname_out <- snakemake@output$fname
 
-msc_category <- snakemake@params$params$category
-msc_subcategory <- snakemake@params$params$subcategory
-
 # read data
 study <- readRDS(fname_study)
 
-df_terms <- read_csv(
-  fname_terms,
-  col_types = cols(
-    gs_url = col_character(),
-    gs_exact_source = col_character(),
-    gs_geoid = col_character(),
-    gs_pmid = col_character()
-  )
-) %>%
-  filter(gs_cat == msc_category) %>%
-  {
-    if (msc_subcategory != "None") {
-      print("Filtering subcategory")
-      filter(., gs_subcat == msc_subcategory)
-    } else {
-      print("Skipping subcategory filter")
-      .
-    }
-  } %>%
-  select(gs_name, gene_symbol) %>%
-  rename(term = gs_name, gene = gene_symbol) %>%
-  distinct(.keep_all = TRUE)
+df_terms <- read_csv(fname_terms)
 
 df_terms %>% dim()
 df_terms %>% head()

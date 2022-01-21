@@ -29,20 +29,21 @@ rule all:
         "results/aggregated_plots/",
 
 
-rule retrieve_terms:
+rule create_term_database:
     output:
-        fname="results/term_database.csv",
+        fname=f"results/terms/{paramspace.wildcard_pattern}/term_database.csv",
     params:
         term_filter=config["term_filter"],
+        params=paramspace.instance,
     resources:
         mem_mb=15_000,
     script:
-        "scripts/retrieve_terms.R"
+        "scripts/create_term_database.R"
 
 
 rule compute_term_similarities:
     input:
-        fname_terms="results/term_database.csv",
+        fname_terms=f"results/terms/{paramspace.wildcard_pattern}/term_database.csv",
     output:
         fname=f"results/terms/{paramspace.wildcard_pattern}/term_similarities.csv",
         plotdir=directory(f"results/terms/{paramspace.wildcard_pattern}/plots/"),
@@ -56,7 +57,7 @@ rule compute_term_similarities:
 
 rule create_synthetic_study:
     input:
-        fname_terms="results/term_database.csv",
+        fname_terms=f"results/terms/{paramspace.wildcard_pattern}/term_database.csv",
         fname_sim=f"results/terms/{paramspace.wildcard_pattern}/term_similarities.csv",
     output:
         fname_rds=f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds",
@@ -72,10 +73,8 @@ rule run_method:
     input:
         script="resources/method_definitions/{method}.R",
         fname_study=f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds",
-        fname_terms="results/term_database.csv",
-        fname_term_sim=(
-            f"results/terms/{paramspace.wildcard_pattern}/term_similarities.csv"
-        ),
+        fname_terms=f"results/terms/{paramspace.wildcard_pattern}/term_database.csv",
+        fname_term_sim=f"results/terms/{paramspace.wildcard_pattern}/term_similarities.csv",
     output:
         fname=f"results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv",
     params:
