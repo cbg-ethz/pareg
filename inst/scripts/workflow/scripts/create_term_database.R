@@ -42,6 +42,31 @@ if (parts[[1]] == "msigdb") {
     select(gs_name, gene_symbol) %>%
     rename(term = gs_name, gene = gene_symbol) %>%
     distinct(.keep_all = TRUE)
+} else if (parts[[1]] == "custom") {
+  genes_group1 <- paste0("g1_gene_", seq(1, 15))
+  genes_group2 <- paste0("g2_gene_", seq(1, 15))
+  genes_bg <- paste0("bg_gene_", seq(1, 1000))
+
+  df_terms <- rbind(
+    purrr::map_dfr(seq(1, 50), function(x) {
+      data.frame(
+        term = paste0("g1_term_", x),
+        gene = c(
+          sample(genes_group1, 10, replace = FALSE),
+          sample(genes_bg, 10, replace = FALSE)
+        )
+      )
+    }),
+    purrr::map_dfr(seq(1, 50), function(x) {
+      data.frame(
+        term = paste0("g2_term_", x),
+        gene = c(
+          sample(genes_group2, 10, replace = FALSE),
+          sample(genes_bg, 10, replace = FALSE)
+        )
+      )
+    })
+  )
 } else {
   stop(paste("Unknown term database source:", parts[[1]]))
 }
