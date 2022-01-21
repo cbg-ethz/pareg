@@ -38,7 +38,7 @@ term_similarities <- 1 - proxy::dist(
 term_similarities %>%
   write.csv(fname_out)
 
-# visualize result
+# simlarity histogram
 df_sim <- data.frame(similarity = term_similarities[upper.tri(term_similarities)])
 
 df_sim %>%
@@ -53,6 +53,16 @@ df_sim %>%
   theme_minimal()
 ggsave(file.path(plotdir, "similarity_histogram.pdf"))
 
+# similarity clustermap
+max_size <- 500
+if (nrow(term_similarities) > max_size) {
+  # subsample so creating clustermap doesn't take too long
+  random_indices <- sample(nrow(term_similarities), max_size)
+  term_similarities_subsample <- term_similarities[random_indices, random_indices]
+} else {
+  term_similarities_subsample <- term_similarities
+}
+
 png(
   file.path(plotdir, "similarity_clustermap.png"),
   width = 20,
@@ -61,7 +71,7 @@ png(
   res = 300
 )
 ComplexHeatmap::Heatmap(
-  term_similarities,
+  term_similarities_subsample,
   name = "similarity",
   col = circlize::colorRamp2(c(0, 1), c("white", "black"))
 )
