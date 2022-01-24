@@ -43,29 +43,28 @@ if (parts[[1]] == "msigdb") {
     rename(term = gs_name, gene = gene_symbol) %>%
     distinct(.keep_all = TRUE)
 } else if (parts[[1]] == "custom") {
-  genes_group1 <- paste0("g1_gene_", seq(1, 15))
-  genes_group2 <- paste0("g2_gene_", seq(1, 15))
+  group_num <- parts[[2]]
+  group_size <- parts[[3]]
+  pathways_from_group <- parts[[4]]
+
+  gene_groups <- purrr::map(seq(1, group_num), function(group_idx) {
+    glue::glue("g{group_idx}_gene_{seq(1, group_size)}")
+  })
   genes_bg <- paste0("bg_gene_", seq(1, 1000))
 
-  df_terms <- rbind(
-    purrr::map_dfr(seq(1, 50), function(x) {
-      data.frame(
-        term = paste0("g1_term_", x),
-        gene = c(
-          sample(genes_group1, 10, replace = FALSE),
-          sample(genes_bg, 10, replace = FALSE)
+  df_terms <- purrr::imap_dfr(
+    gene_groups,
+    function(current_gene_list, gene_list_idx) {
+      purrr::map_dfr(seq(1, pathways_from_group), function(pathway_idx) {
+        data.frame(
+          term = paste0("g", gene_list_idx, "_term_", pathway_idx),
+          gene = c(
+            sample(current_gene_list, 10, replace = FALSE),
+            sample(genes_bg, 10, replace = FALSE)
+          )
         )
-      )
-    }),
-    purrr::map_dfr(seq(1, 50), function(x) {
-      data.frame(
-        term = paste0("g2_term_", x),
-        gene = c(
-          sample(genes_group2, 10, replace = FALSE),
-          sample(genes_bg, 10, replace = FALSE)
-        )
-      )
-    })
+      })
+    }
   )
 } else {
   stop(paste("Unknown term database source:", parts[[1]]))
