@@ -45,6 +45,7 @@ df_enr %>%
           ) %>%
           ggplot(aes_string(m = "enrichment", d = "is_on_term", color = param_name)) +
           geom_roc() +
+          geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
           ggtitle(glue("Parameter: {param_name}")) +
           theme_minimal()
       })

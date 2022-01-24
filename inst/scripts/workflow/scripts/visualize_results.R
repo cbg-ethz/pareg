@@ -31,6 +31,7 @@ df_enr %>%
   ) %>%
   ggplot(aes(m = enrichment, d = is_on_term, color = method)) +
   geom_roc() +
+  geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
   theme_minimal()
 ggsave(file.path(outdir, "roc_curves.pdf"))
 
@@ -49,6 +50,7 @@ cowplot::plot_grid(
     rename(fpr = V1, tpr = V2, threshold = V3) %>%
     ggplot(aes(x = fpr, y = tpr, color = method)) +
     geom_line() +
+    geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
     ggtitle("ROC-curve") +
     theme_minimal(),
   df_enr %>%
