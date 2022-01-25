@@ -1,6 +1,7 @@
 library(tidyverse)
 library(glue)
 
+library(PRROC)
 library(plotROC)
 library(cowplot)
 
@@ -17,7 +18,7 @@ df_enr <- fname_list %>%
     # TODO: make this better
     param_str <- gtools::split_path(path, depth_first = FALSE)[[3]]
     tmp <- list()
-    for(param_pair in strsplit(param_str, "_")[[1]]) {
+    for (param_pair in strsplit(param_str, "_")[[1]]) {
       parts <- strsplit(param_pair, "~")[[1]]
       tmp[parts[[1]]] <- parts[[2]]
     }
@@ -28,7 +29,7 @@ df_enr <- fname_list %>%
 df_enr %>%
   head
 
-# visualize
+# plot ROC curves
 df_enr %>%
   group_by(method) %>%
   group_walk(function(df_group, key) {
@@ -57,3 +58,27 @@ df_enr %>%
       base_height = 10
     )
   })
+
+# compute and plot AUCs
+df_auc <- df_enr %>%
+  group_by(method, replicate, termsource, alpha, beta, similarityfactor, ontermcount, siggenescaling) %>%
+  group_modify(function(df_group, key) {
+    auc <- roc.curve(
+      scores.class0 = df_group$enrichment,
+      weights.class0 = df_group$is_on_term,
+      curve = FALSE
+    )$auc
+
+    data.frame(auc = auc)
+  })
+
+df_auc %>%
+  head()
+
+df_auc %>%
+  ggplot(aes(x = method, y = auc, fill = method)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("ROC-AUC") +
+  theme_minimal()
+ggsave(file.path(outdir, glue("roc_aucs.pdf")), width = 8, height = 6)
