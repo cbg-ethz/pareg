@@ -32,6 +32,7 @@ df_enr %>%
   ggplot(aes(m = enrichment, d = is_on_term, color = method)) +
   geom_roc() +
   geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
+  coord_fixed() +
   theme_minimal()
 ggsave(file.path(outdir, "roc_curves.pdf"))
 
