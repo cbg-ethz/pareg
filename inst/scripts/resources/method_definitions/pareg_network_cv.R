@@ -20,21 +20,6 @@ df %>%
   arrange(desc(abs(enrichment))) %>%
   head()
 
-# misc
-data.frame(
-  iteration = seq_along(fit$obj$loss_hist),
-  loss = fit$obj$loss_hist
-) %>%
-  ggplot(aes(x = iteration, y = loss)) +
-    geom_line() +
-    geom_point() +
-    theme_minimal()
-ggsave(
-  file.path(dirname(snakemake@output$fname), "loss.pdf"),
-  width = 8,
-  height = 6
-)
-
 # save result
 df %>%
   write_csv(snakemake@output$fname)
