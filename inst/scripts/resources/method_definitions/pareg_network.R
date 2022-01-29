@@ -7,7 +7,7 @@ devtools::load_all("../..")
 fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
-  network_param = 0.9, term_network = term_similarities_sub,
+  network_param = 1, term_network = term_similarities_sub,
   truncate_response = TRUE
 )
 
