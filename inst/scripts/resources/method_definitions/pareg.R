@@ -19,13 +19,14 @@ df %>%
   head()
 
 # misc
-data.frame(
-  iteration = seq_along(fit$obj$loss_hist),
-  loss = fit$obj$loss_hist
-) %>%
-  ggplot(aes(x = iteration, y = loss)) +
+do.call(rbind, fit$obj$loss_hist) %>%
+  as_tibble() %>%
+  unnest(everything()) %>%
+  mutate(iteration = seq_along(fit$obj$loss_hist)) %>%
+  pivot_longer(-iteration) %>%
+  ggplot(aes(x = iteration, y = value, color = name)) +
     geom_line() +
-    geom_point() +
+    # geom_point() +
     theme_minimal()
 ggsave(
   file.path(dirname(snakemake@output$fname), "loss.pdf"),
