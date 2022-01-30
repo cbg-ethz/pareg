@@ -7,13 +7,14 @@ devtools::load_all("../..")
 fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
-  family = netReg::binomial,
+  network_param = 1, term_network = term_similarities_sub,
+  family = netReg::bernoulli,
   response_column_name = "pvalue_notsig"
 )
 
 df <- fit %>%
   as.data.frame() %>%
-  mutate(method = "pareg_bin", enrichment = abs(enrichment))
+  mutate(method = "pareg_network_ber", enrichment = abs(enrichment))
 
 df %>%
   arrange(desc(abs(enrichment))) %>%
