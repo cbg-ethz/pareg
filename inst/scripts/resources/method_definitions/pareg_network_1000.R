@@ -7,13 +7,13 @@ devtools::load_all("../..")
 fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
-  network_param = 1, term_network = term_similarities_sub,
+  network_param = 1000, term_network = term_similarities_sub,
   truncate_response = TRUE
 )
 
 df <- fit %>%
   as.data.frame() %>%
-  mutate(method = "pareg_network", enrichment = abs(enrichment))
+  mutate(method = "pareg_network_1000", enrichment = abs(enrichment))
 
 df %>%
   arrange(desc(abs(enrichment))) %>%
