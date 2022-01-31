@@ -22,6 +22,11 @@ df_loss <- fname_enr_list %>%
     }
 
     replicate <- path_parts[[length(path_parts) - 2]]
+    method <- path_parts[[length(path_parts) - 1]]
+
+    if (!"pareg" %in% method) {
+      return(NULL)
+    }
 
     read_csv(path_loss) %>%
       tail(1) %>% # only use final loss value
