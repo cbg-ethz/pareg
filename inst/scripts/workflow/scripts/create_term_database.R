@@ -50,7 +50,7 @@ if (parts[[1]] == "msigdb") {
   gene_groups <- purrr::map(seq(1, group_num), function(group_idx) {
     glue::glue("g{group_idx}_gene_{seq(1, group_size)}")
   })
-  genes_bg <- paste0("bg_gene_", seq(1, 1000))
+  genes_bg <- paste0("bg_gene_", seq(1, 10000))
 
   df_terms <- purrr::imap_dfr(
     gene_groups,
