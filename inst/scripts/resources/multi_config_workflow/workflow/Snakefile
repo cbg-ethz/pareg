@@ -35,10 +35,22 @@ module regularization_parameter:
 use rule * from regularization_parameter as regularization_parameter_*
 
 
+module noise:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_configfile("config_noise/config.yaml")
+    replace_prefix: {"results/": "results/noise/"}
+
+
+use rule * from noise as noise_*
+
+
 # define required output files
 rule all:
     input:
         rules.dispersion_fitting_all.input,
         rules.response_distribution_all.input,
         rules.regularization_parameter_all.input,
+        rules.noise_all.input,
     default_target: True
