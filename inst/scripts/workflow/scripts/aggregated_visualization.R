@@ -16,7 +16,8 @@ dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 df_enr <- fname_list %>%
   map_dfr(function(path) {
     # TODO: make this better
-    param_str <- gtools::split_path(path, depth_first = FALSE)[[3]]
+    path_parts <- gtools::split_path(path, depth_first = FALSE)
+    param_str <- path_parts[[length(path_parts) - 1]]
     tmp <- list()
     for (param_pair in strsplit(param_str, "_")[[1]]) {
       parts <- strsplit(param_pair, "~")[[1]]

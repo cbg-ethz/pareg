@@ -1,0 +1,44 @@
+from snakemake.io import load_configfile
+
+
+# import modules
+module dispersion_fitting:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_configfile("config_dispersion_fitting/config.yaml")
+    replace_prefix: {"results/": "results/dispersion_fitting/"}
+
+
+use rule * from dispersion_fitting as dispersion_fitting_*
+
+
+module response_distribution:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_configfile("config_response_distribution/config.yaml")
+    replace_prefix: {"results/": "results/response_distribution/"}
+
+
+use rule * from response_distribution as response_distribution_*
+
+
+module regularization_parameter:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_configfile("config_regularization_parameter/config.yaml")
+    replace_prefix: {"results/": "results/regularization_parameter/"}
+
+
+use rule * from regularization_parameter as regularization_parameter_*
+
+
+# define required output files
+rule all:
+    input:
+        rules.dispersion_fitting_all.input,
+        rules.response_distribution_all.input,
+        rules.regularization_parameter_all.input,
+    default_target: True
