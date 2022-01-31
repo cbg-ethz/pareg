@@ -9,6 +9,7 @@ library(cowplot)
 # parameters
 fname_list <- snakemake@input$fname_list
 
+fname_aucs <- snakemake@output$fname_aucs
 outdir <- snakemake@output$outdir
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 
@@ -72,6 +73,9 @@ df_auc <- df_enr %>%
 
     data.frame(auc = auc)
   })
+
+df_auc %>%
+  write_csv(fname_aucs)
 
 df_auc %>%
   head()

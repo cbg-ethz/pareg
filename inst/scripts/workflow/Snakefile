@@ -134,5 +134,6 @@ rule aggregated_visualizations:
         ),
     output:
         outdir=directory("results/aggregated_plots/"),
+        fname_aucs="results/aggregated_plots/roc_aucs.csv",
     script:
         "scripts/aggregated_visualization.R"
