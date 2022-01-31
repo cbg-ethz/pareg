@@ -46,11 +46,28 @@ module noise:
 use rule * from noise as noise_*
 
 
+# custom logic
+rule compare_rocauc_vs_loss:
+    input:
+        fname_aucs="results/regularization_parameter/aggregated_plots/roc_aucs.csv",
+        fname_enr_list=expand(
+            "results/regularization_parameter/enrichments/{params}/replicates/{replicate}/{method}/enrichment_result.csv",
+            params=regularization_parameter.paramspace.instance_patterns,
+            replicate=range(regularization_parameter.config["replicate_count"]),
+            method=regularization_parameter.method_list,
+        )
+    output:
+        outdir=directory("results/regularization_parameter/rocauc_vs_loss/")
+    script:
+        "scripts/compare_rocauc_vs_loss.R"
+
+
 # define required output files
 rule all:
     input:
         rules.dispersion_fitting_all.input,
         rules.response_distribution_all.input,
         rules.regularization_parameter_all.input,
+        "results/regularization_parameter/rocauc_vs_loss/",
         rules.noise_all.input,
     default_target: True
