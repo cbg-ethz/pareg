@@ -3,7 +3,6 @@
 # `null` will execut all methods
 # list of strings will execute selected methods
 method_list:
-    - single_term_methods
     - pareg_network
     - pareg_network_phi_lm
     - pareg_network_phi_var
