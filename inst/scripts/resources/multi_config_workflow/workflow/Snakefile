@@ -7,7 +7,8 @@ module dispersion_fitting:
         "../../../workflow/Snakefile"
     config:
         load_configfile("config_dispersion_fitting/config.yaml")
-    replace_prefix: {"results/": "results/dispersion_fitting/"}
+    replace_prefix:
+        {"results/": "results/dispersion_fitting/"}
 
 
 use rule * from dispersion_fitting as dispersion_fitting_*
@@ -18,7 +19,8 @@ module response_distribution:
         "../../../workflow/Snakefile"
     config:
         load_configfile("config_response_distribution/config.yaml")
-    replace_prefix: {"results/": "results/response_distribution/"}
+    replace_prefix:
+        {"results/": "results/response_distribution/"}
 
 
 use rule * from response_distribution as response_distribution_*
@@ -29,7 +31,8 @@ module regularization_parameter:
         "../../../workflow/Snakefile"
     config:
         load_configfile("config_regularization_parameter/config.yaml")
-    replace_prefix: {"results/": "results/regularization_parameter/"}
+    replace_prefix:
+        {"results/": "results/regularization_parameter/"}
 
 
 use rule * from regularization_parameter as regularization_parameter_*
@@ -40,7 +43,8 @@ module noise:
         "../../../workflow/Snakefile"
     config:
         load_configfile("config_noise/config.yaml")
-    replace_prefix: {"results/": "results/noise/"}
+    replace_prefix:
+        {"results/": "results/noise/"}
 
 
 use rule * from noise as noise_*
@@ -55,9 +59,9 @@ rule compare_rocauc_vs_loss:
             params=regularization_parameter.paramspace.instance_patterns,
             replicate=range(regularization_parameter.config["replicate_count"]),
             method=regularization_parameter.method_list,
-        )
+        ),
     output:
-        outdir=directory("results/regularization_parameter/rocauc_vs_loss/")
+        outdir=directory("results/regularization_parameter/rocauc_vs_loss/"),
     script:
         "scripts/compare_rocauc_vs_loss.R"
 
