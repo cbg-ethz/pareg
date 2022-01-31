@@ -40,6 +40,7 @@ create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
       vars(gene), factor # gene is character if select statement is executed
     ) %>%
     mutate(
+      pvalue_sig = pvalue <= pvalue_threshold,
       pvalue_notsig = pvalue > pvalue_threshold
     )
 }

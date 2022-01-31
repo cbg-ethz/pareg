@@ -8,7 +8,7 @@ fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
   family = netReg::bernoulli,
-  response_column_name = "pvalue_notsig"
+  response_column_name = "pvalue_sig"
 )
 
 df <- fit %>%

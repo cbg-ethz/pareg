@@ -9,7 +9,7 @@ fit <- pareg::pareg(
   df_terms,
   network_param = 1, term_network = term_similarities_sub,
   family = netReg::bernoulli,
-  response_column_name = "pvalue_notsig"
+  response_column_name = "pvalue_sig"
 )
 
 df <- fit %>%
