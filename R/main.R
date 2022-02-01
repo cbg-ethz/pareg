@@ -83,7 +83,8 @@ pareg <- function(
   }
 
   # transform response from [0, 1] to (0, 1) if needed
-  if (min(Y) == 0 || max(Y) == 1) {
+  eps <- .Machine$double.eps * 1e9
+  if (min(Y) < eps || max(Y) > 1 - eps) {
     Y <- transform_y(Y)
   }
 
