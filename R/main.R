@@ -14,7 +14,6 @@ library(netReg)
 #' @param lasso_param Lasso regularization parameter.
 #' @param network_param Network regularization parameter.
 #' @param term_network Term similarity network as adjacency matrix.
-#' @param truncate_response Make sure response is in (0, 1).
 #' @param cv Estimate best regularization parameters using cross-validation.
 #' @param family Distribution family of response.
 #' @param response_column_name Which column of model dataframe
@@ -47,7 +46,7 @@ library(netReg)
 pareg <- function(
   df_genes, df_terms,
   lasso_param = NA_real_, network_param = NA_real_,
-  term_network = NULL, truncate_response = FALSE,
+  term_network = NULL,
   cv = FALSE,
   family = netReg::beta,
   response_column_name = "pvalue"
@@ -83,11 +82,9 @@ pareg <- function(
     term_network <- term_network[ordered_terms, ordered_terms]
   }
 
-  # truncate response if requested
-  if (truncate_response) {
-    eps <- .Machine$double.eps * 1e9 # see ?mgcv::betar
-    Y[Y > 1 - eps] <- 1 - eps
-    Y[Y < eps] <- eps
+  # transform response from [0, 1] to (0, 1) if needed
+  if (min(Y) == 0 || max(Y) == 1) {
+    Y <- transform_y(Y)
   }
 
   # fit model
@@ -120,8 +117,7 @@ pareg <- function(
     params = list(
       lasso_param = lasso_param,
       network_param = network_param,
-      cv = cv,
-      truncate_response = truncate_response
+      cv = cv
     )
   ), class = "pareg"))
 }

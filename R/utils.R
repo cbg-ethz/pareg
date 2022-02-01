@@ -166,3 +166,22 @@ generate_similarity_matrix <- function(cluster_sizes) {
     lapply(cluster_sizes, function(x) matrix(runif(x * x), nrow = x, ncol = x))
   ))
 }
+
+
+#' @title Transform vector from [0, 1] to (0, 1).
+#'
+#' @description Make (response) vector conform to Beta assumptions
+#' as described in section 2 of the betareg vignette
+#' https://cran.r-project.org/web/packages/betareg/vignettes/betareg.pdf.
+#'
+#' @export
+#' @param y Numeric vector in [0, 1]^N
+#'
+#' @return Numeric vector in (0, 1)^N
+#'
+#' @examples
+#' transform_y(c(0, 0.5, 1))
+transform_y <- function(y) {
+  n_obs <- sum(!is.na(y))
+  (y * (n_obs - 1) + 0.5) / n_obs
+}
