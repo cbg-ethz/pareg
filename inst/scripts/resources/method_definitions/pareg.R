@@ -6,8 +6,7 @@ devtools::load_all("../..")
 # run model
 fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
-  df_terms,
-  truncate_response = TRUE
+  df_terms
 )
 
 df <- fit %>%

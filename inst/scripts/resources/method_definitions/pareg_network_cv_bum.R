@@ -8,7 +8,6 @@ fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
   term_network = term_similarities_sub,
-  truncate_response = TRUE,
   cv = TRUE,
   family = netReg::bum
 )
