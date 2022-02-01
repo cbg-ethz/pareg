@@ -50,6 +50,18 @@ module noise:
 use rule * from noise as noise_*
 
 
+module network_regularization:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_configfile("config_network_regularization/config.yaml")
+    replace_prefix:
+        {"results/": "results/network_regularization/"}
+
+
+use rule * from network_regularization as network_regularization_*
+
+
 # custom logic
 rule compare_rocauc_vs_loss:
     input:
@@ -74,4 +86,5 @@ rule all:
         rules.regularization_parameter_all.input,
         "results/regularization_parameter/rocauc_vs_loss/",
         rules.noise_all.input,
+        rules.network_regularization_all.input,
     default_target: True
