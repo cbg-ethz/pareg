@@ -11,9 +11,8 @@ dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 # read loss data
 df_loss <- fname_enr_list %>%
   map_dfr(function(path_enr) {
-    path_loss <- file.path(dirname(path_enr), "loss.csv")
-
-    path_parts <- gtools::split_path(path_loss, depth_first = FALSE)
+    # parse parameters
+    path_parts <- gtools::split_path(path_enr, depth_first = FALSE)
     param_str <- path_parts[[length(path_parts) - 4]]
     tmp <- list()
     for (param_pair in strsplit(param_str, "_")[[1]]) {
@@ -28,14 +27,25 @@ df_loss <- fname_enr_list %>%
       return(NULL)
     }
 
-    read_csv(path_loss) %>%
-      tail(1) %>% # only use final loss value
-      mutate(path = path_loss) %>%
+    # parse extra statistics
+    path_stats <- file.path(dirname(path_enr), "extra_stats.csv")
+    df_stats <- read_csv(path_stats)
+
+    # parse loss
+    path_loss <- file.path(dirname(path_enr), "loss.csv")
+
+    df_lo <- read_csv(path_loss) %>%
+      tail(1) # only use final loss value
+
+    # assemble result
+    df_lo %>%
+      mutate(path = path_enr) %>%
       rowwise %>%
       mutate(
         method = str_split_fixed(path, "/", Inf)[[7]],
         replicate = replicate,
-        !!!tmp
+        !!!tmp,
+        !!!df_stats
       ) %>%
       select(-path)
   })
@@ -58,6 +68,10 @@ df_res %>%
 # create summary plot
 p <- cowplot::plot_grid(
   ggplot(df_res, aes(x = method, y = total_loss)) +
+    geom_boxplot() +
+    scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+    theme_minimal(),
+  ggplot(df_res, aes(x = method, y = pseudo_r_squared)) +
     geom_boxplot() +
     scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
     theme_minimal(),

@@ -38,6 +38,11 @@ ggsave(
   height = 6
 )
 
+data.frame(
+  pseudo_r_squared = fit$obj$pseudo_r_squared
+) %>%
+  write_csv(file.path(dirname(snakemake@output$fname), "extra_stats.csv"))
+
 # save result
 df %>%
   write_csv(snakemake@output$fname)
