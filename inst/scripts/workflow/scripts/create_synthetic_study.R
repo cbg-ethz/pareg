@@ -109,6 +109,14 @@ table(
   dnn = c("gene in generated study", "gene in original study")
 )
 
+data.frame(
+  min_pvalue = min(df$pvalue),
+  median_pvalue = median(df$pvalue),
+  max_pvalue = max(df$pvalue),
+  summary = paste(as.vector(summary(df$pvalue)), collapse = "__")
+) %>%
+  write_csv(file.path(plotdir, "pvalue_stats.csv"))
+
 # sanity checks
 stopifnot(all(sort(unique(c(study_genes, nonstudy_genes))) == sort(unique(df_terms$gene))))
 
