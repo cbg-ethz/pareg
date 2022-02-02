@@ -61,7 +61,7 @@ df_enr %>%
     )
   })
 
-# compute and plot AUCs
+# compute AUCs
 df_auc <- df_enr %>%
   group_by(method, replicate, termsource, alpha, beta, similarityfactor, ontermcount, siggenescaling) %>%
   group_modify(function(df_group, key) {
@@ -80,6 +80,7 @@ df_auc %>%
 df_auc %>%
   head()
 
+# plot all AUCs
 df_auc %>%
   ggplot(aes(x = method, y = auc, fill = method)) +
   geom_boxplot() +
@@ -88,3 +89,27 @@ df_auc %>%
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   theme_minimal()
 ggsave(file.path(outdir, glue("roc_aucs.pdf")), width = 8, height = 6)
+
+# plot individual AUCs
+auc_plot_dir <- file.path(outdir, "auc_plots")
+dir.create(auc_plot_dir, showWarnings = FALSE, recursive = TRUE)
+
+df_auc %>%
+  group_by(across(-all_of(c("method", "replicate", "auc")))) %>%
+  group_walk(function(df_group, key) {
+    print(key)
+
+    id_ <- apply(
+      apply(key, 1, function(x) { n <- names(key); paste0(paste(n,x, sep = "~")) }),
+      2,
+      paste0, collapse = "_"
+    )
+
+    ggplot(df_group, aes(x = method, y = auc, fill = method)) +
+      geom_boxplot() +
+      xlab("Method") +
+      ylab("ROC-AUC") +
+      scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+      theme_minimal()
+    ggsave(file.path(auc_plot_dir, glue("roc_aucs_{id_}.pdf")), width = 8, height = 6)
+  })
