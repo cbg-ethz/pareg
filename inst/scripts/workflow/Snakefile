@@ -9,7 +9,9 @@ configfile: "config/config.yaml"
 
 # method selection
 if config["method_list"] is None:
-    (method_list,) = glob_wildcards(srcdir("../resources/method_definitions/{method}.R"))
+    (method_list,) = glob_wildcards(
+        srcdir("../resources/method_definitions/{method}.R")
+    )
 else:
     method_list = config["method_list"]
 
@@ -17,7 +19,7 @@ print(method_list)
 
 
 # setup paramspace
-df_params = pd.read_csv(config["params_path"], comment='#')
+df_params = pd.read_csv(config["params_path"], comment="#")
 
 for param, values in config["parameters"].items():
     df_tmp = pd.DataFrame({param: values, "tmp_col": 1})
