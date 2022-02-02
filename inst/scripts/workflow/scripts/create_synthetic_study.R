@@ -6,7 +6,10 @@ devtools::load_all("../..")
 # parameters
 fname_terms <- snakemake@input$fname_terms
 fname_sim <- snakemake@input$fname_sim
+
 fname_rds <- snakemake@output$fname_rds
+plotdir <- snakemake@output$plotdir
+dir.create(plotdir, recursive = TRUE)
 
 alpha <- snakemake@params$params$alpha # false positive rate
 beta <- snakemake@params$params$beta # false negative rate
@@ -104,6 +107,28 @@ table(
   df$in_study,
   df$in_orig_study,
   dnn = c("gene in generated study", "gene in original study")
+)
+
+# sanity checks
+stopifnot(all(sort(unique(c(study_genes, nonstudy_genes))) == sort(unique(df_terms$gene))))
+
+# overview plots
+ggplot(df, aes(x = pvalue)) +
+  geom_histogram() +
+  facet_wrap(~ in_study) +
+  theme_minimal()
+ggsave(
+  file.path(plotdir, "study_pvalue_histogram.pdf"),
+  width = 16
+)
+
+ggplot(df, aes(x = pvalue)) +
+  geom_histogram() +
+  facet_wrap(~ in_orig_study) +
+  theme_minimal()
+ggsave(
+  file.path(plotdir, "orig_study_pvalue_histogram.pdf"),
+  width = 16
 )
 
 # save result
