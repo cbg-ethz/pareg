@@ -1,27 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://cbg-ethz.github.io/pareg//index.html</loc>
+    <loc>https://cbg-ethz.github.io/pareg/404.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/pareg//reference/as.data.frame.pareg.html</loc>
+    <loc>https://cbg-ethz.github.io/pareg/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/pareg//reference/compute_term_similarities.html</loc>
+    <loc>https://cbg-ethz.github.io/pareg/articles/pareg.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/pareg//reference/create_model_df.html</loc>
+    <loc>https://cbg-ethz.github.io/pareg/authors.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/pareg//reference/jaccard.html</loc>
+    <loc>https://cbg-ethz.github.io/pareg/index.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/pareg//reference/pareg.html</loc>
+    <loc>https://cbg-ethz.github.io/pareg/reference/as.data.frame.pareg.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/pareg//reference/plot.pareg.html</loc>
+    <loc>https://cbg-ethz.github.io/pareg/reference/compute_term_similarities.html</loc>
   </url>
   <url>
-    <loc>https://cbg-ethz.github.io/pareg//articles/pareg.html</loc>
+    <loc>https://cbg-ethz.github.io/pareg/reference/create_model_df.html</loc>
+  </url>
+  <url>
+    <loc>https://cbg-ethz.github.io/pareg/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://cbg-ethz.github.io/pareg/reference/jaccard.html</loc>
+  </url>
+  <url>
+    <loc>https://cbg-ethz.github.io/pareg/reference/pareg.html</loc>
+  </url>
+  <url>
+    <loc>https://cbg-ethz.github.io/pareg/reference/plot.pareg.html</loc>
   </url>
 </urlset>
