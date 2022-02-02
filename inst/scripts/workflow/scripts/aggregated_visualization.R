@@ -85,5 +85,6 @@ df_auc %>%
   geom_boxplot() +
   xlab("Method") +
   ylab("ROC-AUC") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
   theme_minimal()
 ggsave(file.path(outdir, glue("roc_aucs.pdf")), width = 8, height = 6)
