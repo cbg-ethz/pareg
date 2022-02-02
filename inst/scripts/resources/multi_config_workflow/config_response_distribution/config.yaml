@@ -5,6 +5,7 @@
 method_list:
     - pareg
     - pareg_ber
+    - pareg_clip
     - pareg_network
     - pareg_network_ber
 
