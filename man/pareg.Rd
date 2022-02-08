@@ -10,9 +10,9 @@ pareg(
   lasso_param = NA_real_,
   network_param = NA_real_,
   term_network = NULL,
-  truncate_response = FALSE,
   cv = FALSE,
-  family = netReg::beta
+  family = netReg::beta,
+  response_column_name = "pvalue"
 )
 }
 \arguments{
@@ -26,11 +26,12 @@ pareg(
 
 \item{term_network}{Term similarity network as adjacency matrix.}
 
-\item{truncate_response}{Make sure response is in (0, 1).}
-
 \item{cv}{Estimate best regularization parameters using cross-validation.}
 
 \item{family}{Distribution family of response.}
+
+\item{response_column_name}{Which column of model dataframe
+to use as response.}
 }
 \value{
 An object of class \code{pareg}.

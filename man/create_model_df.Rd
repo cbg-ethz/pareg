@@ -4,7 +4,7 @@
 \alias{create_model_df}
 \title{Create design matrix.}
 \usage{
-create_model_df(df_genes, df_terms)
+create_model_df(df_genes, df_terms, pvalue_threshold = 0.05)
 }
 \arguments{
 \item{df_genes}{Dataframe storing gene names and DE p-values.}
