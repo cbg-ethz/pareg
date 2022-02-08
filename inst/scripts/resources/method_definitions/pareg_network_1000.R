@@ -39,7 +39,8 @@ ggsave(
 )
 
 data.frame(
-  pseudo_r_squared = fit$obj$pseudo_r_squared
+  pseudo_r_squared = fit$obj$pseudo_r_squared,
+  mse = fit$obj$mse
 ) %>%
   write_csv(file.path(dirname(snakemake@output$fname), "extra_stats.csv"))
 
