@@ -4,10 +4,12 @@
 # list of strings will execute selected methods
 method_list:
     - pareg
-    - pareg_ber
     - pareg_clip
+    - pareg_ber
+    - pareg_gau
     - pareg_network
     - pareg_network_ber
+    - pareg_network_gau
 
 term_filter:
     min_size: null
