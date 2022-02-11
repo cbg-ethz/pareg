@@ -82,10 +82,12 @@ pareg <- function(
     term_network <- term_network[ordered_terms, ordered_terms]
   }
 
-  # transform response from [0, 1] to (0, 1) if needed
-  eps <- .Machine$double.eps * 1e9
-  if (min(Y) < eps || max(Y) > 1 - eps) {
-    Y <- transform_y(Y)
+  if (family()$family %in% c("beta", "beta_phi_lm", "beta_phi_var")) {
+    # transform response from [0, 1] to (0, 1) if needed
+    eps <- .Machine$double.eps * 1e9
+    if (min(Y) < eps || max(Y) > 1 - eps) {
+      Y <- transform_y(Y)
+    }
   }
 
   # fit model
