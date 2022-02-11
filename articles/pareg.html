@@ -69,7 +69,7 @@
       <h1 data-toc-skip>Get started</h1>
                         <h4 data-toc-skip class="author">Kim Philipp Jablonski</h4>
             
-            <h4 data-toc-skip class="date">2022-02-08</h4>
+            <h4 data-toc-skip class="date">2022-02-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/cbg-ethz/pareg/blob/HEAD/vignettes/pareg.Rmd" class="external-link"><code>vignettes/pareg.Rmd</code></a></small>
       <div class="hidden name"><code>pareg.Rmd</code></div>
@@ -227,7 +227,9 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pareg.html">pareg</a></span><span class="op">(</span><span class="va">df_study</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">in_study</span><span class="op">)</span>, <span class="va">df_terms</span>, network_param <span class="op">=</span> <span class="fl">1</span>, term_network <span class="op">=</span> <span class="va">term_network</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Warning: Unknown columns: `NA`</span></code></pre>
-<pre><code><span class="co">## Warning: family beta is still experimental. enjoy with care.</span></code></pre>
+<pre><code><span class="co">## Warning: family beta is still experimental. enjoy with care.</span>
+
+<span class="co">## Warning: family beta is still experimental. enjoy with care.</span></code></pre>
 <pre><code><span class="co">## Loaded Tensorflow version 2.3.0</span></code></pre>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
