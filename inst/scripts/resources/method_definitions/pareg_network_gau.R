@@ -5,7 +5,13 @@ devtools::load_all("../..")
 
 # run model
 fit <- pareg::pareg(
-  study$df %>% select(gene, pvalue) %>% mutate(pvalue = log10(pvalue)),
+  study$df %>%
+    select(gene, pvalue) %>%
+    mutate(pvalue = ifelse(
+      pvalue > 0,
+      log10(pvalue),
+      log10(min(pvalue[pvalue > 0]))
+    )),
   df_terms,
   network_param = 1, term_network = term_similarities_sub,
   family = netReg::gaussian
