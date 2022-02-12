@@ -87,6 +87,7 @@ df_auc %>%
   xlab("Method") +
   ylab("ROC-AUC") +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  ylim(0, 1) +
   theme_minimal()
 ggsave(file.path(outdir, glue("roc_aucs.pdf")), width = 8, height = 6)
 
@@ -110,6 +111,7 @@ df_auc %>%
       xlab("Method") +
       ylab("ROC-AUC") +
       scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+      ylim(0, 1) +
       theme_minimal()
     ggsave(file.path(auc_plot_dir, glue("roc_aucs_{id_}.pdf")), width = 8, height = 6)
   })
