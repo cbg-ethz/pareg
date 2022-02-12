@@ -88,6 +88,34 @@ df_enr %>%
     ggsave(file.path(roc_plot_dir, glue("rocs_{id_}.pdf")), width = 8, height = 6)
   })
 
+# plot individual ROC curves for subset of FPR values
+roc_sub_plot_dir <- file.path(outdir, "roc_subset_plots")
+dir.create(roc_sub_plot_dir, showWarnings = FALSE, recursive = TRUE)
+
+df_enr %>%
+  group_by(across(-all_of(c("term", "enrichment", "is_on_term", "replicate")))) %>%
+  group_walk(function(df_group, key) {
+    id_ <- apply(
+      apply(key, 1, function(x) { n <- names(key); paste0(paste(n,x, sep = "~")) }),
+      2,
+      paste0, collapse = "_"
+    )
+    print(id_)
+
+    df_group %>%
+      mutate(
+        replicate = as_factor(replicate), # fix hue plotting
+        is_on_term = recode(as.character(is_on_term), "FALSE" = 0, "TRUE" = 1) # fix warning: "D not labeled 0/1, assuming FALSE = 0 and TRUE = 1"
+      ) %>%
+      ggplot(aes(m = enrichment, d = is_on_term, color = replicate)) +
+      geom_roc() +
+      geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
+      ggtitle(id_) +
+      xlim(0, 0.2) +
+      theme_minimal()
+    ggsave(file.path(roc_sub_plot_dir, glue("rocs_{id_}.pdf")), width = 8, height = 6)
+  })
+
 # compute AUCs
 df_auc <- df_enr %>%
   group_by(method, replicate, termsource, alpha, beta, similarityfactor, ontermcount, siggenescaling) %>%
