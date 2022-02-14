@@ -32,13 +32,14 @@ df_enr <- fname_list %>%
 df_enr %>%
   head
 
-# plot ROC curves
+# plot ROC/PR curves
 df_enr %>%
   group_by(method) %>%
   group_walk(function(df_group, key) {
     print(key)
     parameter_columns <- setdiff(colnames(df_group), c("method", "term", "enrichment", "is_on_term", "replicate"))
 
+    # ROC
     plot_list <- parameter_columns %>%
       map(function(param_name) {
         print(param_name)
@@ -57,6 +58,36 @@ df_enr %>%
     p <- plot_grid(plotlist = plot_list)
     save_plot(
       file.path(outdir, glue("rocs_{key}.pdf")),
+      p,
+      base_height = 10
+    )
+
+    # PR
+    plot_list <- parameter_columns %>%
+      map(function(param_name) {
+        print(param_name)
+        df_group %>%
+          mutate(
+            replicate = as_factor(replicate), # fix hue plotting
+          ) %>%
+          {
+            pr.curve(
+              scores.class0 = .$enrichment,
+              weights.class0 = .$is_on_term,
+              curve = TRUE
+            )$curve %>%
+              as.data.frame()
+          } %>%
+          rename(recall = V1, precision = V2, threshold = V3) %>%
+          ggplot(aes(x = recall, y = precision, color = param_name)) +
+          geom_line() +
+          ggtitle(glue("Parameter: {param_name}")) +
+          theme_minimal()
+      })
+
+    p <- plot_grid(plotlist = plot_list)
+    save_plot(
+      file.path(outdir, glue("prs_{key}.pdf")),
       p,
       base_height = 10
     )
