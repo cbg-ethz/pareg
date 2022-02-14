@@ -69,7 +69,9 @@ rule create_synthetic_study:
         fname_sim="results/terms/{termsource}/term_similarities.csv",
     output:
         fname_rds=f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds",
-        plotdir=directory(f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/plots/"),
+        plotdir=directory(
+            f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/plots/"
+        ),
     params:
         params=paramspace.instance,
     resources:
