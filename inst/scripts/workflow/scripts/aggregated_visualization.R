@@ -62,9 +62,12 @@ df_enr %>%
     )
   })
 
-# plot individual ROC curves
+# plot individual ROC/PR curves
 roc_plot_dir <- file.path(outdir, "roc_plots")
 dir.create(roc_plot_dir, showWarnings = FALSE, recursive = TRUE)
+
+pr_plot_dir <- file.path(outdir, "pr_plots")
+dir.create(pr_plot_dir, showWarnings = FALSE, recursive = TRUE)
 
 df_enr %>%
   group_by(across(-all_of(c("term", "enrichment", "is_on_term", "replicate")))) %>%
@@ -87,6 +90,27 @@ df_enr %>%
       ggtitle(id_) +
       theme_minimal()
     ggsave(file.path(roc_plot_dir, glue("rocs_{id_}.pdf")), width = 8, height = 6)
+
+    df_group %>%
+      mutate(
+        replicate = as_factor(replicate), # fix hue plotting
+      ) %>%
+      group_by(replicate) %>%
+      group_modify(function(group, key) {
+        print(key)
+        pr.curve(
+          scores.class0 = group$enrichment,
+          weights.class0 = group$is_on_term,
+          curve = TRUE
+        )$curve %>%
+          as.data.frame()
+      }) %>%
+      rename(recall = V1, precision = V2, threshold = V3) %>%
+      ggplot(aes(x = recall, y = precision, color = replicate)) +
+      geom_line() +
+      ggtitle("PR-curve") +
+      theme_minimal()
+    ggsave(file.path(pr_plot_dir, glue("prs_{id_}.pdf")), width = 8, height = 6)
   })
 
 # plot individual ROC curves for subset of FPR values
