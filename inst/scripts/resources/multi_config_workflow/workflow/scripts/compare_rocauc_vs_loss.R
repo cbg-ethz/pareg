@@ -56,7 +56,10 @@ df_aucs <- read_csv(
   col_types = cols(.default = "c")
 ) %>%
   filter(str_detect(method, "pareg")) %>%
-  mutate(auc = as.numeric(auc))
+  mutate(
+    roc_auc = as.numeric(roc_auc),
+    pr_auc = as.numeric(pr_auc)
+  )
 
 # combine data sources
 df_res <- df_loss %>%
@@ -79,10 +82,14 @@ p <- cowplot::plot_grid(
     geom_boxplot() +
     scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
     theme_minimal(),
-  ggplot(df_res, aes(x = method, y = auc)) +
+  ggplot(df_res, aes(x = method, y = roc_auc)) +
     geom_boxplot() +
     scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
     theme_minimal(),
+    ggplot(df_res, aes(x = method, y = pr_auc)) +
+      geom_boxplot() +
+      scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+      theme_minimal(),
   ncol = 1
 )
 p
