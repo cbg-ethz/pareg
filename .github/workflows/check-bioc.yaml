@@ -116,6 +116,10 @@ jobs:
           ## Edit below if you have any Windows system dependencies
         shell: Rscript {0}
 
+      - name: Install Tensorflow
+        run: |
+          Rscript -e "tfprobability::install_tfprobability(version=Sys.getenv('TFP_VERSION'), tensorflow=Sys.getenv('TF_VERSION'))"
+
       - name: Install BiocManager
         run: |
           message(paste('****', Sys.time(), 'installing BiocManager ****'))
