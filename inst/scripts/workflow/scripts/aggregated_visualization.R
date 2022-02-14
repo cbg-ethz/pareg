@@ -42,6 +42,7 @@ df_enr %>%
     # ROC
     plot_list <- parameter_columns %>%
       map(function(param_name) {
+        print("ROC")
         print(param_name)
         df_group %>%
           mutate(
@@ -65,21 +66,24 @@ df_enr %>%
     # PR
     plot_list <- parameter_columns %>%
       map(function(param_name) {
+        print("PR")
         print(param_name)
         df_group %>%
           mutate(
             replicate = as_factor(replicate), # fix hue plotting
           ) %>%
-          {
+          group_by_at(vars(one_of(param_name))) %>%
+          group_modify(function(group, key) {
+            print(key)
             pr.curve(
-              scores.class0 = .$enrichment,
-              weights.class0 = .$is_on_term,
+              scores.class0 = group$enrichment,
+              weights.class0 = group$is_on_term,
               curve = TRUE
             )$curve %>%
               as.data.frame()
-          } %>%
+          }) %>%
           rename(recall = V1, precision = V2, threshold = V3) %>%
-          ggplot(aes(x = recall, y = precision, color = param_name)) +
+          ggplot(aes_string(x = "recall", y = "precision", color = param_name)) +
           geom_line() +
           ggtitle(glue("Parameter: {param_name}")) +
           theme_minimal()
