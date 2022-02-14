@@ -57,4 +57,5 @@ Imports:
     glue,
     rlang,
     progress,
-    Matrix
+    Matrix,
+    matrixLaplacian
