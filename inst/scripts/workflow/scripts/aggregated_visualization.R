@@ -4,6 +4,7 @@ library(glue)
 library(PRROC)
 library(plotROC)
 library(cowplot)
+library(scales)
 
 
 # parameters
@@ -111,7 +112,7 @@ df_enr %>%
       geom_roc() +
       geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
       ggtitle(id_) +
-      xlim(0, 0.2) +
+      scale_x_continuous(limits = c(0, 0.2), oob = squish) +
       theme_minimal()
     ggsave(file.path(roc_sub_plot_dir, glue("rocs_{id_}.pdf")), width = 8, height = 6)
   })
