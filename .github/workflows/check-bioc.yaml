@@ -116,10 +116,6 @@ jobs:
           ## Edit below if you have any Windows system dependencies
         shell: Rscript {0}
 
-      - name: Install Tensorflow
-        run: |
-          Rscript -e "tfprobability::install_tfprobability(version=Sys.getenv('TFP_VERSION'), tensorflow=Sys.getenv('TF_VERSION'))"
-
       - name: Install BiocManager
         run: |
           message(paste('****', Sys.time(), 'installing BiocManager ****'))
@@ -130,6 +126,11 @@ jobs:
         run: |
           BiocManager::install(version = "${{ matrix.config.bioc }}", ask = FALSE)
         shell: Rscript {0}
+
+      - name: Install Tensorflow
+        run: |
+          Rscript -e "install.packages("tfprobability")"
+          Rscript -e "tfprobability::install_tfprobability(version=Sys.getenv('TFP_VERSION'), tensorflow=Sys.getenv('TF_VERSION'))"
 
       - name: Install dependencies pass 1
         run: |
