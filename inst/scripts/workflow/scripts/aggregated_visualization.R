@@ -121,13 +121,18 @@ df_enr %>%
 df_auc <- df_enr %>%
   group_by(method, replicate, termsource, alpha, beta, similarityfactor, ontermcount, siggenescaling) %>%
   group_modify(function(df_group, key) {
-    auc <- roc.curve(
+    roc_auc <- roc.curve(
       scores.class0 = df_group$enrichment,
       weights.class0 = df_group$is_on_term,
       curve = FALSE
     )$auc
+    pr_auc <- pr.curve(
+      scores.class0 = df_group$enrichment,
+      weights.class0 = df_group$is_on_term,
+      curve = FALSE
+    )$auc.integral
 
-    data.frame(auc = auc)
+    data.frame(roc_auc = roc_auc, pr_auc = pr_auc)
   })
 
 df_auc %>%
@@ -138,7 +143,7 @@ df_auc %>%
 
 # plot all AUCs
 df_auc %>%
-  ggplot(aes(x = method, y = auc, fill = method)) +
+  ggplot(aes(x = method, y = roc_auc, fill = method)) +
   geom_boxplot() +
   xlab("Method") +
   ylab("ROC-AUC") +
@@ -147,12 +152,22 @@ df_auc %>%
   theme_minimal()
 ggsave(file.path(outdir, glue("roc_aucs.pdf")), width = 8, height = 6)
 
+df_auc %>%
+  ggplot(aes(x = method, y = pr_auc, fill = method)) +
+  geom_boxplot() +
+  xlab("Method") +
+  ylab("PR-AUC") +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+  ylim(0, 1) +
+  theme_minimal()
+ggsave(file.path(outdir, glue("pr_aucs.pdf")), width = 8, height = 6)
+
 # plot individual AUCs
 auc_plot_dir <- file.path(outdir, "auc_plots")
 dir.create(auc_plot_dir, showWarnings = FALSE, recursive = TRUE)
 
 df_auc %>%
-  group_by(across(-all_of(c("method", "replicate", "auc")))) %>%
+  group_by(across(-all_of(c("method", "replicate", "roc_auc", "pr_auc")))) %>%
   group_walk(function(df_group, key) {
     print(key)
 
@@ -162,7 +177,7 @@ df_auc %>%
       paste0, collapse = "_"
     )
 
-    ggplot(df_group, aes(x = method, y = auc, fill = method)) +
+    ggplot(df_group, aes(x = method, y = roc_auc, fill = method)) +
       geom_boxplot() +
       xlab("Method") +
       ylab("ROC-AUC") +
@@ -170,4 +185,13 @@ df_auc %>%
       ylim(0, 1) +
       theme_minimal()
     ggsave(file.path(auc_plot_dir, glue("roc_aucs_{id_}.pdf")), width = 8, height = 6)
+
+    ggplot(df_group, aes(x = method, y = pr_auc, fill = method)) +
+      geom_boxplot() +
+      xlab("Method") +
+      ylab("PR-AUC") +
+      scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+      ylim(0, 1) +
+      theme_minimal()
+    ggsave(file.path(auc_plot_dir, glue("pr_aucs_{id_}.pdf")), width = 8, height = 6)
   })
