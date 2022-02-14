@@ -1,7 +1,3 @@
-library(tidyverse)
-library(netReg)
-
-
 #' @title Pathway enrichment using a regularized regression approach.
 #'
 #' @description Run model to compute pathway enrichments.
@@ -41,14 +37,13 @@ library(netReg)
 #' )
 #' pareg(df_genes, df_terms)
 #' @import tidyverse
-#' @importFrom netReg edgenet cv.edgenet beta
 #' @importFrom glue glue_collapse
 pareg <- function(
   df_genes, df_terms,
   lasso_param = NA_real_, network_param = NA_real_,
   term_network = NULL,
   cv = FALSE,
-  family = netReg::beta,
+  family = beta,
   response_column_name = "pvalue"
 ) {
   # generate design matrix
@@ -92,9 +87,9 @@ pareg <- function(
 
   # fit model
   if (cv) {
-    fit_func <- netReg::cv.edgenet
+    fit_func <- cv.edgenet
   } else {
-    fit_func <- netReg::edgenet
+    fit_func <- edgenet
 
     if (is.na(lasso_param)) {
       lasso_param <- 0

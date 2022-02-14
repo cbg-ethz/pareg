@@ -9,7 +9,7 @@ fit <- pareg::pareg(
   df_terms,
   term_network = term_similarities_sub,
   cv = TRUE,
-  family = netReg::bum
+  family = pareg::bum
 )
 
 df <- fit %>%

@@ -7,7 +7,7 @@ test_that("Gaussian case works", {
   X <- matrix(rnorm(1000 * 3), nrow = 1000)
   Y <- rnorm(1000, X %*% beta + alpha)
 
-  fit <- netReg::edgenet(X, Y, family = netReg::gaussian())
+  fit <- pareg::edgenet(X, Y, family = pareg::gaussian)
 
   expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.02)
 })
@@ -22,14 +22,15 @@ test_that("Beta case works", {
 
   X <- matrix(rnorm(N * 2), nrow = N)
   eta <- X %*% beta + alpha
-  mu <- netReg::beta_phi_var()$linkinv(eta)$numpy()
+  mu <- pareg::beta_phi_var()$linkinv(eta)$numpy()
   phi <- 1
   Y <- rbeta(N, mu * phi, (1 - mu) * phi)
 
-  Y <- pareg::transform_y(Y)
+  Y <- transform_y(Y)
 
-  # betareg::betareg(Y ~ X)
-  fit <- netReg::edgenet(X, Y, family = netReg::beta_phi_var())
+  fit_br <- betareg::betareg(Y ~ X)
+  fit <- pareg::edgenet(X, Y, family = pareg::beta_phi_var())
 
+  expect_equal(c(as.vector(coef(fit)), fit$dispersion), as.vector(coef(fit_br)), tolerance = 0.05)
   # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.05)
 })

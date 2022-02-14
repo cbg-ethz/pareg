@@ -13,7 +13,7 @@ fit <- pareg::pareg(
       log10(min(pvalue[pvalue > 0]))
     )),
   df_terms,
-  family = netReg::gaussian
+  family = pareg::gaussian
 )
 
 df <- fit %>%

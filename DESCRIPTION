@@ -25,7 +25,9 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 4.1)
+    R (>= 4.1),
+    tensorflow (>= 2.2.0),
+    tfprobability (>= 0.10.0)
 Suggests:
     knitr,
     rmarkdown,
@@ -45,7 +47,6 @@ Imports:
     stats,
     tidyverse,
     tidygraph,
-    netReg,
     igraph,
     proxy,
     dplyr,
@@ -57,5 +58,3 @@ Imports:
     rlang,
     progress,
     Matrix
-Remotes:
-    dirmeier/netReg@v1.12.0

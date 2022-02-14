@@ -11,7 +11,7 @@ pareg(
   network_param = NA_real_,
   term_network = NULL,
   cv = FALSE,
-  family = netReg::beta,
+  family = beta,
   response_column_name = "pvalue"
 )
 }

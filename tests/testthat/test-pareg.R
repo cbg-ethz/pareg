@@ -31,7 +31,7 @@ test_that("package doesn't crash for trivial case", {
   )
 })
 
-test_that("Poisson family works", {
+test_that("Bernoulli family works", {
   # create synthetic data
   set.seed(42)
 
@@ -57,7 +57,7 @@ test_that("Poisson family works", {
   # run model
   res <- pareg(
     df_genes, df_terms,
-    family = netReg::poisson,
+    family = bernoulli,
     response_column_name = "pvalue_notsig"
   )
 

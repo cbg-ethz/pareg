@@ -7,7 +7,7 @@ devtools::load_all("../..")
 fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
-  family = netReg::poisson,
+  family = pareg::poisson,
   response_column_name = "pvalue_notsig"
 )
 

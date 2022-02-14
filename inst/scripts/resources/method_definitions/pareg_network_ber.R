@@ -8,7 +8,7 @@ fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
   network_param = 1, term_network = term_similarities_sub,
-  family = netReg::bernoulli,
+  family = pareg::bernoulli,
   response_column_name = "pvalue_sig"
 )
 

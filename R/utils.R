@@ -19,7 +19,7 @@
 #'   gene = c("g1", "g2", "g1", "g2", "g2")
 #' )
 #' create_model_df(df_genes, df_terms)
-#' @import tidyverse
+#' @import tidyverse dplyr tidyr
 #' @importFrom rlang .data
 create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
   df_terms %>%
@@ -82,6 +82,7 @@ create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
 #' @importFrom rlang .data
 #' @importFrom dplyr mutate filter rename arrange desc
 #' @importFrom tidyr extract
+#' @importFrom tibble rownames_to_column
 #' @importFrom stats coef
 as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
   if (!is.null(row.names) || optional) {
