@@ -803,6 +803,7 @@ setMethod(
 
 
 #' @noRd
+#' @importFrom matrixLaplacian matrixLaplacian
 .edgenet <- function(x, y, gx, gy,
                      lambda, psigx, psigy,
                      thresh, maxit, learning.rate, family) {
@@ -812,10 +813,10 @@ setMethod(
   y <- cast_float(y)
 
   if (!is.null(gx)) {
-    gx <- cast_float(laplacian_(gx))
+    gx <- cast_float(matrixLaplacian(gx, FALSE, FALSE)$LaplacianMatrix)
   }
   if (!is.null(gy)) {
-    gy <- cast_float(laplacian_(gy))
+    gy <- cast_float(matrixLaplacian(gy, FALSE, FALSE)$LaplacianMatrix)
   }
 
   mod <- model(ncol(x), ncol(y), family)
