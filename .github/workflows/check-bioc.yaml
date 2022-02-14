@@ -129,7 +129,9 @@ jobs:
 
       - name: Install Tensorflow
         run: |
-          Rscript -e "install.packages('tfprobability')"
+          Rscript -e "install.packages(c('reticulate', 'tfprobability'))"
+          Rscript -e "reticulate::install_miniconda()"
+          Rscript -e "reticulate::conda_create('r-reticulate', packages = c('python==3.9.0'))"
           Rscript -e "tfprobability::install_tfprobability(version=Sys.getenv('TFP_VERSION'), tensorflow=Sys.getenv('TF_VERSION'))"
 
       - name: Install dependencies pass 1
