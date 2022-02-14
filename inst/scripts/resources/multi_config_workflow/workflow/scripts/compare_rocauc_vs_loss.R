@@ -70,7 +70,7 @@ df_res %>%
 
 # create summary plot
 p <- cowplot::plot_grid(
-  ggplot(df_res, aes(x = method, y = total_loss)) +
+  ggplot(df_res, aes(x = method, y = likelihood)) +
     geom_boxplot() +
     scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
     theme_minimal(),
