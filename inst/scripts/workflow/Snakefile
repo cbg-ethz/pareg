@@ -91,7 +91,7 @@ rule run_method:
         script_name=lambda wildcards, input: input.script,
         setup_code_fname=srcdir("scripts/model_setup_code.R"),
     resources:
-        mem_mb=lambda wildcards: (15_000 if "cv" in wildcards.method else 5000),
+        mem_mb=lambda wildcards: (30_000 if "cv" in wildcards.method else 20000),
         time_min=lambda wildcards, attempt: (
             60 * 23 if "cv" in wildcards.method else 60 * 10
         )
@@ -139,5 +139,7 @@ rule aggregated_visualizations:
     output:
         outdir=directory("results/aggregated_plots/"),
         fname_aucs="results/aggregated_plots/roc_aucs.csv",
+    resources:
+        mem_mb=20_000,
     script:
         "scripts/aggregated_visualization.R"
