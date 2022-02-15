@@ -2,6 +2,8 @@
 #'
 #' @description Compute Jaccard similarity between two sets.
 #'
+#' @export
+#'
 #' @param x First set.
 #' @param y Second set.
 #'
