@@ -30,12 +30,11 @@
 #' )
 #' fit <- pareg(df_genes, df_terms)
 #' plot(fit)
-#' @import tidyverse ggraph
+#' @import tidyverse ggraph ggplot2
 #' @importFrom rlang .data
 #' @importFrom dplyr group_by summarize distinct pull
 #' @importFrom magrittr %<>% extract2
 #' @importFrom tidygraph as_tbl_graph activate mutate
-#' @importFrom ggplot2 aes theme element_rect coord_fixed
 plot_pareg_with_args <- function(x, show_term_names = TRUE, min_similarity = 0) {
   # prepare data
   df_enr <- as.data.frame(x)
