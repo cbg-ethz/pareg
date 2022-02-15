@@ -288,11 +288,8 @@ coef.edgenet <- function(object, ...) {
 #'  \item{loss }{ loss function}
 #' @examples
 #' gaussian()
-#' binomial("probit")$link
-#' poisson()$linkinv
-#' gamma()$linkinv
+#' bernoulli("probit")$link
 #' beta()$loss
-#' inverse.gaussian()$loss
 family <- function(object, ...) UseMethod("family")
 
 
