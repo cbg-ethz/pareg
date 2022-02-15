@@ -44,9 +44,6 @@ Family objects provide a convenient way to specify the details
 }
 \examples{
 gaussian()
-binomial("probit")$link
-poisson()$linkinv
-gamma()$linkinv
+bernoulli("probit")$link
 beta()$loss
-inverse.gaussian()$loss
 }
