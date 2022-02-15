@@ -34,3 +34,18 @@ test_that("Beta case works", {
   expect_equal(c(as.vector(coef(fit)), fit$dispersion), as.vector(coef(fit_br)), tolerance = 0.05)
   # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.05)
 })
+
+
+test_that("Cross-validation works", {
+  set.seed(42)
+
+  alpha <- 2.3
+  beta <- c(1.7, -0.4, 6)
+
+  X <- matrix(rnorm(1000 * 3), nrow = 1000)
+  Y <- rnorm(1000, X %*% beta + alpha)
+
+  fit <- pareg::cv.edgenet(X, Y, family = pareg::gaussian)
+
+  expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.02)
+})
