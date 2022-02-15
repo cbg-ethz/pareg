@@ -1,7 +1,6 @@
-library(purrr)
-library(ggplot2)
-
 test_that("idea works", {
+  library(ggplot2)
+
   # setup terms
   df_terms <- rbind(
     data.frame(
@@ -20,7 +19,7 @@ test_that("idea works", {
   window_size <- 10
   genes <- paste("g", 90:109, sep = "")
 
-  df_enr <- map_df(0:10, function(x) {
+  df_enr <- purrr::map_df(0:10, function(x) {
     df_genes <- data.frame(
       gene = genes,
       pvalue = c(
@@ -33,7 +32,7 @@ test_that("idea works", {
     df_res <- pareg(df_genes, df_terms)
 
     cbind(
-      df_res,
+      as.data.frame(df_res),
       data.frame(x = x)
     )
   })
