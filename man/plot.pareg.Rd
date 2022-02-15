@@ -2,41 +2,19 @@
 % Please edit documentation in R/plotting.R
 \name{plot.pareg}
 \alias{plot.pareg}
-\title{Plot result of enrichment computation.}
+\title{Plot pareg object.}
 \usage{
-\method{plot}{pareg}(x, show_term_names = TRUE, min_similarity = 0)
+\method{plot}{pareg}(x, ...)
 }
 \arguments{
 \item{x}{An object of class \code{pareg}.}
 
-\item{show_term_names}{Whether to plot node labels.}
-
-\item{min_similarity}{Don't plot edges for similarities below this value.}
+\item{...}{Parameters passed to pareg::plot_pareg_with_args}
 }
 \value{
 ggplot object.
 }
 \description{
-Visualize pathway enrichments as network.
-}
-\examples{
-df_genes <- data.frame(
-  gene = paste("g", 1:20, sep = ""),
-  pvalue = c(
-    rbeta(10, .1, 1),
-    rbeta(10, 1, 1)
-  )
-)
-df_terms <- rbind(
-  data.frame(
-    term = "foo",
-    gene = paste("g", 1:10, sep = "")
-  ),
-  data.frame(
-    term = "bar",
-    gene = paste("g", 11:20, sep = "")
-  )
-)
-fit <- pareg(df_genes, df_terms)
-plot(fit)
+Check pareg::plot_pareg_with_args for details. Needed because
+of WARNING in "checking S3 generic/method consistency"
 }
