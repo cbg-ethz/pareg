@@ -10,6 +10,9 @@ create_model_df(df_genes, df_terms, pvalue_threshold = 0.05)
 \item{df_genes}{Dataframe storing gene names and DE p-values.}
 
 \item{df_terms}{Dataframe storing pathway database.}
+
+\item{pvalue_threshold}{P-value threshold to create binary columns
+`pvalue_sig` and `pvalue_notsig`.}
 }
 \value{
 Dataframe.

@@ -1,3 +1,5 @@
 ^pareg\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^\.lintr$
+^\.mega-linter.yml$

@@ -30,13 +30,12 @@
 #' )
 #' fit <- pareg(df_genes, df_terms)
 #' plot(fit)
-#' @import tidyverse ggraph
+#' @import tidyverse ggraph ggplot2
 #' @importFrom rlang .data
 #' @importFrom dplyr group_by summarize distinct pull
 #' @importFrom magrittr %<>% extract2
 #' @importFrom tidygraph as_tbl_graph activate mutate
-#' @importFrom ggplot2 aes theme element_rect coord_fixed
-plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
+plot_pareg_with_args <- function(x, show_term_names = TRUE, min_similarity = 0) {
   # prepare data
   df_enr <- as.data.frame(x)
   df_terms <- x$df_terms
@@ -114,4 +113,21 @@ plot.pareg <- function(x, show_term_names = TRUE, min_similarity = 0) {
   }
 
   return(p)
+}
+
+
+#' @title Plot pareg object.
+#'
+#' @description Check pareg::plot_pareg_with_args for details. Needed because
+#' of WARNING in "checking S3 generic/method consistency"
+#'
+#' @export
+#'
+#' @param x An object of class \code{pareg}.
+#' @param ... Parameters passed to pareg::plot_pareg_with_args
+#'
+#' @method plot pareg
+#' @return ggplot object.
+plot.pareg <- function(x, ...) {
+    plot_pareg_with_args(x, ...)
 }

@@ -6,6 +6,8 @@
 #'
 #' @param df_genes Dataframe storing gene names and DE p-values.
 #' @param df_terms Dataframe storing pathway database.
+#' @param pvalue_threshold P-value threshold to create binary columns
+#' `pvalue_sig` and `pvalue_notsig`.
 #'
 #' @return Dataframe.
 #'

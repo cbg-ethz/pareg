@@ -40,12 +40,16 @@ Suggests:
     mgsa,
     topGO,
     msigdbr,
-    Matrix
+    betareg
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
     stats,
     tidyverse,
+    tidyr,
+    purrr,
+    tibble,
+    glue,
     tidygraph,
     igraph,
     proxy,
@@ -53,8 +57,9 @@ Imports:
     magrittr,
     ggplot2,
     ggraph,
-    tidyr,
-    glue,
     rlang,
     progress,
-    Matrix
+    Matrix,
+    matrixLaplacian,
+    keras,
+    methods

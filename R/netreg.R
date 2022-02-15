@@ -15,8 +15,9 @@ linear.predictor <- function(alpha, beta, x) {
 
 
 #' @noRd
+#' @importFrom keras keras_model_custom
 model <- function(p, q, family) {
-  keras::keras_model_custom(function(self) {
+  keras_model_custom(function(self) {
     self$alpha <- init_vector(q)
     self$beta <- init_matrix(p, q)
     if (family$family %in% c("beta_phi_lm")) {
@@ -287,11 +288,8 @@ coef.edgenet <- function(object, ...) {
 #'  \item{loss }{ loss function}
 #' @examples
 #' gaussian()
-#' binomial("probit")$link
-#' poisson()$linkinv
-#' gamma()$linkinv
+#' bernoulli("probit")$link
 #' beta()$loss
-#' inverse.gaussian()$loss
 family <- function(object, ...) UseMethod("family")
 
 
@@ -592,8 +590,9 @@ edgenet.loss <- function(lambda, psigx, psigy, gx, gy, family) {
 #' @noRd
 #' @import tensorflow
 #' @importFrom purrr transpose
+#' @importFrom keras optimizer_adam
 fit <- function(mod, loss, x, y, maxit = 1000, learning.rate = 0.03, thresh = 1e-4) {
-  optimizer <- keras::optimizer_adam(learning.rate)
+  optimizer <- optimizer_adam(learning.rate)
   lo.old <- Inf
   loss_hist <- vector("list", length = maxit)
   stopping_reason <- "max_iterations"
@@ -1188,6 +1187,7 @@ setMethod(
 
 
 #' @noRd
+#' @importFrom matrixLaplacian matrixLaplacian
 .edgenet <- function(x, y, gx, gy,
                      lambda, psigx, psigy,
                      thresh, maxit, learning.rate, family) {
@@ -1197,10 +1197,10 @@ setMethod(
   y <- cast_float(y)
 
   if (!is.null(gx)) {
-    gx <- cast_float(laplacian_(gx))
+    gx <- cast_float(matrixLaplacian(gx, FALSE, FALSE)$LaplacianMatrix)
   }
   if (!is.null(gy)) {
-    gy <- cast_float(laplacian_(gy))
+    gy <- cast_float(matrixLaplacian(gy, FALSE, FALSE)$LaplacianMatrix)
   }
 
   mod <- model(ncol(x), ncol(y), family)
