@@ -25,3 +25,9 @@ remotes::install_github("cbg-ethz/pareg")
 
 * `.`: R package
 * `inst/scripts/`: Snakemake workflows and other utilities
+
+
+## Dev notes
+
+* Update `NAMESPACE` and write man pages: `Rscript -e "devtools::document()"`
+* Format code: `Rscript -e "styler::style_dir('.', transformers = biocthis::bioc_style())"`
