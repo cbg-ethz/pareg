@@ -217,31 +217,36 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>, Y <span class="op">=</span> <span class="va">Y</span>, G.X <span class="op">=</span> <span class="va">G.X</span>, psigx <span class="op">=</span> <span class="fl">1</span>, family <span class="op">=</span> <span class="va">gaussian</span>,</span>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>, optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in laplacian_(gx):</span> could not find function "laplacian_"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounds can only be used with method L-BFGS-B (or Brent)</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>unknown names in control: maxeval, xtol_rel, ftol_rel, ftol_abs</span>
 <span class="r-in"><span class="co">## estimate only lambda with two matrices</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>, Y <span class="op">=</span> <span class="va">Y</span>, G.X <span class="op">=</span> <span class="va">G.X</span>, <span class="va">G.Y</span>, psigx <span class="op">=</span> <span class="fl">1</span>, psigy <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  family <span class="op">=</span> <span class="va">gaussian</span>, maxit <span class="op">=</span> <span class="fl">1</span>, optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in laplacian_(gx):</span> could not find function "laplacian_"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounds can only be used with method L-BFGS-B (or Brent)</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>unknown names in control: maxeval, xtol_rel, ftol_rel, ftol_abs</span>
 <span class="r-in"><span class="co">## estimate only psigx</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>, Y <span class="op">=</span> <span class="va">Y</span>, G.X <span class="op">=</span> <span class="va">G.X</span>, <span class="va">G.Y</span>, lambda <span class="op">=</span> <span class="fl">1</span>, psigy <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  family <span class="op">=</span> <span class="va">gaussian</span>, maxit <span class="op">=</span> <span class="fl">1</span>, optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in laplacian_(gx):</span> could not find function "laplacian_"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounds can only be used with method L-BFGS-B (or Brent)</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>unknown names in control: maxeval, xtol_rel, ftol_rel, ftol_abs</span>
 <span class="r-in"><span class="co">## estimate all parameters</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>, Y <span class="op">=</span> <span class="va">Y</span>, G.X <span class="op">=</span> <span class="va">G.X</span>, <span class="va">G.Y</span>,</span>
 <span class="r-in">  family <span class="op">=</span> <span class="va">gaussian</span>, maxit <span class="op">=</span> <span class="fl">1</span>, optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in laplacian_(gx):</span> could not find function "laplacian_"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounds can only be used with method L-BFGS-B (or Brent)</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>unknown names in control: maxeval, xtol_rel, ftol_rel, ftol_abs</span>
 <span class="r-in"><span class="co">## if Y is vectorial, we cannot use an affinity matrix for Y</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>, Y <span class="op">=</span> <span class="va">Y</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, G.X <span class="op">=</span> <span class="va">G.X</span>,</span>
 <span class="r-in">  family <span class="op">=</span> <span class="va">gaussian</span>, maxit <span class="op">=</span> <span class="fl">1</span>, optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in laplacian_(gx):</span> could not find function "laplacian_"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>bounds can only be used with method L-BFGS-B (or Brent)</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>unknown names in control: maxeval, xtol_rel, ftol_rel, ftol_abs</span>
 </code></pre></div>
     </div>
   </div>
