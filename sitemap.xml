@@ -25,6 +25,15 @@
     <loc>https://cbg-ethz.github.io/pareg/reference/create_model_df.html</loc>
   </url>
   <url>
+    <loc>https://cbg-ethz.github.io/pareg/reference/cvedgenet-methods.html</loc>
+  </url>
+  <url>
+    <loc>https://cbg-ethz.github.io/pareg/reference/edgenet-methods.html</loc>
+  </url>
+  <url>
+    <loc>https://cbg-ethz.github.io/pareg/reference/family-methods.html</loc>
+  </url>
+  <url>
     <loc>https://cbg-ethz.github.io/pareg/reference/generate_similarity_matrix.html</loc>
   </url>
   <url>
@@ -38,6 +47,9 @@
   </url>
   <url>
     <loc>https://cbg-ethz.github.io/pareg/reference/plot.pareg.html</loc>
+  </url>
+  <url>
+    <loc>https://cbg-ethz.github.io/pareg/reference/plot_pareg_with_args.html</loc>
   </url>
   <url>
     <loc>https://cbg-ethz.github.io/pareg/reference/similarity_sample.html</loc>

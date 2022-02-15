@@ -62,6 +62,9 @@
 <dd><p>Dataframe storing gene names and DE p-values.</p></dd>
 <dt>df_terms</dt>
 <dd><p>Dataframe storing pathway database.</p></dd>
+<dt>pvalue_threshold</dt>
+<dd><p>P-value threshold to create binary columns
+`pvalue_sig` and `pvalue_notsig`.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -79,7 +82,12 @@
 <span class="r-in">  gene <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"g1"</span>, <span class="st">"g2"</span>, <span class="st">"g1"</span>, <span class="st">"g2"</span>, <span class="st">"g2"</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="fu">create_model_df</span><span class="op">(</span><span class="va">df_genes</span>, <span class="va">df_terms</span><span class="op">)</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in df_terms %&gt;% group_by(term) %&gt;% mutate(member = gene %in% df_genes$gene) %&gt;%     ungroup() %&gt;% mutate_at(vars(gene), as.character) %&gt;% right_join(df_genes %&gt;%     mutate_at(vars(gene), as.character), by = "gene") %&gt;% pivot_wider(names_from = term,     values_from = member, values_fill = FALSE) %&gt;% select(-one_of("NA")) %&gt;%     rename_at(vars(-gene, -pvalue), ~paste0(., ".member")) %&gt;%     mutate_at(vars(gene), factor) %&gt;% mutate(pvalue_sig = pvalue &lt;=     pvalue_threshold, pvalue_notsig = pvalue &gt; pvalue_threshold):</span> could not find function "%&gt;%"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown columns: `NA`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 7</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   gene  pvalue A.member B.member C.member pvalue_sig pvalue_notsig</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> g1       0.1 TRUE     TRUE     FALSE    FALSE      TRUE         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> g2       0.2 TRUE     TRUE     TRUE     FALSE      TRUE         </span>
 </code></pre></div>
     </div>
   </div>
