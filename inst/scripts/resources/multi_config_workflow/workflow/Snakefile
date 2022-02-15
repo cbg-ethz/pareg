@@ -62,6 +62,18 @@ module network_regularization:
 use rule * from network_regularization as network_regularization_*
 
 
+module real_datasets:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_configfile("config_real_datasets/config.yaml")
+    replace_prefix:
+        {"results/": "results/real_datasets/"}
+
+
+use rule * from real_datasets as real_datasets_*
+
+
 # custom logic
 rule compare_rocauc_vs_loss:
     input:
@@ -87,4 +99,5 @@ rule all:
         "results/regularization_parameter/rocauc_vs_loss/",
         rules.noise_all.input,
         rules.network_regularization_all.input,
+        rules.real_datasets_all.input,
     default_target: True
