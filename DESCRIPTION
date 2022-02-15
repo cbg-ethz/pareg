@@ -39,7 +39,8 @@ Suggests:
     PRROC,
     mgsa,
     topGO,
-    msigdbr
+    msigdbr,
+    betareg
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
