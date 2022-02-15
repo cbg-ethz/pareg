@@ -23,5 +23,5 @@ jobs:
       - name: Lint
         shell: Rscript {0}
         run: |
-          lintr::lint_package()
-          quit(save = "no", status = length(lintr::lint_package()))
+          lintr::lint_dir()
+          quit(save = "no", status = length(lintr::lint_dir()))
