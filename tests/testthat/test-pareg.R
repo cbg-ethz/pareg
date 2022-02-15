@@ -78,5 +78,8 @@ test_that("term input network mismatch leads to crash", {
   res <- pareg(df_genes, df_terms, term_network = network)
 
   rownames(network) <- colnames(network) <- c("A", "C")
-  expect_error(pareg(df_genes, df_terms, term_network = network), "subscript out of bounds")
+  expect_error(
+    pareg(df_genes, df_terms, term_network = network),
+    "The following covariates do not appear in term network: B"
+  )
 })
