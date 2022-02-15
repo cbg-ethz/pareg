@@ -936,6 +936,7 @@ setMethod(
 
 
 #' @noRd
+#' @importFrom matrixLaplacian matrixLaplacian
 .cv.edgenet <- function(x, y, gx, gy,
                         lambda, psigx, psigy,
                         family,
@@ -958,10 +959,10 @@ setMethod(
   }
 
   if (!is.null(gx)) {
-    gx <- cast_float(laplacian_(gx))
+    gx <- cast_float(matrixLaplacian(gx, FALSE, FALSE)$LaplacianMatrix)
   }
   if (!is.null(gy)) {
-    gy <- cast_float(laplacian_(gy))
+    gy <- cast_float(matrixLaplacian(gy, FALSE, FALSE)$LaplacianMatrix)
   }
 
   lambda.tensor <- init_zero_scalar(FALSE)

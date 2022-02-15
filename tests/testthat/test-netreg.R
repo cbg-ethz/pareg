@@ -49,3 +49,20 @@ test_that("Cross-validation works", {
 
   expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.02)
 })
+
+
+test_that("Cross-validation with network regularization works", {
+  set.seed(42)
+
+  alpha <- 2.3
+  beta <- c(1.7, -0.4, 6)
+
+  X <- matrix(rnorm(1000 * 3), nrow = 1000)
+  Y <- rnorm(1000, X %*% beta + alpha)
+
+  amat <- matrix(runif(3 * 3), 3, 3)
+
+  fit <- pareg::cv.edgenet(X, Y, G.X = amat, family = pareg::gaussian)
+
+  # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.02)
+})
