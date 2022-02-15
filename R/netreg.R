@@ -15,8 +15,9 @@ linear.predictor <- function(alpha, beta, x) {
 
 
 #' @noRd
+#' @importFrom keras keras_model_custom
 model <- function(p, q, family) {
-  keras::keras_model_custom(function(self) {
+  keras_model_custom(function(self) {
     self$alpha <- init_vector(q)
     self$beta <- init_matrix(p, q)
     if (family$family %in% c("beta_phi_lm")) {
@@ -592,8 +593,9 @@ edgenet.loss <- function(lambda, psigx, psigy, gx, gy, family) {
 #' @noRd
 #' @import tensorflow
 #' @importFrom purrr transpose
+#' @importFrom keras optimizer_adam
 fit <- function(mod, loss, x, y, maxit = 1000, learning.rate = 0.03, thresh = 1e-4) {
-  optimizer <- keras::optimizer_adam(learning.rate)
+  optimizer <- optimizer_adam(learning.rate)
   lo.old <- Inf
   loss_hist <- vector("list", length = maxit)
   stopping_reason <- "max_iterations"

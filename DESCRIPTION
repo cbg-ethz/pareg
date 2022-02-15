@@ -39,8 +39,7 @@ Suggests:
     PRROC,
     mgsa,
     topGO,
-    msigdbr,
-    Matrix
+    msigdbr
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
@@ -60,4 +59,6 @@ Imports:
     rlang,
     progress,
     Matrix,
-    matrixLaplacian
+    matrixLaplacian,
+    keras,
+    methods
