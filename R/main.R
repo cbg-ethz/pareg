@@ -14,6 +14,7 @@
 #' @param family Distribution family of response.
 #' @param response_column_name Which column of model dataframe
 #' to use as response.
+#' @param max_iterations How many iterations to maximally run optimizer for.
 #'
 #' @return An object of class \code{pareg}.
 #'
@@ -44,7 +45,8 @@ pareg <- function(
   term_network = NULL,
   cv = FALSE,
   family = beta,
-  response_column_name = "pvalue"
+  response_column_name = "pvalue",
+  max_iterations = 1e5
 ) {
   # generate design matrix
   df_model <- create_model_df(df_genes, df_terms)
@@ -103,7 +105,8 @@ pareg <- function(
     X, Y,
     G.X = term_network,
     lambda = lasso_param, psigx = network_param, psigy = 0,
-    family = family
+    family = family,
+    maxit = max_iterations
   )
 
   # return structured object

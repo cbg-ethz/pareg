@@ -12,7 +12,8 @@ pareg(
   term_network = NULL,
   cv = FALSE,
   family = beta,
-  response_column_name = "pvalue"
+  response_column_name = "pvalue",
+  max_iterations = 1e+05
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ pareg(
 
 \item{response_column_name}{Which column of model dataframe
 to use as response.}
+
+\item{max_iterations}{How many iterations to maximally run optimizer for.}
 }
 \value{
 An object of class \code{pareg}.
