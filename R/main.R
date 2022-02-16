@@ -40,8 +40,10 @@
 #' @import tidyverse
 #' @importFrom glue glue_collapse
 pareg <- function(
-  df_genes, df_terms,
-  lasso_param = NA_real_, network_param = NA_real_,
+  df_genes,
+  df_terms,
+  lasso_param = NA_real_,
+  network_param = NA_real_,
   term_network = NULL,
   cv = FALSE,
   family = beta,
@@ -73,7 +75,10 @@ pareg <- function(
 
     term_diff <- setdiff(ordered_terms, rownames(term_network))
     if (length(term_diff) > 0) {
-      stop(paste("The following covariates do not appear in term network:", glue_collapse(term_diff, sep = ", ")))
+      stop(paste(
+        "The following covariates do not appear in term network:",
+        glue_collapse(term_diff, sep = ", ")
+      ))
     }
 
     term_network <- term_network[ordered_terms, ordered_terms]
@@ -102,23 +107,29 @@ pareg <- function(
   }
 
   fit <- fit_func(
-    X, Y,
+    X,
+    Y,
     G.X = term_network,
-    lambda = lasso_param, psigx = network_param, psigy = 0,
+    lambda = lasso_param,
+    psigx = network_param,
+    psigy = 0,
     family = family,
     maxit = max_iterations
   )
 
   # return structured object
-  return(structure(list(
-    obj = fit,
-    term_network = term_network,
-    df_terms = df_terms,
-    covariates = covariates,
-    params = list(
-      lasso_param = lasso_param,
-      network_param = network_param,
-      cv = cv
-    )
-  ), class = "pareg"))
+  return(structure(
+    list(
+      obj = fit,
+      term_network = term_network,
+      df_terms = df_terms,
+      covariates = covariates,
+      params = list(
+        lasso_param = lasso_param,
+        network_param = network_param,
+        cv = cv
+      )
+    ),
+    class = "pareg"
+  ))
 }

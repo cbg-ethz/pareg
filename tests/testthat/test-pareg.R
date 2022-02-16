@@ -56,7 +56,8 @@ test_that("Bernoulli family works", {
 
   # run model
   res <- pareg(
-    df_genes, df_terms,
+    df_genes,
+    df_terms,
     family = bernoulli,
     response_column_name = "pvalue_notsig"
   )

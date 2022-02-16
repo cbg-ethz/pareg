@@ -25,7 +25,9 @@ model <- function(p, q, family) {
     }
     if (family$family %in% c("beta_phi_var")) {
       initializer <- tf$keras.initializers$Ones()
-      self$dispersion <- tf$Variable(initializer(tf$shape(1), tensorflow::tf$float32))
+      self$dispersion <- tf$Variable(
+        initializer(tf$shape(1), tensorflow::tf$float32)
+      )
     }
     self$family <- family
     self$linkinv <- family$linkinv
@@ -41,7 +43,10 @@ model <- function(p, q, family) {
         eta <- linear.predictor(self$alpha, self$beta, x)
         eta_phi <- linear.predictor(self$alpha, self$gamma, x)
 
-        return(list(mu_hat = self$linkinv(eta), phi_hat = self$family$secondary_linkinv(eta_phi)))
+        return(list(
+          mu_hat = self$linkinv(eta),
+          phi_hat = self$family$secondary_linkinv(eta_phi)
+        ))
       }
 
       eta <- linear.predictor(self$alpha, self$beta, x)
@@ -200,7 +205,8 @@ not.supported.yet <- function(family) {
 
 
 warn.experimental <- function(family) {
-  warning(paste("family", family, "is still experimental. enjoy with care."),
+  warning(
+    paste("family", family, "is still experimental. enjoy with care."),
     call. = FALSE
   )
 }
@@ -224,7 +230,8 @@ constant_float <- function(x) {
 #' @import tensorflow
 init_matrix <- function(m, n, trainable = TRUE) {
   initializer <- tf$keras.initializers$glorot_normal(23L)
-  tensorflow::tf$Variable(initializer(shape(m, n), tensorflow::tf$float32),
+  tensorflow::tf$Variable(
+    initializer(shape(m, n), tensorflow::tf$float32),
     trainable = trainable
   )
 }
@@ -234,7 +241,8 @@ init_matrix <- function(m, n, trainable = TRUE) {
 #' @import tensorflow
 init_vector <- function(m, trainable = TRUE) {
   initializer <- tf$keras.initializers$glorot_normal(23L)
-  tensorflow::tf$Variable(initializer(shape(m), tensorflow::tf$float32),
+  tensorflow::tf$Variable(
+    initializer(shape(m), tensorflow::tf$float32),
     trainable = trainable
   )
 }
@@ -242,7 +250,8 @@ init_vector <- function(m, trainable = TRUE) {
 #' @noRd
 #' @import tensorflow
 init_zero_scalar <- function(trainable = TRUE) {
-  tensorflow::tf$Variable(tf$zeros(shape(), tensorflow::tf$float32),
+  tensorflow::tf$Variable(
+    tf$zeros(shape(), tensorflow::tf$float32),
     trainable = trainable
   )
 }
@@ -428,7 +437,14 @@ beta_phi_var <- function(link = c("logit", "probit", "log")) {
 
 
 #' @noRd
-.as.family <- function(family, link, linkfun, linkinv, loss, secondary_linkinv = NULL) {
+.as.family <- function(
+  family,
+  link,
+  linkfun,
+  linkinv,
+  loss,
+  secondary_linkinv = NULL
+) {
   structure(
     list(
       family = family,
@@ -514,7 +530,8 @@ beta.loss <- function(y, mu.hat, phi_hat, ...) {
     q.trans <- tf$math$maximum(q, eps)
 
     prob <- tfprobability::tfd_beta(
-      concentration1 = p.trans, concentration0 = q.trans
+      concentration1 = p.trans,
+      concentration0 = q.trans
     )
     obj <- obj + tf$reduce_sum(prob$log_prob(y[, j]))
   }
@@ -591,7 +608,15 @@ edgenet.loss <- function(lambda, psigx, psigy, gx, gy, family) {
 #' @import tensorflow
 #' @importFrom purrr transpose
 #' @importFrom keras optimizer_adam
-fit <- function(mod, loss, x, y, maxit = 1000, learning.rate = 0.03, thresh = 1e-4) {
+fit <- function(
+  mod,
+  loss,
+  x,
+  y,
+  maxit = 1000,
+  learning.rate = 0.03,
+  thresh = 1e-4
+) {
   optimizer <- optimizer_adam(learning.rate)
   lo.old <- Inf
   loss_hist <- vector("list", length = maxit)
@@ -618,7 +643,8 @@ fit <- function(mod, loss, x, y, maxit = 1000, learning.rate = 0.03, thresh = 1e
     }
 
     optimizer$apply_gradients(purrr::transpose(list(
-      gradients, mod$trainable_variables
+      gradients,
+      mod$trainable_variables
     )))
 
     if (step %% 25 == 0) {
@@ -652,11 +678,20 @@ fit <- function(mod, loss, x, y, maxit = 1000, learning.rate = 0.03, thresh = 1e
 
 
 #' @noRd
-cross.validate <- function(mod, loss,
-                           x, y,
-                           lambda.tensor, psigx.tensor, psigy.tensor,
-                           nfolds, folds,
-                           maxit = 1000, thresh = 1e-5, learning.rate = 0.01) {
+cross.validate <- function(
+  mod,
+  loss,
+  x,
+  y,
+  lambda.tensor,
+  psigx.tensor,
+  psigy.tensor,
+  nfolds,
+  folds,
+  maxit = 1000,
+  thresh = 1e-5,
+  learning.rate = 0.01
+) {
   fn <- function(params, ...) {
     params <- .get.params(params, ...)
     lambda.tensor$assign(params[1])
@@ -673,9 +708,13 @@ cross.validate <- function(mod, loss,
 
       mod$reinit()
       invisible(fit(
-        mod, loss,
-        cast_float(x.train), cast_float(y.train),
-        maxit, learning.rate, thresh
+        mod,
+        loss,
+        cast_float(x.train),
+        cast_float(y.train),
+        maxit,
+        learning.rate,
+        thresh
       ))
       losses[fold] <- loss(
         mod,
@@ -755,18 +794,19 @@ cross.validate <- function(mod, loss,
 #'  parameter \code{psi.gy}. If this is not desired just set \code{G.Y} to
 #'  \code{NULL}.
 #' @param lambda  \code{numerical} shrinkage parameter for LASSO. Per default
-#' this parameter is
-#'  set to \code{NA_real_} which means that \code{lambda} is going to be estimated
+#'  this parameter is set to \code{NA_real_}
+#'  which means that \code{lambda} is going to be estimated
 #'  using cross-validation. If any \code{numerical} value for \code{lambda}
 #'  is set, estimation of the optimal parameter will \emph{not} be conducted.
 #' @param psigx  \code{numerical} shrinkage parameter for graph-regularization
-#'  of \code{G.X}. Per default this parameter is
-#'  set to \code{NA_real_} which means that \code{psigx} is going to be estimated
+#'  of \code{G.X}. Per default this parameter is set to
+#'  \code{NA_real_} which means that \code{psigx} is going to be estimated
 #'  in the cross-validation. If any \code{numerical} value for \code{psigx} is
 #'  set, estimation of the optimal parameter will \emph{not} be conducted.
 #' @param psigy  \code{numerical} shrinkage parameter for graph-regularization
 #'  of \code{G.Y}. Per default this parameter is
-#'  set to \code{NA_real_} which means that \code{psigy} is going to be estimated
+#'  set to \code{NA_real_} which means that \code{psigy} is
+#'  going to be estimated
 #'  in the cross-validation. If any \code{numerical} value for \code{psigy} is
 #'  set, estimation of the optimal parameter will \emph{not} be conducted.
 #' @param thresh  \code{numerical} threshold for the optimizer
@@ -806,42 +846,83 @@ cross.validate <- function(mod, loss,
 #'
 #' ## dont use affinity matrices and estimate lambda
 #' fit <- cv.edgenet(
-#'   X = X, Y = Y, family = gaussian,
-#'   maxit = 1, optim.maxit = 1
+#'   X = X,
+#'   Y = Y,
+#'   family = gaussian,
+#'   maxit = 1,
+#'   optim.maxit = 1
 #' )
 #' ## only provide one matrix and estimate lambda
 #' fit <- cv.edgenet(
-#'   X = X, Y = Y, G.X = G.X, psigx = 1, family = gaussian,
-#'   maxit = 1, optim.maxit = 1
+#'   X = X,
+#'   Y = Y,
+#'   G.X = G.X,
+#'   psigx = 1,
+#'   family = gaussian,
+#'   maxit = 1,
+#'   optim.maxit = 1
 #' )
 #' ## estimate only lambda with two matrices
 #' fit <- cv.edgenet(
-#'   X = X, Y = Y, G.X = G.X, G.Y, psigx = 1, psigy = 1,
-#'   family = gaussian, maxit = 1, optim.maxit = 1
+#'   X = X,
+#'   Y = Y,
+#'   G.X = G.X,
+#'   G.Y,
+#'   psigx = 1,
+#'   psigy = 1,
+#'   family = gaussian,
+#'   maxit = 1,
+#'   optim.maxit = 1
 #' )
 #' ## estimate only psigx
 #' fit <- cv.edgenet(
-#'   X = X, Y = Y, G.X = G.X, G.Y, lambda = 1, psigy = 1,
-#'   family = gaussian, maxit = 1, optim.maxit = 1
+#'   X = X,
+#'   Y = Y,
+#'   G.X = G.X,
+#'   G.Y,
+#'   lambda = 1,
+#'   psigy = 1,
+#'   family = gaussian,
+#'   maxit = 1,
+#'   optim.maxit = 1
 #' )
 #' ## estimate all parameters
 #' fit <- cv.edgenet(
-#'   X = X, Y = Y, G.X = G.X, G.Y,
-#'   family = gaussian, maxit = 1, optim.maxit = 1
+#'   X = X,
+#'   Y = Y,
+#'   G.X = G.X,
+#'   G.Y,
+#'   family = gaussian,
+#'   maxit = 1,
+#'   optim.maxit = 1
 #' )
 #' ## if Y is vectorial, we cannot use an affinity matrix for Y
 #' fit <- cv.edgenet(
-#'   X = X, Y = Y[, 1], G.X = G.X,
-#'   family = gaussian, maxit = 1, optim.maxit = 1
+#'   X = X,
+#'   Y = Y[, 1],
+#'   G.X = G.X,
+#'   family = gaussian,
+#'   maxit = 1,
+#'   optim.maxit = 1
 #' )
 setGeneric(
   "cv.edgenet",
-  function(X, Y, G.X = NULL, G.Y = NULL,
-           lambda = NA_real_, psigx = NA_real_, psigy = NA_real_,
-           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
-           family = gaussian,
-           optim.maxit = 1e2, optim.thresh = 1e-2,
-           nfolds = 10) {
+  function(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = NA_real_,
+  psigx = NA_real_,
+  psigy = NA_real_,
+  thresh = 1e-5,
+  maxit = 1e5,
+  learning.rate = 0.01,
+  family = gaussian,
+  optim.maxit = 1e2,
+  optim.thresh = 1e-2,
+  nfolds = 10
+  ) {
     standardGeneric("cv.edgenet")
   },
   package = "pareg"
@@ -852,18 +933,36 @@ setGeneric(
 setMethod(
   "cv.edgenet",
   signature = signature(X = "matrix", Y = "numeric"),
-  function(X, Y, G.X = NULL, G.Y = NULL,
-           lambda = NA_real_, psigx = NA_real_, psigy = NA_real_,
-           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
-           family = gaussian,
-           optim.maxit = 1e2, optim.thresh = 1e-2,
-           nfolds = 10) {
+  function(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = NA_real_,
+  psigx = NA_real_,
+  psigy = NA_real_,
+  thresh = 1e-5,
+  maxit = 1e5,
+  learning.rate = 0.01,
+  family = gaussian,
+  optim.maxit = 1e2,
+  optim.thresh = 1e-2,
+  nfolds = 10
+  ) {
     cv.edgenet(
-      X, as.matrix(Y), G.X, G.Y,
-      lambda, psigx, psigy,
-      thresh, maxit, learning.rate,
+      X,
+      as.matrix(Y),
+      G.X,
+      G.Y,
+      lambda,
+      psigx,
+      psigy,
+      thresh,
+      maxit,
+      learning.rate,
       family,
-      optim.maxit, optim.thresh,
+      optim.maxit,
+      optim.thresh,
       nfolds
     )
   }
@@ -874,16 +973,30 @@ setMethod(
 setMethod(
   "cv.edgenet",
   signature = signature(X = "matrix", Y = "matrix"),
-  function(X, Y, G.X = NULL, G.Y = NULL,
-           lambda = NA_real_, psigx = NA_real_, psigy = NA_real_,
-           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
-           family = gaussian,
-           optim.maxit = 1e2, optim.thresh = 1e-2,
-           nfolds = 10) {
+  function(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = NA_real_,
+  psigx = NA_real_,
+  psigy = NA_real_,
+  thresh = 1e-5,
+  maxit = 1e5,
+  learning.rate = 0.01,
+  family = gaussian,
+  optim.maxit = 1e2,
+  optim.thresh = 1e-2,
+  nfolds = 10
+  ) {
     stopifnot(
-      is.numeric(nfolds), nfolds > 0, is.numeric(learning.rate),
-      is.numeric(optim.maxit), is.numeric(optim.thresh),
-      is.numeric(maxit), is.numeric(thresh)
+      is.numeric(nfolds),
+      nfolds > 0,
+      is.numeric(learning.rate),
+      is.numeric(optim.maxit),
+      is.numeric(optim.thresh),
+      is.numeric(maxit),
+      is.numeric(thresh)
     )
 
     n <- dim(X)[1]
@@ -913,18 +1026,35 @@ setMethod(
     folds <- sample(rep(seq_len(10), length.out = n))
 
     ret <- .cv.edgenet(
-      X, Y, G.X, G.Y,
-      lambda, psigx, psigy,
+      X,
+      Y,
+      G.X,
+      G.Y,
+      lambda,
+      psigx,
+      psigy,
       family,
-      thresh, maxit, learning.rate,
-      nfolds, folds,
-      optim.maxit, optim.thresh
+      thresh,
+      maxit,
+      learning.rate,
+      nfolds,
+      folds,
+      optim.maxit,
+      optim.thresh
     )
 
     ret$fit <- edgenet(
-      X, Y, G.X, G.Y,
-      ret$lambda, ret$psigx, ret$psigy,
-      thresh, maxit, learning.rate, family
+      X,
+      Y,
+      G.X,
+      G.Y,
+      ret$lambda,
+      ret$psigx,
+      ret$psigy,
+      thresh,
+      maxit,
+      learning.rate,
+      family
     )
 
     ret$call <- match.call()
@@ -937,12 +1067,23 @@ setMethod(
 
 #' @noRd
 #' @importFrom matrixLaplacian matrixLaplacian
-.cv.edgenet <- function(x, y, gx, gy,
-                        lambda, psigx, psigy,
-                        family,
-                        thresh, maxit, learning.rate,
-                        nfolds, folds,
-                        optim.maxit, optim.thresh) {
+.cv.edgenet <- function(
+  x,
+  y,
+  gx,
+  gy,
+  lambda,
+  psigx,
+  psigy,
+  family,
+  thresh,
+  maxit,
+  learning.rate,
+  nfolds,
+  folds,
+  optim.maxit,
+  optim.thresh
+) {
   reg.params <- list(lambda = lambda, psigx = psigx, psigy = psigy)
   estimatable.params <- Filter(is.na, reg.params)
   fixed.params <- Filter(is.finite, reg.params)
@@ -953,7 +1094,8 @@ setMethod(
              got nothing to estimate", call. = FALSE)
   }
   if (length(init.params) == 0) {
-    stop("please set either of lambda/psigx/psigy to NA_real_",
+    stop(
+      "please set either of lambda/psigx/psigy to NA_real_",
       call. = FALSE
     )
   }
@@ -970,13 +1112,27 @@ setMethod(
   psigy.tensor <- init_zero_scalar(FALSE)
 
   mod <- model(ncol(x), ncol(y), family)
-  loss <- edgenet.loss(lambda.tensor, psigx.tensor, psigy.tensor, gx, gy, family)
+  loss <- edgenet.loss(
+    lambda.tensor,
+    psigx.tensor,
+    psigy.tensor,
+    gx,
+    gy,
+    family
+  )
   fn <- cross.validate(
-    mod, loss,
-    x, y,
-    lambda.tensor, psigx.tensor, psigy.tensor,
-    nfolds, folds,
-    maxit, thresh, learning.rate
+    mod,
+    loss,
+    x,
+    y,
+    lambda.tensor,
+    psigx.tensor,
+    psigy.tensor,
+    nfolds,
+    folds,
+    maxit,
+    thresh,
+    learning.rate
   )
 
   opt <- optim(
@@ -1020,8 +1176,7 @@ setMethod(
   }
 
   pars <- c("lambda" = ret$lambda, "psigx" = ret$psigx, "psigy" = ret$psigy)
-  for (i in seq(pars))
-  {
+  for (i in seq(pars)) {
     if (names(pars)[i] %in% ret$estimated.parameters) {
       names(pars)[i] <- paste(names(pars)[i], "(estimated)")
     } else {
@@ -1051,7 +1206,8 @@ setMethod(
 #'  knowledge in the form of one/two affinity matrices. Graph-regularization is
 #'  an extension to previously introduced regularization techniques,
 #'  such as the LASSO. See the vignette for details on the objective function of
-#'  the model: \href{../doc/edgenet.html}{\code{vignette("edgenet", package="netReg")}}
+#'  the model:
+#'  \href{../doc/edgenet.html}{\code{vignette("edgenet", package="netReg")}}
 #'
 #' @param X  input matrix, of dimension (\code{n} x \code{p})
 #' where \code{n} is the number of observations and \code{p} is the number
@@ -1084,7 +1240,8 @@ setMethod(
 #' \item{psigx }{ regularization parameter psigx}
 #' \item{psigy }{ regularization parameter psigy}
 #' \item{family }{ a description of the error distribution and link function
-#'    to be used. Can be a \code{\link[pareg:family]{pareg::family}} function or a character string
+#'    to be used. Can be a \code{\link[pareg:family]{pareg::family}}
+#'    function or a character string
 #'    naming a family function, e.g. \code{gaussian} or "gaussian".}
 #' \item{call }{ the call that produced the object}
 #'
@@ -1100,22 +1257,38 @@ setMethod(
 #' ## dont use affinity matrices
 #' fit <- edgenet(X = X, Y = Y, family = gaussian, maxit = 10)
 #' ## only provide one matrix
-#' fit <- edgenet(X = X, Y = Y, G.X = G.X, psigx = 1, family = gaussian, maxit = 10)
+#' fit <- edgenet(
+#'   X = X,
+#'   Y = Y,
+#'   G.X = G.X,
+#'   psigx = 1,
+#'   family = gaussian,
+#'   maxit = 10
+#' )
 #' ## use two matrices
 #' fit <- edgenet(X = X, Y = Y, G.X = G.X, G.Y, family = gaussian, maxit = 10)
 #' ## if Y is vectorial, we cannot use an affinity matrix for Y
 #' fit <- edgenet(X = X, Y = Y[, 1], G.X = G.X, family = gaussian, maxit = 10)
 #' @references
-#'  Cheng, Wei and Zhang, Xiang and Guo, Zhishan and Shi, Yu and Wang, Wei (2014),
+#'  Cheng, Wei and Zhang, Xiang and Guo, Zhishan and Shi, Yu and Wang, Wei #'  (2014),
 #'  Graph-regularized dual Lasso for robust eQTL mapping. \cr
 #'  \emph{Bioinformatics}
 #'
 setGeneric(
   "edgenet",
-  function(X, Y, G.X = NULL, G.Y = NULL,
-           lambda = 0, psigx = 0, psigy = 0,
-           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
-           family = gaussian) {
+  function(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = 0,
+  psigx = 0,
+  psigy = 0,
+  thresh = 1e-5,
+  maxit = 1e5,
+  learning.rate = 0.01,
+  family = gaussian
+  ) {
     standardGeneric("edgenet")
   },
   package = "pareg"
@@ -1126,14 +1299,30 @@ setGeneric(
 setMethod(
   "edgenet",
   signature = signature(X = "matrix", Y = "numeric"),
-  function(X, Y, G.X = NULL, G.Y = NULL,
-           lambda = 0, psigx = 0, psigy = 0,
-           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
-           family = gaussian) {
+  function(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = 0,
+  psigx = 0,
+  psigy = 0,
+  thresh = 1e-5,
+  maxit = 1e5,
+  learning.rate = 0.01,
+  family = gaussian
+  ) {
     edgenet(
-      X, as.matrix(Y), G.X, G.Y,
-      lambda, psigx, psigy,
-      thresh, maxit, learning.rate,
+      X,
+      as.matrix(Y),
+      G.X,
+      G.Y,
+      lambda,
+      psigx,
+      psigy,
+      thresh,
+      maxit,
+      learning.rate,
       family
     )
   }
@@ -1144,12 +1333,22 @@ setMethod(
 setMethod(
   "edgenet",
   signature = signature(X = "matrix", Y = "matrix"),
-  function(X, Y, G.X = NULL, G.Y = NULL,
-           lambda = 0, psigx = 0, psigy = 0,
-           thresh = 1e-5, maxit = 1e5, learning.rate = 0.01,
-           family = gaussian) {
+  function(
+  X,
+  Y,
+  G.X = NULL,
+  G.Y = NULL,
+  lambda = 0,
+  psigx = 0,
+  psigy = 0,
+  thresh = 1e-5,
+  maxit = 1e5,
+  learning.rate = 0.01,
+  family = gaussian
+  ) {
     stopifnot(
-      is.numeric(maxit), is.numeric(thresh),
+      is.numeric(maxit),
+      is.numeric(thresh),
       is.numeric(learning.rate)
     )
 
@@ -1173,10 +1372,17 @@ setMethod(
 
     # estimate coefficients
     ret <- .edgenet(
-      x = X, y = Y, gx = G.X, gy = G.Y,
-      lambda = lambda, psigx = psigx, psigy = psigy,
-      thresh = thresh, maxit = maxit,
-      learning.rate = learning.rate, family = family
+      x = X,
+      y = Y,
+      gx = G.X,
+      gy = G.Y,
+      lambda = lambda,
+      psigx = psigx,
+      psigy = psigy,
+      thresh = thresh,
+      maxit = maxit,
+      learning.rate = learning.rate,
+      family = family
     )
 
     ret$call <- match.call()
@@ -1189,9 +1395,19 @@ setMethod(
 
 #' @noRd
 #' @importFrom matrixLaplacian matrixLaplacian
-.edgenet <- function(x, y, gx, gy,
-                     lambda, psigx, psigy,
-                     thresh, maxit, learning.rate, family) {
+.edgenet <- function(
+  x,
+  y,
+  gx,
+  gy,
+  lambda,
+  psigx,
+  psigy,
+  thresh,
+  maxit,
+  learning.rate,
+  family
+) {
   cols.x <- colnames(x)
   cols.y <- colnames(y)
   x <- cast_float(x)
@@ -1239,7 +1455,11 @@ setMethod(
     psigy = psigy,
     loss_hist = res$loss_hist,
     stopping_reason = res$stopping_reason,
-    pseudo_r_squared = if (is.null(family$linkfun)) NA else cor(x$numpy() %*% beta, family$linkfun(y$numpy()))^2,
+    pseudo_r_squared = if (is.null(family$linkfun)) {
+      NA
+    } else {
+      cor(x$numpy() %*% beta, family$linkfun(y$numpy()))^2
+    },
     mse = mse
   )
 

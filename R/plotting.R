@@ -35,7 +35,11 @@
 #' @importFrom dplyr group_by summarize distinct pull
 #' @importFrom magrittr %<>% extract2
 #' @importFrom tidygraph as_tbl_graph activate mutate
-plot_pareg_with_args <- function(x, show_term_names = TRUE, min_similarity = 0) {
+plot_pareg_with_args <- function(
+  x,
+  show_term_names = TRUE,
+  min_similarity = 0
+) {
   # prepare data
   df_enr <- as.data.frame(x)
   df_terms <- x$df_terms
@@ -58,7 +62,7 @@ plot_pareg_with_args <- function(x, show_term_names = TRUE, min_similarity = 0) 
   term_network[term_network < min_similarity] <- 0
 
   # create plot
-  term_graph <- as_tbl_graph(igraph::graph_from_adjacency_matrix( # nolint
+  term_graph <- as_tbl_graph(igraph::graph_from_adjacency_matrix(
     term_network,
     weighted = TRUE
   )) %>%
@@ -99,7 +103,10 @@ plot_pareg_with_args <- function(x, show_term_names = TRUE, min_similarity = 0) 
     ) +
     scale_size(range = c(2, 10)) +
     scale_color_gradient2(
-      low = "red", mid = "grey", high = "blue", midpoint = 0,
+      low = "red",
+      mid = "grey",
+      high = "blue",
+      midpoint = 0,
       na.value = "black"
     ) +
     scale_edge_alpha() +
@@ -129,5 +136,5 @@ plot_pareg_with_args <- function(x, show_term_names = TRUE, min_similarity = 0) 
 #' @method plot pareg
 #' @return ggplot object.
 plot.pareg <- function(x, ...) {
-    plot_pareg_with_args(x, ...)
+  plot_pareg_with_args(x, ...)
 }

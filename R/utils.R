@@ -33,13 +33,20 @@ create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
       df_genes %>% mutate_at(vars(gene), as.character),
       by = "gene"
     ) %>%
-    pivot_wider(names_from = term, values_from = member, values_fill = FALSE) %>%
+    pivot_wider(
+      names_from = term,
+      values_from = member,
+      values_fill = FALSE
+    ) %>%
     select(
-      -one_of("NA") # use `one_of` to handle case where NA does not exist (happens when a gene appears in no term)
+      # use `one_of` to handle case where NA does not exist
+      # (happens when a gene appears in no term)
+      -one_of("NA")
     ) %>%
     rename_at(vars(-gene, -pvalue), ~ paste0(., ".member")) %>%
     mutate_at(
-      vars(gene), factor # gene is character if select statement is executed
+      vars(gene),
+      factor # gene is character if select statement is executed
     ) %>%
     mutate(
       pvalue_sig = pvalue <= pvalue_threshold,
@@ -142,7 +149,9 @@ similarity_sample <- function(sim_mat, size, similarity_factor = 1) {
   for (i in seq_len(size)) {
     pb$tick()
 
-    prob <- (1 - similarity_factor) * rep(1, sample_num) / sample_num + similarity_factor * sim_mat[current_sample, ]
+    prob <- (1 - similarity_factor) *
+      rep(1, sample_num) / sample_num +
+      similarity_factor * sim_mat[current_sample, ]
     current_sample <- sample(sample_list, 1, prob = prob)
     selected_samples <- c(selected_samples, current_sample)
   }
