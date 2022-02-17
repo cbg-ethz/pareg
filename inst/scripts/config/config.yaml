@@ -6,6 +6,7 @@ method_list:
     - single_term_methods
     - mgsa
     - topGO
+    - gsea
     - pareg_ng
 
 term_filter:
