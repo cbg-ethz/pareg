@@ -21,7 +21,7 @@ cv.edgenet(
   family = gaussian,
   optim.maxit = 100,
   optim.thresh = 0.01,
-  nfolds = 10
+  nfolds = 2
 )
 
 \S4method{cv.edgenet}{matrix,numeric}(
@@ -38,7 +38,7 @@ cv.edgenet(
   family = gaussian,
   optim.maxit = 100,
   optim.thresh = 0.01,
-  nfolds = 10
+  nfolds = 2
 )
 
 \S4method{cv.edgenet}{matrix,matrix}(
@@ -55,7 +55,7 @@ cv.edgenet(
   family = gaussian,
   optim.maxit = 100,
   optim.thresh = 0.01,
-  nfolds = 10
+  nfolds = 2
 )
 }
 \arguments{
@@ -80,20 +80,21 @@ parameter \code{psi.gy}. If this is not desired just set \code{G.Y} to
 \code{NULL}.}
 
 \item{lambda}{\code{numerical} shrinkage parameter for LASSO. Per default
-this parameter is
- set to \code{NA_real_} which means that \code{lambda} is going to be estimated
- using cross-validation. If any \code{numerical} value for \code{lambda}
- is set, estimation of the optimal parameter will \emph{not} be conducted.}
+this parameter is set to \code{NA_real_}
+which means that \code{lambda} is going to be estimated
+using cross-validation. If any \code{numerical} value for \code{lambda}
+is set, estimation of the optimal parameter will \emph{not} be conducted.}
 
 \item{psigx}{\code{numerical} shrinkage parameter for graph-regularization
-of \code{G.X}. Per default this parameter is
-set to \code{NA_real_} which means that \code{psigx} is going to be estimated
+of \code{G.X}. Per default this parameter is set to
+\code{NA_real_} which means that \code{psigx} is going to be estimated
 in the cross-validation. If any \code{numerical} value for \code{psigx} is
 set, estimation of the optimal parameter will \emph{not} be conducted.}
 
 \item{psigy}{\code{numerical} shrinkage parameter for graph-regularization
 of \code{G.Y}. Per default this parameter is
-set to \code{NA_real_} which means that \code{psigy} is going to be estimated
+set to \code{NA_real_} which means that \code{psigy} is
+going to be estimated
 in the cross-validation. If any \code{numerical} value for \code{psigy} is
 set, estimation of the optimal parameter will \emph{not} be conducted.}
 
@@ -146,32 +147,63 @@ Y <- X \%*\% b + matrix(rnorm(100 * 10), 100)
 
 ## dont use affinity matrices and estimate lambda
 fit <- cv.edgenet(
-  X = X, Y = Y, family = gaussian,
-  maxit = 1, optim.maxit = 1
+  X = X,
+  Y = Y,
+  family = gaussian,
+  maxit = 1,
+  optim.maxit = 1
 )
 ## only provide one matrix and estimate lambda
 fit <- cv.edgenet(
-  X = X, Y = Y, G.X = G.X, psigx = 1, family = gaussian,
-  maxit = 1, optim.maxit = 1
+  X = X,
+  Y = Y,
+  G.X = G.X,
+  psigx = 1,
+  family = gaussian,
+  maxit = 1,
+  optim.maxit = 1
 )
 ## estimate only lambda with two matrices
 fit <- cv.edgenet(
-  X = X, Y = Y, G.X = G.X, G.Y, psigx = 1, psigy = 1,
-  family = gaussian, maxit = 1, optim.maxit = 1
+  X = X,
+  Y = Y,
+  G.X = G.X,
+  G.Y,
+  psigx = 1,
+  psigy = 1,
+  family = gaussian,
+  maxit = 1,
+  optim.maxit = 1
 )
 ## estimate only psigx
 fit <- cv.edgenet(
-  X = X, Y = Y, G.X = G.X, G.Y, lambda = 1, psigy = 1,
-  family = gaussian, maxit = 1, optim.maxit = 1
+  X = X,
+  Y = Y,
+  G.X = G.X,
+  G.Y,
+  lambda = 1,
+  psigy = 1,
+  family = gaussian,
+  maxit = 1,
+  optim.maxit = 1
 )
 ## estimate all parameters
 fit <- cv.edgenet(
-  X = X, Y = Y, G.X = G.X, G.Y,
-  family = gaussian, maxit = 1, optim.maxit = 1
+  X = X,
+  Y = Y,
+  G.X = G.X,
+  G.Y,
+  family = gaussian,
+  maxit = 1,
+  optim.maxit = 1
 )
 ## if Y is vectorial, we cannot use an affinity matrix for Y
 fit <- cv.edgenet(
-  X = X, Y = Y[, 1], G.X = G.X,
-  family = gaussian, maxit = 1, optim.maxit = 1
+  X = X,
+  Y = Y[, 1],
+  G.X = G.X,
+  family = gaussian,
+  maxit = 1,
+  optim.maxit = 1
 )
 }

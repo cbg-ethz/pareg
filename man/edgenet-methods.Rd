@@ -93,7 +93,8 @@ An object of class \code{edgenet}
 \item{psigx }{ regularization parameter psigx}
 \item{psigy }{ regularization parameter psigy}
 \item{family }{ a description of the error distribution and link function
-   to be used. Can be a \code{\link[pareg:family]{pareg::family}} function or a character string
+   to be used. Can be a \code{\link[pareg:family]{pareg::family}}
+   function or a character string
    naming a family function, e.g. \code{gaussian} or "gaussian".}
 \item{call }{ the call that produced the object}
 }
@@ -103,7 +104,8 @@ Fit a graph-regularized linear regression model using
  knowledge in the form of one/two affinity matrices. Graph-regularization is
  an extension to previously introduced regularization techniques,
  such as the LASSO. See the vignette for details on the objective function of
- the model: \href{../doc/edgenet.html}{\code{vignette("edgenet", package="netReg")}}
+ the model:
+ \href{../doc/edgenet.html}{\code{vignette("edgenet", package="netReg")}}
 }
 \examples{
 X <- matrix(rnorm(100 * 10), 100, 10)
@@ -117,14 +119,21 @@ Y <- X \%*\% b + matrix(rnorm(100 * 10), 100)
 ## dont use affinity matrices
 fit <- edgenet(X = X, Y = Y, family = gaussian, maxit = 10)
 ## only provide one matrix
-fit <- edgenet(X = X, Y = Y, G.X = G.X, psigx = 1, family = gaussian, maxit = 10)
+fit <- edgenet(
+  X = X,
+  Y = Y,
+  G.X = G.X,
+  psigx = 1,
+  family = gaussian,
+  maxit = 10
+)
 ## use two matrices
 fit <- edgenet(X = X, Y = Y, G.X = G.X, G.Y, family = gaussian, maxit = 10)
 ## if Y is vectorial, we cannot use an affinity matrix for Y
 fit <- edgenet(X = X, Y = Y[, 1], G.X = G.X, family = gaussian, maxit = 10)
 }
 \references{
-Cheng, Wei and Zhang, Xiang and Guo, Zhishan and Shi, Yu and Wang, Wei (2014),
+Cheng, Wei and Zhang, Xiang and Guo, Zhishan and Shi, Yu and Wang, Wei #'  (2014),
  Graph-regularized dual Lasso for robust eQTL mapping. \cr
  \emph{Bioinformatics}
 }

@@ -16,6 +16,24 @@ jaccard <- function(x, y) {
 }
 
 
+#' @title Overlap coefficient.
+#'
+#' @description Compute overlap coefficient between two sets.
+#'
+#' @export
+#'
+#' @param x First set.
+#' @param y Second set.
+#'
+#' @return Overlap coefficient between set x and y.
+#'
+#' @examples
+#' overlap_coefficient(c(1, 2, 3), c(2, 3, 4))
+overlap_coefficient <- function(x, y) {
+  return(length(intersect(x, y)) / min(length(x), length(y)))
+}
+
+
 #' @title Term similarity computation.
 #'
 #' @description Generate similarity matrix for input terms.
