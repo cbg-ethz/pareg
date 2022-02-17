@@ -26,7 +26,8 @@ gene_list <- study$df %>%
 
 name_map <- msigdbr::msigdbr(species = "Homo sapiens", category = "C5", subcategory = subcategory) %>%
   dplyr::select(gs_name, gs_exact_source) %>%
-  distinct(gs_exact_source, .keep_all = TRUE)
+  distinct(gs_exact_source, .keep_all = TRUE) %>%
+  mutate(gs_name = str_to_lower(gs_name))
 
 df_terms_goid <- name_map %>%
   right_join(df_terms, by = c("gs_name" = "term"))
