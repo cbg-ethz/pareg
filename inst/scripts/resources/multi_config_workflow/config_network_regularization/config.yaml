@@ -4,7 +4,9 @@
 # list of strings will execute selected methods
 method_list:
     - pareg
+    - pareg_lasso
     - pareg_network
+    - pareg_network_lasso
 
 term_filter:
     min_size: null
