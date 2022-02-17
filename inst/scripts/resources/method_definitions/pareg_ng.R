@@ -7,7 +7,7 @@ devtools::load_all("../..")
 fit <- pareg::pareg(
   study$df %>%
     select(gene, pvalue) %>%
-    mutate(pvalue = ifelse(
+    mutate(pvalue = -ifelse(
       pvalue > 0,
       log10(pvalue),
       log10(min(pvalue[pvalue > 0]))
