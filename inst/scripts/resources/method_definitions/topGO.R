@@ -1,15 +1,18 @@
 # parameters
-category <- snakemake@params$params$category
-subcategory <- snakemake@params$params$subcategory
+termsource <- snakemake@params$params$termsource
+
+parts <- strsplit(termsource, "~")[[1]]
+db <- parts[[1]]
+category <- parts[[2]]
 
 # topGO only works with Gene Ontology
-if (category != "C5") {
-  print("Skipping topGO method due to invalid category")
+if (db != "msigdb" || category != "C5") {
+  print("Skipping topGO method due to invalid database or category")
   file.create(snakemake@output$fname) # create empty csv which is skipped by aggregation
   quit(save = "no")
 }
 
-subcategory <- substring(subcategory, 4) # remove "GO:" prefix
+subcategory <- substring(parts[[3]], 4) # remove "GO:" prefix
 
 # prepare environment
 source(snakemake@params$setup_code_fname)
