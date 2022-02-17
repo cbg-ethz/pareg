@@ -27,6 +27,8 @@ df %>%
   head()
 
 # misc
+saveRDS(fit, file.path(dirname(snakemake@output$fname), "fit.rds"))
+
 df_loss <- do.call(rbind, fit$obj$loss_hist) %>%
   as_tibble() %>%
   unnest(everything()) %>%
