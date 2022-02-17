@@ -921,7 +921,7 @@ setGeneric(
   family = gaussian,
   optim.maxit = 1e2,
   optim.thresh = 1e-2,
-  nfolds = 10
+  nfolds = 2
   ) {
     standardGeneric("cv.edgenet")
   },
@@ -947,7 +947,7 @@ setMethod(
   family = gaussian,
   optim.maxit = 1e2,
   optim.thresh = 1e-2,
-  nfolds = 10
+  nfolds = 2
   ) {
     cv.edgenet(
       X,
@@ -987,7 +987,7 @@ setMethod(
   family = gaussian,
   optim.maxit = 1e2,
   optim.thresh = 1e-2,
-  nfolds = 10
+  nfolds = 2
   ) {
     stopifnot(
       is.numeric(nfolds),
