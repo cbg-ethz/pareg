@@ -54,7 +54,10 @@ df <- Sys.glob(file.path(analysis_dirs[[1]], "/gsea_report_for_na_*.xls")) %>%
 
 # finalize
 df <- df %>%
-  mutate(method = "gsea")
+  mutate(
+    method = "gsea",
+    term = str_to_lower(term)
+  )
 
 df %>%
   head()

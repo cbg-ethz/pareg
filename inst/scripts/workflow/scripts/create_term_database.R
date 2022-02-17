@@ -11,6 +11,7 @@ termsource <- snakemake@wildcards$termsource
 
 parts <- strsplit(termsource, "~")[[1]]
 
+# generate base term set
 if (parts[[1]] == "msigdb") {
   category <- parts[[2]]
   subcategory <- parts[[3]]
@@ -69,6 +70,13 @@ if (parts[[1]] == "msigdb") {
 } else {
   stop(paste("Unknown term database source:", parts[[1]]))
 }
+
+# convert all characters to lower case to improve method compatibility
+df_terms <- df_terms %>%
+  mutate(
+    term = str_to_lower(term),
+    gene = str_to_lower(gene)
+  )
 
 # select terms of reasonable size
 df_term_tally <- df_terms %>%
