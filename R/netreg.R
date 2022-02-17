@@ -720,7 +720,7 @@ cross.validate <- function(
         mod,
         cast_float(x.test),
         cast_float(y.test)
-      )$total_loss
+      )$likelihood
     }
 
     mean(losses)
