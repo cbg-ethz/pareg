@@ -50,16 +50,16 @@ module noise:
 use rule * from noise as noise_*
 
 
-module network_regularization:
+module regularization_effect:
     snakefile:
         "../../../workflow/Snakefile"
     config:
-        load_configfile("config_network_regularization/config.yaml")
+        load_configfile("config_regularization_effect/config.yaml")
     replace_prefix:
-        {"results/": "results/network_regularization/"}
+        {"results/": "results/regularization_effect/"}
 
 
-use rule * from network_regularization as network_regularization_*
+use rule * from regularization_effect as regularization_effect_*
 
 
 module real_datasets:
@@ -95,7 +95,7 @@ rule all:
     input:
         rules.dispersion_fitting_all.input,
         rules.response_distribution_all.input,
-        rules.regularization_parameter_all.input,
+        rules.regularization_effect_all.input,
         "results/regularization_parameter/rocauc_vs_loss/",
         rules.noise_all.input,
         rules.network_regularization_all.input,

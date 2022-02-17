@@ -20,4 +20,4 @@ parameters:
     ontermcount: [5]
     siggenescaling: ["membercount"]
 
-params_path: config_network_regularization/params.csv
+params_path: config_regularization_effect/params.csv
