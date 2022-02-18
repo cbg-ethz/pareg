@@ -69,7 +69,7 @@ pareg <- function(
     ordered_terms <- vapply(
       strsplit(covariates, ".", fixed = TRUE),
       function(x) {
-        glue_collapse(x[1:(length(x) - 1)], sep = ".")
+        glue_collapse(x[seq_len(length(x) - 1)], sep = ".")
       },
       FUN.VALUE = character(1)
     )
