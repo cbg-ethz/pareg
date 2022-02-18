@@ -20,6 +20,7 @@ biocViews:
     StatisticalMethod,
     GraphAndNetwork,
     Regression,
+    GeneExpression,
     DifferentialExpression,
     NetworkEnrichment,
     Network
