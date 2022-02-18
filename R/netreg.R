@@ -659,7 +659,11 @@ fit <- function(
   ret <- list(
     beta = mod$beta$numpy(),
     alpha = mod$alpha$numpy(),
-    loss_hist = loss_hist[!sapply(loss_hist, is.null)],
+    loss_hist = loss_hist[!vapply(
+      loss_hist,
+      is.null,
+      FUN.VALUE = logical(1)
+    )],
     stopping_reason = stopping_reason
   )
 

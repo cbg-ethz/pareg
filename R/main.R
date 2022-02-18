@@ -66,11 +66,12 @@ pareg <- function(
     as.matrix()
 
   if (!is.null(term_network)) {
-    ordered_terms <- sapply(
+    ordered_terms <- vapply(
       strsplit(covariates, ".", fixed = TRUE),
       function(x) {
         glue_collapse(x[1:(length(x) - 1)], sep = ".")
-      }
+      },
+      FUN.VALUE = character(1)
     )
 
     term_diff <- setdiff(ordered_terms, rownames(term_network))
