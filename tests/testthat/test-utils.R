@@ -52,9 +52,14 @@ test_that("similarity sampling works", {
 
   df_sims <- rep(c(1, 0.5, 0), each = 10) %>%
     purrr::map_dfr(function(w) {
-      selected_samples <- pareg::similarity_sample(sim_mat, size = 10, similarity_factor = w)
+      selected_samples <- pareg::similarity_sample(
+        sim_mat, size = 10, similarity_factor = w
+      )
       similarity_values <- sim_mat[selected_samples, selected_samples]
-      data.frame(w = w, similarity_values = as.vector(unname(unlist(similarity_values))))
+      data.frame(
+        w = w,
+        similarity_values = as.vector(unname(unlist(similarity_values)))
+      )
     })
 
   df_sims %>%

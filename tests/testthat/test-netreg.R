@@ -31,7 +31,11 @@ test_that("Beta case works", {
   fit_br <- betareg::betareg(Y ~ X)
   fit <- pareg::edgenet(X, Y, family = pareg::beta_phi_var())
 
-  expect_equal(c(as.vector(coef(fit)), fit$dispersion), as.vector(coef(fit_br)), tolerance = 0.05)
+  expect_equal(
+      c(as.vector(coef(fit)), fit$dispersion),
+      as.vector(coef(fit_br)),
+      tolerance = 0.05
+  )
   # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.05)
 })
 
@@ -64,7 +68,13 @@ test_that("Cross-validation with network regularization works", {
   amat <- matrix(runif(3 * 3), 3, 3)
 
   # small iteration count to reduce runtime
-  fit <- pareg::cv.edgenet(X, Y, G.X = amat, family = pareg::gaussian, maxit = 10)
+  fit <- pareg::cv.edgenet(
+    X,
+    Y,
+    G.X = amat,
+    family = pareg::gaussian,
+    maxit = 10
+  )
 
   # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.02)
 })

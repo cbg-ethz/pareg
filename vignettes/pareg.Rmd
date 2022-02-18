@@ -112,7 +112,10 @@ df_study <- data.frame(
   )
 )
 
-table(df_study$pvalue <= 0.05, df_study$in_study, dnn = c("sig. p-value", "in study"))
+table(
+  df_study$pvalue <= 0.05,
+  df_study$in_study, dnn = c("sig. p-value", "in study")
+)
 ```
 
 ## Enrichment analysis
@@ -128,7 +131,11 @@ hist(term_network, xlab = "Term similarity")
 We can then compute our pathway enrichment values.
 
 ```{r}
-fit <- pareg(df_study %>% select(-in_study), df_terms, network_param = 1, term_network = term_network)
+fit <- pareg(
+  df_study %>% select(-in_study),
+  df_terms,
+  network_param = 1, term_network = term_network
+)
 
 fit %>%
   as.data.frame() %>%

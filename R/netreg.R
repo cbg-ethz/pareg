@@ -1270,7 +1270,8 @@ setMethod(
 #' ## if Y is vectorial, we cannot use an affinity matrix for Y
 #' fit <- edgenet(X = X, Y = Y[, 1], G.X = G.X, family = gaussian, maxit = 10)
 #' @references
-#'  Cheng, Wei and Zhang, Xiang and Guo, Zhishan and Shi, Yu and Wang, Wei #'  (2014),
+#'  Cheng, Wei and Zhang, Xiang and Guo, Zhishan and Shi, Yu and Wang, Wei
+#'  (2014),
 #'  Graph-regularized dual Lasso for robust eQTL mapping. \cr
 #'  \emph{Bioinformatics}
 #'
