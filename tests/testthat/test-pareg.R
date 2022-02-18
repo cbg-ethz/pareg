@@ -31,6 +31,44 @@ test_that("package doesn't crash for trivial case", {
   )
 })
 
+
+test_that("pareg works with term network", {
+  # create synthetic data
+  set.seed(42)
+
+  df_genes <- data.frame(
+    gene = paste("g", 1:20, sep = ""),
+    pvalue = c(
+      rbeta(10, .1, 1),
+      rbeta(10, 1.1, 1)
+    )
+  )
+
+  df_terms <- rbind(
+    data.frame(
+      term = "foo",
+      gene = paste("g", 1:10, sep = "")
+    ),
+    data.frame(
+      term = "bar",
+      gene = paste("g", 11:20, sep = "")
+    )
+  )
+
+  term_sims <- matrix(c(1, 0.5, 0.5, 1), 2, 2)
+  rownames(term_sims) <- colnames(term_sims) <- c("foo", "bar")
+
+  # run model
+  res <- pareg(df_genes, df_terms, term_network = term_sims)
+
+  # check results
+  expect_lt(
+    res %>% as.data.frame() %>% filter(term == "foo") %>% pull(enrichment),
+    res %>% as.data.frame() %>% filter(term == "bar") %>% pull(enrichment)
+  )
+})
+
+
 test_that("Bernoulli family works", {
   # create synthetic data
   set.seed(42)
