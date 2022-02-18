@@ -64,5 +64,4 @@ Imports:
     progress,
     Matrix,
     matrixLaplacian,
-    keras,
-    methods
+    keras
