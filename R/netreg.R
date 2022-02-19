@@ -1425,9 +1425,12 @@ setMethod(
     gy <- cast_float(matrixLaplacian(gy, FALSE, FALSE)$LaplacianMatrix)
   }
 
+  input_shape <- keras::shape(dim(x)[[1]], dim(x)[[2]])
   mod <- model(ncol(x), ncol(y), family)
+  mod$build(input_shape)
   loss <- edgenet.loss(lambda, psigx, psigy, gx, gy, family)
   res <- fit(mod, loss, x, y, maxit, learning.rate, thresh)
+  mod$compute_output_shape(input_shape = input_shape)  # needed to save to disk
 
   # finalize output
   beta <- res$beta
@@ -1465,7 +1468,8 @@ setMethod(
     } else {
       cor(x$numpy() %*% beta, family$linkfun(y$numpy()))^2
     },
-    mse = mse
+    mse = mse,
+    model = mod
   )
 
   ret$family <- family

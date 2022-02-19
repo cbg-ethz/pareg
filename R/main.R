@@ -125,6 +125,9 @@ pareg <- function(
       term_network = term_network,
       df_terms = df_terms,
       covariates = covariates,
+      X = X,
+      Y = Y,
+      response_column_name = response_column_name,
       params = list(
         lasso_param = lasso_param,
         network_param = network_param,
