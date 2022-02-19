@@ -146,10 +146,10 @@ p <- cowplot::plot_grid(
     geom_boxplot() +
     scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
     theme_minimal(),
-    ggplot(df_res, aes(x = method, y = pr_auc)) +
-      geom_boxplot() +
-      scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
-      theme_minimal(),
+  ggplot(df_res, aes(x = method, y = pr_auc)) +
+    geom_boxplot() +
+    scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+    theme_minimal(),
   ncol = 1
 )
 p
