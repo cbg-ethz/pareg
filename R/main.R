@@ -118,6 +118,12 @@ pareg <- function(
     maxit = max_iterations
   )
 
+  # update parameters to cross-validation estimates if needed
+  if (cv) {
+    lasso_param <- fit$lambda
+    network_param <- fit$psigx
+  }
+
   # return structured object
   return(structure(
     list(
