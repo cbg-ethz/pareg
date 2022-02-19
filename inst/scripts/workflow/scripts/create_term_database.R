@@ -9,7 +9,7 @@ fname_out <- snakemake@output$fname
 term_filter_params <- snakemake@params$term_filter
 termsource <- snakemake@wildcards$termsource
 
-parts <- strsplit(termsource, "~")[[1]]
+parts <- strsplit(termsource, "@")[[1]]
 
 # generate base term set
 if (parts[[1]] == "msigdb") {

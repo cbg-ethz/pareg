@@ -1,7 +1,7 @@
 # parameters
 termsource <- snakemake@params$params$termsource
 
-parts <- strsplit(termsource, "~")[[1]]
+parts <- strsplit(termsource, "@")[[1]]
 db <- parts[[1]]
 category <- parts[[2]]
 
