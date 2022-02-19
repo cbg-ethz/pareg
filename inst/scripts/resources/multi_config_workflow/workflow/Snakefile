@@ -84,6 +84,21 @@ rule compare_rocauc_vs_loss:
             replicate=range(regularization_parameter.config["replicate_count"]),
             method=regularization_parameter.method_list,
         ),
+        fname_study_list=[
+            f"results/regularization_parameter/studies/{params}/replicates/{replicate}/study.rds"
+            for params in regularization_parameter.paramspace.instance_patterns
+            for replicate in [
+                f"{r}_testsamples"
+                for r in range(regularization_parameter.config["replicate_count"])
+            ]
+            for method in regularization_parameter.method_list
+        ],
+        fname_method_list=[
+            f"results/regularization_parameter/enrichments/{params}/replicates/{replicate}/{method}/enrichment_result.csv"
+            for params in regularization_parameter.paramspace.instance_patterns
+            for replicate in range(regularization_parameter.config["replicate_count"])
+            for method in regularization_parameter.method_list
+        ],
     output:
         outdir=directory("results/regularization_parameter/rocauc_vs_loss/"),
     script:
