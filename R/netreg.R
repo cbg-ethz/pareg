@@ -1143,13 +1143,14 @@ setMethod(
     fn = fn,
     par = init.params,
     var.args = fixed.params,
+    method = "L-BFGS-B",
     lower = rep(0, length(init.params)),
-    upper = rep(100, length(init.params)),
+    upper = rep(Inf, length(init.params)),
     control = list(
-      maxeval = optim.maxit,
-      xtol_rel = optim.thresh,
-      ftol_rel = optim.thresh,
-      ftol_abs = optim.thresh
+      maxit = optim.maxit,
+      reltol = optim.thresh,
+      abstol = optim.thresh,
+      trace = 6
     )
   )
 
