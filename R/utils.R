@@ -197,3 +197,9 @@ transform_y <- function(y) {
   n_obs <- sum(!is.na(y))
   (y * (n_obs - 1) + 0.5) / n_obs
 }
+
+
+#' @noRd
+pipe_split <- function(df, group_col, value_col) {
+  split(df[, value_col], df[, group_col])
+}
