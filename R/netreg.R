@@ -769,6 +769,17 @@ cross.validate <- function(
 }
 
 
+#' @noRd
+#' @import nloptr
+optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
+  bobele <- nloptr::bobyqa(par, fn,
+    lower = lower, upper = upper,
+    control = control, ...
+  )
+  bobele
+}
+
+
 #' Find the optimal shrinkage parameters for edgenet
 #'
 #' @export
@@ -1143,14 +1154,13 @@ setMethod(
     fn = fn,
     par = init.params,
     var.args = fixed.params,
-    method = "L-BFGS-B",
     lower = rep(0, length(init.params)),
     upper = rep(Inf, length(init.params)),
     control = list(
-      maxit = optim.maxit,
-      reltol = optim.thresh,
-      abstol = optim.thresh,
-      trace = 6
+      maxeval = optim.maxit,
+      xtol_rel = optim.thresh,
+      ftol_rel = optim.thresh,
+      ftol_abs = optim.thresh
     )
   )
 
