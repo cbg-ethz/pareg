@@ -17,7 +17,9 @@ jobs:
           use-public-rspm: true
 
       - name: Install lintr
-        run: install.packages("lintr")
+        run: |
+          install.packages("remotes")
+          remotes::install_github("r-lib/lintr")
         shell: Rscript {0}
 
       - name: Lint
