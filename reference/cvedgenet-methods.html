@@ -217,26 +217,6 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>method L-BFGS-B uses 'factr' (and 'pgtol') instead of 'reltol' and 'abstol'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> L = 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X0 = 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> U = inf </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At X0, 0 variables are exactly at the bounds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At iterate     0  f=       14.777  |proj g|=            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iterations 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function evaluations 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> segments explored during Cauchy searches 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BFGS updates skipped 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> active bounds at final generalized Cauchy point 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> norm of the final projected gradient 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final function value 14.7771</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X = 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F = 14.7771</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 14.777054 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
 <span class="r-in"><span class="co">## only provide one matrix and estimate lambda</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -247,26 +227,6 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>method L-BFGS-B uses 'factr' (and 'pgtol') instead of 'reltol' and 'abstol'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> L = 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X0 = 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> U = inf </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At X0, 0 variables are exactly at the bounds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At iterate     0  f=         15.2  |proj g|=            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iterations 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function evaluations 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> segments explored during Cauchy searches 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BFGS updates skipped 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> active bounds at final generalized Cauchy point 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> norm of the final projected gradient 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final function value 15.2004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X = 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F = 15.2004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 15.200381 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
 <span class="r-in"><span class="co">## estimate only lambda with two matrices</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -279,26 +239,6 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>method L-BFGS-B uses 'factr' (and 'pgtol') instead of 'reltol' and 'abstol'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> L = 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X0 = 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> U = inf </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At X0, 0 variables are exactly at the bounds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At iterate     0  f=       11.784  |proj g|=            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iterations 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function evaluations 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> segments explored during Cauchy searches 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BFGS updates skipped 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> active bounds at final generalized Cauchy point 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> norm of the final projected gradient 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final function value 11.7839</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X = 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F = 11.7839</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 11.783884 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
 <span class="r-in"><span class="co">## estimate only psigx</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -311,26 +251,6 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>method L-BFGS-B uses 'factr' (and 'pgtol') instead of 'reltol' and 'abstol'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> N = 1, M = 5 machine precision = 2.22045e-16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> L = 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X0 = 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> U = inf </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At X0, 0 variables are exactly at the bounds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At iterate     0  f=       17.159  |proj g|=            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iterations 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function evaluations 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> segments explored during Cauchy searches 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BFGS updates skipped 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> active bounds at final generalized Cauchy point 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> norm of the final projected gradient 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final function value 17.1588</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X = 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F = 17.1588</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 17.158813 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
 <span class="r-in"><span class="co">## estimate all parameters</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -341,57 +261,6 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>method L-BFGS-B uses 'factr' (and 'pgtol') instead of 'reltol' and 'abstol'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> N = 3, M = 5 machine precision = 2.22045e-16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> L = 0 0 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X0 = 0.1 0.1 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> U = inf inf inf </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At X0, 0 variables are exactly at the bounds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At iterate     0  f=       18.309  |proj g|=    0.0011921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ---------------- CAUCHY entered-------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> There are 2  breakpoints</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Piece      1 f1, f2 at start point -1.9327e-06  1.9327e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Distance to the next break point =   8.3886e+01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Distance to the stationary point =   1.0000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCP found in this segment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Piece      1 f1, f2 at start point -1.9327e-06  1.9327e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Distance to the stationary point =   1.0000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cauchy X =  0.0988079 0.0992847 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ---------------- exit CAUCHY----------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  variables are free at GCP on iteration 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LINE SEARCH 0 times; norm of step = 0.00139021</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X = 0.0988079 0.0992847 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G = 0.000953674 0.000953674 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Iteration     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ---------------- CAUCHY entered-------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> There are 2  breakpoints</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Piece      1 f1, f2 at start point -1.8190e-06  1.0700e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Distance to the next break point =   1.0361e+02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Distance to the stationary point =   1.7000e+01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GCP found in this segment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Piece      1 f1, f2 at start point -1.8190e-06  1.0700e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Distance to the stationary point =   1.7000e+01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cauchy X =  0.0825954 0.0830723 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ---------------- exit CAUCHY----------------------</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  variables are free at GCP on iteration 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LINE SEARCH 3 times; norm of step = 0.100751</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X = 0.0195114 0.0371335 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> G = -0.000476837 -0.000476837 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 18.296741 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stopped after 2 iterations</span>
 <span class="r-in"><span class="co">## if Y is vectorial, we cannot use an affinity matrix for Y</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -401,26 +270,6 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>method L-BFGS-B uses 'factr' (and 'pgtol') instead of 'reltol' and 'abstol'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> N = 2, M = 5 machine precision = 2.22045e-16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> L = 0 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X0 = 0.1 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> U = inf inf </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At X0, 0 variables are exactly at the bounds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> At iterate     0  f=       2.9368  |proj g|=            0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iterations 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> function evaluations 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> segments explored during Cauchy searches 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BFGS updates skipped 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> active bounds at final generalized Cauchy point 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> norm of the final projected gradient 0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final function value 2.93676</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> X = 0.1 0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> F = 2.93676</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> final  value 2.936759 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> converged</span>
 </code></pre></div>
     </div>
   </div>
