@@ -6,15 +6,14 @@ devtools::load_all()
 fname_aucs <- snakemake@input$fname_aucs
 fname_enr_list <- snakemake@input$fname_enr_list
 fname_study_list <- snakemake@input$fname_study_list
-fname_method_list <- snakemake@input$fname_method_list
 
 outdir <- snakemake@output$outdir
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 
 # read loss data
 df_loss_test <- pmap_dfr(
-  list(fname_enr_list, fname_study_list, fname_method_list),
-  function(path_enr, path_study, path_method) {
+  list(fname_enr_list, fname_study_list),
+  function(path_enr, path_study) {
     # parse parameters
     path_parts <- gtools::split_path(path_enr, depth_first = FALSE)
     param_str <- path_parts[[length(path_parts) - 4]]
@@ -32,7 +31,7 @@ df_loss_test <- pmap_dfr(
     }
 
     # read data
-    fit <- readRDS(file.path(dirname(path_method), "fit.rds"))
+    fit <- readRDS(file.path(dirname(path_enr), "fit.rds"))
     mod <- keras::load_model_tf(fit$obj$model)
     study <- readRDS(path_study)
 
