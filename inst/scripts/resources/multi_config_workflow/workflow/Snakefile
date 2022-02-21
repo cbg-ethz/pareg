@@ -95,6 +95,8 @@ rule compare_rocauc_vs_loss:
         ],
     output:
         outdir=directory("results/regularization_parameter/rocauc_vs_loss/"),
+    resources:
+        mem_mb=20_000,
     script:
         "scripts/compare_rocauc_vs_loss.R"
 
