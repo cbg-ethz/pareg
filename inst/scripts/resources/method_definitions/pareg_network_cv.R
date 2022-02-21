@@ -22,7 +22,7 @@ df %>%
 # misc
 fname_model <- file.path(dirname(snakemake@output$fname), "model")
 fit$obj$fit$model$save(fname_model)
-fit$obj$fit$model <- fname_model
+fit$obj$model <- fname_model
 saveRDS(fit, file.path(dirname(snakemake@output$fname), "fit.rds"))
 
 df_loss <- do.call(rbind, fit$obj$fit$loss_hist) %>%
