@@ -272,6 +272,13 @@ coef.edgenet <- function(object, ...) {
 }
 
 
+#' @export
+#' @method coef cv.edgenet
+coef.cv.edgenet <- function(object, ...) {
+  coef(object$fit)
+}
+
+
 ### response distribution families ###
 
 
