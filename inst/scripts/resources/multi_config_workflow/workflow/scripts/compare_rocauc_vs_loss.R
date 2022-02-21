@@ -59,6 +59,7 @@ df_loss_test <- pmap_dfr(
     data.frame(likelihood_test = loss_test$likelihood) %>%
       rowwise %>%
       mutate(
+        method = method,
         replicate = replicate,
         !!!tmp
       )
