@@ -25,17 +25,17 @@
 #' @importFrom rlang .data
 create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
   df_terms %>%
-    group_by(term) %>%
-    mutate(member = gene %in% df_genes$gene) %>%
+    group_by(.data$term) %>%
+    mutate(member = .data$gene %in% df_genes$gene) %>%
     ungroup() %>%
-    mutate_at(vars(gene), as.character) %>%
+    mutate_at(vars(.data$gene), as.character) %>%
     right_join(
-      df_genes %>% mutate_at(vars(gene), as.character),
+      df_genes %>% mutate_at(vars(.data$gene), as.character),
       by = "gene"
     ) %>%
     pivot_wider(
-      names_from = term,
-      values_from = member,
+      names_from = .data$term,
+      values_from = .data$member,
       values_fill = FALSE
     ) %>%
     select(
@@ -43,14 +43,14 @@ create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
       # (happens when a gene appears in no term)
       -one_of("NA")
     ) %>%
-    rename_at(vars(-gene, -pvalue), ~ paste0(., ".member")) %>%
+    rename_at(vars(-.data$gene, -.data$pvalue), ~ paste0(., ".member")) %>%
     mutate_at(
-      vars(gene),
+      vars(.data$gene),
       factor # gene is character if select statement is executed
     ) %>%
     mutate(
-      pvalue_sig = pvalue <= pvalue_threshold,
-      pvalue_notsig = pvalue > pvalue_threshold
+      pvalue_sig = .data$pvalue <= pvalue_threshold,
+      pvalue_notsig = .data$pvalue > pvalue_threshold
     )
 }
 
@@ -101,10 +101,10 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
   as.data.frame(coef(x$obj)) %>% # nolint
     rownames_to_column() %>%
     mutate(rowname = c("intercept", x$covariates)) %>%
-    filter(grepl(".member$", rowname)) %>%
-    extract(rowname, "term", "(.*).member") %>%
-    rename(enrichment = `y[1]`) %>%
-    arrange(desc(enrichment))
+    filter(grepl(".member$", .data$rowname)) %>%
+    extract(.data$rowname, "term", "(.*).member") %>%
+    rename(enrichment = .data$`y[1]`) %>%
+    arrange(desc(.data$enrichment))
 }
 
 

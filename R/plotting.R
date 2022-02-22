@@ -46,14 +46,14 @@ plot_pareg_with_args <- function(
   term_network <- x$term_network
 
   term_sizes <- df_terms %>%
-    group_by(term) %>%
+    group_by(.data$term) %>%
     summarize(size = n())
 
   if (is.null(term_network)) {
     # pareg was run without network regularization
     term_list <- df_terms %>%
-      distinct(term) %>%
-      pull(term)
+      distinct(.data$term) %>%
+      pull(.data$term)
     term_network <- matrix(0, length(term_list), length(term_list))
     rownames(term_network) <- colnames(term_network) <- term_list
   }
@@ -66,14 +66,14 @@ plot_pareg_with_args <- function(
     term_network,
     weighted = TRUE
   )) %>%
-    activate(nodes) %>%
+    activate(.data$nodes) %>%
     mutate(
       enrichment = data.frame(term = .data$name) %>%
         left_join(df_enr, by = "term") %>%
-        pull(enrichment),
+        pull(.data$enrichment),
       term_size = data.frame(term = .data$name) %>%
         left_join(term_sizes, by = "term") %>%
-        pull(size),
+        pull(.data$size),
     )
 
   edge_count <- term_graph %>%
