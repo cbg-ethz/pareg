@@ -66,7 +66,7 @@ plot_pareg_with_args <- function(
     term_network,
     weighted = TRUE
   )) %>%
-    activate(.data$nodes) %>%
+    activate(nodes) %>%
     mutate(
       enrichment = data.frame(term = .data$name) %>%
         left_join(df_enr, by = "term") %>%
@@ -77,14 +77,14 @@ plot_pareg_with_args <- function(
     )
 
   edge_count <- term_graph %>%
-    activate(.data$edges) %>%
+    activate(edges) %>%
     as_tibble() %>%
     dim() %>%
     extract2(1)
 
   if (edge_count > 0) {
     term_graph %<>%
-      activate(.data$edges) %>%
+      activate(edges) %>%
       mutate(
         term_similarity = .data$weight
       )
