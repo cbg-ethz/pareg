@@ -8,6 +8,7 @@ method_list:
     - pareg_network_100
     - pareg_network_1000
     - pareg_network_10000
+    - pareg_network_cv
 
 term_filter:
     min_size: null
