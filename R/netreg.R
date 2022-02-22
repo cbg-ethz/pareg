@@ -87,7 +87,7 @@ logistic <- function(x) 1 / (1 + cast_float(tf$exp(-x)))
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tfprobability tfp
 gcdf <- function(x) {
   std <- tfp$distributions$Normal(0, 1)
   std$cdf(x)
@@ -1418,6 +1418,7 @@ setMethod(
 
 #' @noRd
 #' @importFrom matrixLaplacian matrixLaplacian
+#' @importFrom stats cor
 .edgenet <- function(
   x,
   y,

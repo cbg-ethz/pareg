@@ -173,6 +173,7 @@ similarity_sample <- function(sim_mat, size, similarity_factor = 1) {
 #' @examples
 #' generate_similarity_matrix(c(1, 2, 3))
 #' @importFrom Matrix bdiag
+#' @importFrom stats runif
 generate_similarity_matrix <- function(cluster_sizes) {
   as.matrix(bdiag(
     lapply(cluster_sizes, function(x) matrix(runif(x * x), nrow = x, ncol = x))

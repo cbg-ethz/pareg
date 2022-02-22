@@ -77,14 +77,14 @@ plot_pareg_with_args <- function(
     )
 
   edge_count <- term_graph %>%
-    activate(edges) %>%
+    activate(.data$edges) %>%
     as_tibble() %>%
     dim() %>%
     extract2(1)
 
   if (edge_count > 0) {
     term_graph %<>%
-      activate(edges) %>%
+      activate(.data$edges) %>%
       mutate(
         term_similarity = .data$weight
       )
