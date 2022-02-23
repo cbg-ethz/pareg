@@ -202,5 +202,6 @@ transform_y <- function(y) {
 
 #' @noRd
 pipe_split <- function(df, group_col, value_col) {
+  df <- as.data.frame(df)
   split(df[, value_col], df[, group_col])
 }
