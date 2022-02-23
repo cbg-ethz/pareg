@@ -107,6 +107,7 @@ rule all:
         rules.dispersion_fitting_all.input,
         rules.response_distribution_all.input,
         rules.regularization_effect_all.input,
+        rules.regularization_parameter_all.input,
         "results/regularization_parameter/rocauc_vs_loss/",
         rules.noise_all.input,
         rules.network_regularization_all.input,
