@@ -110,6 +110,5 @@ rule all:
         rules.regularization_parameter_all.input,
         "results/regularization_parameter/rocauc_vs_loss/",
         rules.noise_all.input,
-        rules.network_regularization_all.input,
         rules.real_datasets_all.input,
     default_target: True
