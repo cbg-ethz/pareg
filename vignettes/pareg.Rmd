@@ -1,7 +1,7 @@
 ---
 title: "Get started"
 author: "Kim Philipp Jablonski"
-date: "`r Sys.Date()`"
+package: pareg
 graphics: yes
 output: BiocStyle::html_document
 bibliography: bibliography.bib
