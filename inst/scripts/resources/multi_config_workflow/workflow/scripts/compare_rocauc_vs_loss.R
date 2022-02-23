@@ -129,10 +129,12 @@ p <- cowplot::plot_grid(
   ggplot(df_res, aes(x = method, y = likelihood)) +
     geom_boxplot() +
     scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+    ylab("-loglik_train") +
     theme_minimal(),
   ggplot(df_res, aes(x = method, y = likelihood_test)) +
     geom_boxplot() +
     scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+    ylab("-loglik_test") +
     theme_minimal(),
   ggplot(df_res, aes(x = method, y = pseudo_r_squared)) +
     geom_boxplot() +
@@ -162,6 +164,7 @@ p <- cowplot::plot_grid(
   ggplot(df_res, aes(x = method, y = likelihood_test)) +
     geom_boxplot() +
     scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+    ylab("-loglik") +
     theme_minimal(),
   ggplot(df_res, aes(x = method, y = roc_auc)) +
     geom_boxplot() +
