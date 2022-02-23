@@ -15,15 +15,7 @@ Description: Compute pathway enrichment scores while accounting for term-term re
     By doing so, it is able to incorporate additional biological knowledge into the enrichment analysis and to estimate pathway enrichment scores more robustly.
 URL: https://github.com/cbg-ethz/pareg
 BugReports: https://github.com/cbg-ethz/pareg/issues
-biocViews:
-    Software,
-    StatisticalMethod,
-    GraphAndNetwork,
-    Regression,
-    GeneExpression,
-    DifferentialExpression,
-    NetworkEnrichment,
-    Network
+biocViews: Software, StatisticalMethod, GraphAndNetwork, Regression, GeneExpression, DifferentialExpression, NetworkEnrichment, Network
 License: GPL-3
 Encoding: UTF-8
 Depends:
