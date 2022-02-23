@@ -153,4 +153,22 @@ p <- cowplot::plot_grid(
   ncol = 1
 )
 p
-cowplot::save_plot(file.path(outdir, "loss_vs_rocauc.pdf"), p, nrow = 2)
+cowplot::save_plot(file.path(outdir, "loss_vs_rocauc.pdf"), p, nrow = 3)
+
+p <- cowplot::plot_grid(
+  ggplot(df_res, aes(x = method, y = likelihood_test)) +
+    geom_boxplot() +
+    scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+    theme_minimal(),
+  ggplot(df_res, aes(x = method, y = roc_auc)) +
+    geom_boxplot() +
+    scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+    theme_minimal(),
+  ggplot(df_res, aes(x = method, y = pr_auc)) +
+    geom_boxplot() +
+    scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+    theme_minimal(),
+  ncol = 1
+)
+p
+cowplot::save_plot(file.path(outdir, "loss_vs_rocauc_subset.pdf"), p, nrow = 3)
