@@ -79,14 +79,13 @@ rule compare_rocauc_vs_loss:
     input:
         fname_aucs="results/regularization_parameter/aggregated_plots/roc_aucs.csv",
         fname_enr_list=expand(
-            "results/regularization_parameter/enrichments/{params}/replicates/{replicate}/{method}/enrichment_result.csv",
-            params=regularization_parameter.paramspace.instance_patterns,
+            f"results/regularization_parameter/enrichments/{regularization_parameter.paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv",
             replicate=range(regularization_parameter.config["replicate_count"]),
             method=regularization_parameter.method_list,
+            allow_missing=True,
         ),
         fname_study_list=[
-            f"results/regularization_parameter/studies/{params}/replicates/{replicate}/study.rds"
-            for params in regularization_parameter.paramspace.instance_patterns
+            f"results/regularization_parameter/studies/{regularization_parameter.paramspace.wildcard_pattern}/replicates/{replicate}/study.rds"
             for replicate in [
                 f"{r}_testsamples"
                 for r in range(regularization_parameter.config["replicate_count"])
@@ -94,7 +93,9 @@ rule compare_rocauc_vs_loss:
             for method in regularization_parameter.method_list
         ],
     output:
-        outdir=directory("results/regularization_parameter/rocauc_vs_loss/"),
+        outdir=directory(
+            f"results/regularization_parameter/rocauc_vs_loss/{regularization_parameter.paramspace.wildcard_pattern}/"
+        ),
     resources:
         mem_mb=20_000,
     script:
@@ -108,7 +109,10 @@ rule all:
         rules.response_distribution_all.input,
         rules.regularization_effect_all.input,
         rules.regularization_parameter_all.input,
-        "results/regularization_parameter/rocauc_vs_loss/",
+        expand(
+            "results/regularization_parameter/rocauc_vs_loss/{params}/",
+            params=regularization_parameter.paramspace.instance_patterns,
+        ),
         rules.noise_all.input,
         rules.real_datasets_all.input,
     default_target: True
