@@ -1,4 +1,5 @@
 library(tidyverse)
+library(ggsignif)
 library(plotROC)
 library(PRROC)
 
@@ -17,9 +18,10 @@ df_enr %>%
 
 # comparison plot
 df_enr %>%
-  ggplot(aes(x = is_on_term, y = enrichment, fill = method)) +
+  ggplot(aes(x = is_on_term, y = enrichment)) +
   geom_boxplot() +
   geom_jitter(shape = ".") +
+  geom_signif(comparisons = list(c("FALSE", "TRUE"))) +
   ylab("Enrichment measure") +
   facet_wrap(~method, scales = "free") +
   theme_minimal()
