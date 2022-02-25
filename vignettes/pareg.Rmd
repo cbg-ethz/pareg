@@ -168,4 +168,10 @@ fit %>%
 plot(fit, min_similarity = 0.1)
 ```
 
+## Session information
+
+```{r}
+sessionInfo()
+```
+
 ## References
