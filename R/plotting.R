@@ -35,6 +35,7 @@
 #' @importFrom dplyr group_by summarize distinct pull
 #' @importFrom magrittr %<>% extract2
 #' @importFrom tidygraph as_tbl_graph activate mutate
+#' @importFrom shadowtext geom_shadowtext
 plot_pareg_with_args <- function(
   x,
   show_term_names = TRUE,
@@ -116,7 +117,11 @@ plot_pareg_with_args <- function(
     )
 
   if (show_term_names) {
-    p <- p + geom_node_text(aes(label = .data$name))
+    p <- p + geom_shadowtext(
+      aes(label = .data$name, x = .data$x, y = .data$y),
+      color = "black",
+      bg.color = "white"
+    )
   }
 
   return(p)

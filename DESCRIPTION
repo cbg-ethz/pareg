@@ -58,4 +58,5 @@ Imports:
     Matrix,
     matrixLaplacian,
     keras,
-    nloptr
+    nloptr,
+    shadowtext
