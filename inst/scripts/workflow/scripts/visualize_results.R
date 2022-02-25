@@ -19,6 +19,7 @@ df_enr %>%
 df_enr %>%
   ggplot(aes(x = is_on_term, y = enrichment, fill = method)) +
   geom_boxplot() +
+  geom_jitter(shape = ".") +
   ylab("Enrichment measure") +
   facet_wrap(~method, scales = "free") +
   theme_minimal()

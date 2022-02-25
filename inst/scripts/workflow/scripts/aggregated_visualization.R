@@ -204,6 +204,7 @@ df_auc %>%
 df_auc %>%
   ggplot(aes(x = method, y = roc_auc, fill = method)) +
   geom_boxplot() +
+  geom_jitter(shape = ".") +
   xlab("Method") +
   ylab("ROC-AUC") +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
@@ -214,6 +215,7 @@ ggsave(file.path(outdir, glue("roc_aucs.pdf")), width = 8, height = 6)
 df_auc %>%
   ggplot(aes(x = method, y = pr_auc, fill = method)) +
   geom_boxplot() +
+  geom_jitter(shape = ".") +
   xlab("Method") +
   ylab("PR-AUC") +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
@@ -238,6 +240,7 @@ df_auc %>%
 
     ggplot(df_group, aes(x = method, y = roc_auc, fill = method)) +
       geom_boxplot() +
+      geom_jitter(shape = ".") +
       xlab("Method") +
       ylab("ROC-AUC") +
       scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
@@ -247,6 +250,7 @@ df_auc %>%
 
     ggplot(df_group, aes(x = method, y = pr_auc, fill = method)) +
       geom_boxplot() +
+      geom_jitter(shape = ".") +
       xlab("Method") +
       ylab("PR-AUC") +
       scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
