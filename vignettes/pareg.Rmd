@@ -13,7 +13,10 @@ vignette: >
 
 # Overview
 
-Pathway enrichment.
+This vignette is an introduction to the usage of `pareg`.
+It estimates pathway enrichment scores by regressing differential expression p-values of all genes considered in an experiment on their membership to a set of biological pathways.
+These scores are computed using a regularized generalized linear model with LASSO and network regularization terms.
+The network regularization term is based on a pathway similarity matrix (e.g., defined by Jaccard similarity) and thus classifies this method as a modular enrichment analysis tool [@huang2009bioinformatics].
 
 # Installation
 
@@ -26,11 +29,12 @@ BiocManager::install("pareg")
 
 # Load required packages
 
-Load `pareg` package and other required libraries.
+We start our analysis by loading the `pareg` package and other required libraries.
 
 ```{r message=FALSE}
 library(ggraph)
 library(tidyverse)
+library(ComplexHeatmap)
 
 library(pareg)
 
@@ -39,56 +43,74 @@ set.seed(42)
 
 # Introductory example
 
-## Retrieve pathway database
+## Generate pathway database
 
-We start by constructing a dataframe containing pathway information.
+For the sake of this introductory example, we generate a synthetic pathway database with a pronounced clustering of pathways.
 
 ```{r}
-term_list <- list(
-  hub_1 = paste0("g", 1:100),
-  hub_2 = paste0("g", 71:170)
-)
+group_num <- 2
+pathways_from_group <- 10
 
-generate_term <- function(main_nodes, other_node_marker, term_count) {
-  function(x) {
-    other_nodes <- paste0(x, other_node_marker, 1:100)
+gene_groups <- purrr::map(seq(1, group_num), function(group_idx) {
+  glue::glue("g{group_idx}_gene_{seq_len(15)}")
+})
+genes_bg <- paste0("bg_gene_", seq(1, 50))
 
-    term_size <- 50 + sample.int(20, 1) - 10 # random int in (40, 60]
-    c(
-      sample(main_nodes, round(x / term_count * term_size)),
-      sample(other_nodes, round((1 - x / term_count) * term_size))
-    )
+df_terms <- purrr::imap_dfr(
+  gene_groups,
+  function(current_gene_list, gene_list_idx) {
+    purrr::map_dfr(seq_len(pathways_from_group), function(pathway_idx) {
+      data.frame(
+        term = paste0("g", gene_list_idx, "_term_", pathway_idx),
+        gene = c(
+          sample(current_gene_list, 10, replace = FALSE),
+          sample(genes_bg, 10, replace = FALSE)
+        )
+      )
+    })
   }
-}
-
-term_count <- 5
-term_list <- c(
-  term_list,
-  set_names(seq_len(term_count), paste0("t1_", seq_len(term_count))) %>%
-    purrr::map(generate_term(term_list$hub_1, "_tg1_", term_count)),
-  set_names(seq_len(term_count), paste0("t2_", seq_len(term_count))) %>%
-    purrr::map(generate_term(term_list$hub_2, "_tg2_", term_count))
 )
-
-df_terms <- term_list %>%
-  enframe("term", "gene") %>%
-  unnest_longer(gene)
 
 df_terms %>%
-  group_by(term) %>%
-  summarize(size = n()) %>%
-  arrange(desc(size)) %>%
-  head() %>%
-  knitr::kable()
+  sample_n(5)
+```
+
+## Term similarities
+
+Before starting the actual enrichment estimation, we compute pairwise pathway similarities with `pareg`'s helper function.
+
+```{r}
+mat_similarities <- compute_term_similarities(
+  df_terms,
+  similarity_function = jaccard
+)
+
+hist(mat_similarities, xlab = "Term similarity")
+```
+
+We can see a clear clustering of pathways.
+
+```{r}
+Heatmap(
+  mat_similarities,
+  name = "Similarity",
+  col = circlize::colorRamp2(c(0, 1), c("white", "black"))
+)
 ```
 
 ## Create synthetic study
 
-We then select a subset of genes to serve as the differentially expressed genes of our synthetic study.
+We then select a subset of pathways to be activated.
+In a performance evaluation, these would be considered to be true positives.
 
 ```{r}
-active_terms <- c("hub_1", "hub_2")
+active_terms <- similarity_sample(mat_similarities, 5)
+active_terms
+```
 
+The genes contained in the union of active pathways are considered to be differentially expressed.
+
+```{r}
 de_genes <- df_terms %>%
   filter(term %in% active_terms) %>%
   distinct(gene) %>%
@@ -100,7 +122,7 @@ other_genes <- df_terms %>%
   setdiff(de_genes)
 ```
 
-For these genes, we can generate artificial p-values.
+The p-values of genes considered to be differentially expressed are sampled from a Beta distribution centered at $0$. The p-values for all other genes are drawn from a Uniform distribution.
 
 ```{r}
 df_study <- data.frame(
@@ -120,23 +142,19 @@ table(
 
 ## Enrichment analysis
 
-We start the pathway enrichment analysis by computing term similarities with `pareg`'s helper functions.
-
-```{r}
-term_network <- compute_term_similarities(df_terms)
-
-hist(term_network, xlab = "Term similarity")
-```
-
-We can then compute our pathway enrichment values.
+Finally, we compute pathway enrichment scores.
 
 ```{r}
 fit <- pareg(
-  df_study %>% select(-in_study),
+  df_study %>% select(gene, pvalue),
   df_terms,
-  network_param = 1, term_network = term_network
+  network_param = 1, term_network = mat_similarities
 )
+```
 
+The results can be exported to a dataframe for further processing...
+
+```{r}
 fit %>%
   as.data.frame() %>%
   arrange(desc(abs(enrichment))) %>%
@@ -144,8 +162,10 @@ fit %>%
   knitr::kable()
 ```
 
-And finally, we can visualize the obtained results.
+... and also visualized in a pathway network view.
 
 ```{r}
 plot(fit, min_similarity = 0.1)
 ```
+
+## References

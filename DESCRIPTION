@@ -35,7 +35,8 @@ Suggests:
     topGO,
     msigdbr,
     betareg,
-    fgsea
+    fgsea,
+    ComplexHeatmap
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
