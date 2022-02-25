@@ -36,7 +36,8 @@ Suggests:
     msigdbr,
     betareg,
     fgsea,
-    ComplexHeatmap
+    ComplexHeatmap,
+    GGally
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:

@@ -36,6 +36,7 @@ df_enr %>%
   theme_minimal()
 ggsave(file.path(outdir, "roc_curves.pdf"))
 
+
 # other approach
 cowplot::plot_grid(
   df_enr %>%
@@ -74,3 +75,25 @@ cowplot::save_plot(
   file.path(outdir, "performance_curves.pdf"), last_plot(),
   ncol = 2, nrow = 1
 )
+
+
+# pairwise scatterplots
+pairwise_dir <- file.path(outdir, "pairwise")
+dir.create(pairwise_dir, showWarnings = FALSE, recursive = TRUE)
+
+df_enr %>%
+  group_by(replicate) %>%
+  group_walk(function(df_group, key) {
+    p <- df_group %>%
+      pivot_wider(
+        id_cols = c("term", "is_on_term"),
+        names_from = c("method"),
+        values_from = c("enrichment")
+      ) %>%
+    GGally::ggpairs(
+      aes(color = is_on_term),
+      columns = df_enr %>% pull(method) %>% unique
+    )
+    p
+    ggsave(file.path(pairwise_dir, glue::glue("pairwise_enrichment_{key}.pdf")), p)
+  })
