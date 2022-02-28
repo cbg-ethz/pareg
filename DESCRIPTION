@@ -38,7 +38,8 @@ Suggests:
     fgsea,
     ComplexHeatmap,
     GGally,
-    ggsignif
+    ggsignif,
+    circlize
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
