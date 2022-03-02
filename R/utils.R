@@ -108,6 +108,75 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
 }
 
 
+#' @title Convert object of class \code{pareg} to class \code{enrichResult}.
+#'
+#' @description The resulting object can be passed to any method from the
+#'  enrichplot package and thus allows for nice visualizations of the
+#'  enrichment results.
+#'
+#' @export
+#'
+#' @param x An object of class \code{pareg}.
+#' @param pvalue_threshold Treshold to select genes for count statistics.
+#'
+#' @return Object of class \code{enrichResult}.
+#'
+#' @examples
+#' df_genes <- data.frame(
+#'   gene = paste("g", 1:20, sep = ""),
+#'   pvalue = c(
+#'     rbeta(10, .1, 1),
+#'     rbeta(10, 1, 1)
+#'   )
+#' )
+#' df_terms <- rbind(
+#'   data.frame(
+#'     term = "foo",
+#'     gene = paste("g", 1:10, sep = "")
+#'   ),
+#'   data.frame(
+#'     term = "bar",
+#'     gene = paste("g", 11:20, sep = "")
+#'   )
+#' )
+#' fit <- pareg(df_genes, df_terms, max_iterations = 10)
+#' as_enrichplot_object(fit)
+#' @importFrom rlang .data
+#' @importFrom dplyr mutate filter rename inner_join rowwise
+#' @importFrom purrr pluck
+as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
+  sig_genes <- x$df_genes %>%
+    filter(.data$pvalue <= pvalue_threshold) %>%
+    pull(.data$gene)
+
+  new(
+    "enrichResult",
+    result = as.data.frame(x) %>%
+      inner_join(
+        x$df_terms %>%
+          group_by(.data$term) %>%
+          tally(),
+        by = "term"
+      ) %>%
+      rename(term_size = n) %>%
+      rowwise() %>%
+      mutate(
+        Description = term,
+        p.adjust = enrichment,
+        Count = x$df_terms %>%
+          filter(.data$Description == term & .data$gene %in% sig_genes) %>%
+          pluck(dim, 1),
+        GeneRatio = paste0(Count, "/", term_size),
+      ),
+    geneSets = x$df_terms,
+    gene = as.character(sig_genes),
+    readable = FALSE,
+    keytype = "UNKNOWN",
+    ontology = "UNKNOWN"
+  )
+}
+
+
 #' @title Sample elements based on similarity structure.
 #'
 #' @description Choose similar object more often,
