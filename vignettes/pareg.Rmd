@@ -169,7 +169,7 @@ fit %>%
 plot(fit, min_similarity = 0.1)
 ```
 
-To provide a wider range of visualization options, the result can be transformed into an object which is understood by the functions of the enrichplot package.
+To provide a wider range of visualization options, the result can be transformed into an object which is understood by the functions of the [enrichplot](https://github.com/YuLab-SMU/enrichplot) package.
 
 ```{r}
 obj <- as_enrichplot_object(fit)
