@@ -22,7 +22,7 @@ test_that("package doesn't crash for trivial case", {
   )
 
   # run model
-  res <- pareg(df_genes, df_terms)
+  res <- pareg(df_genes, df_terms, max_iteration = 100)
 
   # check results
   expect_lt(
@@ -59,7 +59,12 @@ test_that("pareg works with term network", {
   rownames(term_sims) <- colnames(term_sims) <- c("foo", "bar")
 
   # run model
-  res <- pareg(df_genes, df_terms, term_network = term_sims)
+  res <- pareg(
+    df_genes,
+    df_terms,
+    term_network = term_sims,
+    max_iteration = 100
+  )
 
   # check results
   expect_lt(
@@ -97,7 +102,8 @@ test_that("Bernoulli family works", {
     df_genes,
     df_terms,
     family = bernoulli,
-    response_column_name = "pvalue_notsig"
+    response_column_name = "pvalue_notsig",
+    max_iteration = 100
   )
 
   # check results
@@ -114,7 +120,12 @@ test_that("term input network mismatch leads to crash", {
   network <- matrix(c(1, 0.3, 0.3, 1), 2, 2)
 
   rownames(network) <- colnames(network) <- c("A", "B")
-  res <- pareg(df_genes, df_terms, term_network = network)
+  res <- pareg(
+    df_genes,
+    df_terms,
+    term_network = network,
+    max_iterations = 10
+  )
 
   rownames(network) <- colnames(network) <- c("A", "C")
   expect_error(

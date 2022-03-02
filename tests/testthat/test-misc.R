@@ -29,7 +29,7 @@ test_that("idea works", {
       )
     )
 
-    df_res <- pareg(df_genes, df_terms)
+    df_res <- pareg(df_genes, df_terms, max_iterations = 100)
 
     cbind(
       as.data.frame(df_res),
