@@ -128,8 +128,9 @@ pareg <- function(
   return(structure(
     list(
       obj = fit,
-      term_network = term_network,
+      df_genes = df_genes,
       df_terms = df_terms,
+      term_network = term_network,
       covariates = covariates,
       X = X,
       Y = Y,

@@ -35,6 +35,7 @@ We start our analysis by loading the `pareg` package and other required librarie
 library(ggraph)
 library(tidyverse)
 library(ComplexHeatmap)
+library(enrichplot)
 
 library(pareg)
 
@@ -162,10 +163,19 @@ fit %>%
   knitr::kable()
 ```
 
-... and also visualized in a pathway network view.
+...and also visualized in a pathway network view.
 
 ```{r}
 plot(fit, min_similarity = 0.1)
+```
+
+To provide a wider range of visualization options, the result can be transformed into an object which is understood by the functions of the enrichplot package.
+
+```{r}
+obj <- as_enrichplot_object(fit)
+
+dotplot(obj) +
+  scale_colour_continuous(name = "Enrichment Score")
 ```
 
 ## Session information

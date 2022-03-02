@@ -22,6 +22,7 @@ test_that("model creation works with only common genes", {
   expect_equal(df_res, df_expected)
 })
 
+
 test_that("model creation works with gene which is in no term", {
   df_genes <- data.frame(
     gene = c("g1", "g2", "g3"),
@@ -45,6 +46,7 @@ test_that("model creation works with gene which is in no term", {
 
   expect_equal(df_res, df_expected)
 })
+
 
 test_that("similarity sampling works", {
   cluster_sizes <- c(5, 5, 10, 10, 10)
@@ -76,4 +78,40 @@ test_that("similarity sampling works", {
 
   expect_lt(grp_mean[1, 2], grp_mean[2, 2])
   expect_lt(grp_mean[2, 2], grp_mean[3, 2])
+})
+
+
+test_that("enrichplot integration works", {
+  # create synthetic data
+  set.seed(42)
+
+  df_genes <- data.frame(
+    gene = paste("g", 1:25, sep = ""),
+    pvalue = c(
+      rbeta(10, .1, 1),
+      rbeta(15, 1.1, 1)
+    )
+  )
+
+  df_terms <- rbind(
+    data.frame(
+      term = "foo",
+      gene = paste("g", 1:10, sep = "")
+    ),
+    data.frame(
+      term = "bar",
+      gene = paste("g", 11:25, sep = "")
+    )
+  )
+
+  # run model
+  res <- pareg(df_genes, df_terms, max_iteration = 10)
+
+  # test integration
+  obj <- as_enrichplot_object(res)
+
+  enrichplot::dotplot(obj) +
+    scale_colour_continuous(name = "Enrichment Score")
+
+  expect_equal(obj@result$GeneRatio, c("8/10", "2/15"))
 })

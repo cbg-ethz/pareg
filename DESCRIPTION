@@ -62,4 +62,5 @@ Imports:
     matrixLaplacian,
     keras,
     nloptr,
-    shadowtext
+    shadowtext,
+    enrichplot
