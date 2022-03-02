@@ -1,6 +1,6 @@
 Package: pareg
 Title: Pathway enrichment using a regularized regression approach
-Version: 0.99.3
+Version: 0.99.4
 Authors@R:
     c(
         person(
