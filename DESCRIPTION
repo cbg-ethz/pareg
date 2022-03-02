@@ -65,4 +65,5 @@ Imports:
     nloptr,
     shadowtext,
     methods,
-    DOSE
+    DOSE,
+    stringr

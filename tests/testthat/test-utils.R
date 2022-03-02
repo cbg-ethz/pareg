@@ -112,6 +112,11 @@ test_that("enrichplot integration works", {
 
   enrichplot::dotplot(obj) +
     scale_colour_continuous(name = "Enrichment Score")
-
   expect_equal(obj@result$GeneRatio, c("8/10", "2/15"))
+
+  obj <- enrichplot::pairwise_termsim(obj)
+  termsim <- matrix(c(NA, NA, 0, NA), 2, 2)
+  rownames(termsim) <- colnames(termsim) <- c("foo", "bar")
+  expect_equal(obj@termsim, termsim)
+  enrichplot::emapplot(obj)
 })

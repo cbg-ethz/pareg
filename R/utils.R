@@ -144,14 +144,25 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
 #' @importFrom rlang .data
 #' @importFrom methods new
 #' @importFrom dplyr mutate filter rename inner_join rowwise
+#' @importFrom tibble column_to_rownames
 #' @importFrom purrr pluck
+#' @importFrom stringr str_c
 #' @importClassesFrom DOSE enrichResult
 as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
+  # find genes most relevant to enrichment
   sig_genes <- x$df_genes %>%
     filter(.data$pvalue <= pvalue_threshold) %>%
     pull(.data$gene)
 
-  member_count <- function(df, variable) {
+  # helper functions
+  get_term_genes <- function(df, variable) {
+    df %>%
+      filter(variable == .data$term) %>%
+      pull(.data$gene) %>%
+      str_c(collapse = "/")
+  }
+
+  sig_member_count <- function(df, variable) {
     df %>%
       filter(
         variable == .data$term &
@@ -160,6 +171,7 @@ as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
       pluck(dim, 1)
   }
 
+  # create class
   new(
     "enrichResult",
     result = x %>%
@@ -173,12 +185,16 @@ as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
       rename(term_size = n) %>%
       rowwise() %>%
       mutate(
+        ID = .data$term,
         Description = .data$term,
         p.adjust = .data$enrichment,
-        Count = member_count(x$df_terms, .data$Description),
+        Count = sig_member_count(x$df_terms, .data$ID),
         GeneRatio = paste0(.data$Count, "/", .data$term_size),
-      ),
-    geneSets = x$df_terms,
+        geneID = get_term_genes(x$df_terms, .data$ID)
+      ) %>%
+      column_to_rownames("term"),
+    geneSets = x$df_terms %>%
+      pipe_split("term", "gene"),
     gene = as.character(sig_genes),
     readable = FALSE,
     keytype = "UNKNOWN",
