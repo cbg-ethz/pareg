@@ -150,9 +150,19 @@ as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
     filter(.data$pvalue <= pvalue_threshold) %>%
     pull(.data$gene)
 
+  member_count <- function(df, variable) {
+    df %>%
+      filter(
+        variable == .data$term &
+        .data$gene %in% sig_genes
+      ) %>%
+      pluck(dim, 1)
+  }
+
   new(
     "enrichResult",
-    result = as.data.frame(x) %>%
+    result = x %>%
+      as.data.frame() %>%
       inner_join(
         x$df_terms %>%
           group_by(.data$term) %>%
@@ -164,12 +174,7 @@ as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
       mutate(
         Description = .data$term,
         p.adjust = .data$enrichment,
-        Count = x$df_terms %>%
-          filter(
-            .data$Description == .data$term &
-            .data$gene %in% sig_genes
-          ) %>%
-          pluck(dim, 1),
+        Count = member_count(x$df_terms, .data$Description),
         GeneRatio = paste0(.data$Count, "/", .data$term_size),
       ),
     geneSets = x$df_terms,
