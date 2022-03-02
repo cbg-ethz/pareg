@@ -63,4 +63,4 @@ Imports:
     keras,
     nloptr,
     shadowtext,
-    enrichplot
+    methods

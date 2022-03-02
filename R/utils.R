@@ -142,6 +142,7 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
 #' fit <- pareg(df_genes, df_terms, max_iterations = 10)
 #' as_enrichplot_object(fit)
 #' @importFrom rlang .data
+#' @importFrom methods new
 #' @importFrom dplyr mutate filter rename inner_join rowwise
 #' @importFrom purrr pluck
 as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
@@ -161,12 +162,15 @@ as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
       rename(term_size = n) %>%
       rowwise() %>%
       mutate(
-        Description = term,
-        p.adjust = enrichment,
+        Description = .data$term,
+        p.adjust = .data$enrichment,
         Count = x$df_terms %>%
-          filter(.data$Description == term & .data$gene %in% sig_genes) %>%
+          filter(
+            .data$Description == .data$term &
+            .data$gene %in% sig_genes
+          ) %>%
           pluck(dim, 1),
-        GeneRatio = paste0(Count, "/", term_size),
+        GeneRatio = paste0(.data$Count, "/", .data$term_size),
       ),
     geneSets = x$df_terms,
     gene = as.character(sig_genes),
