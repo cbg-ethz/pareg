@@ -145,6 +145,7 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
 #' @importFrom methods new
 #' @importFrom dplyr mutate filter rename inner_join rowwise
 #' @importFrom purrr pluck
+#' @importClassesFrom DOSE enrichResult
 as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
   sig_genes <- x$df_genes %>%
     filter(.data$pvalue <= pvalue_threshold) %>%

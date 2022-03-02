@@ -64,4 +64,5 @@ Imports:
     keras,
     nloptr,
     shadowtext,
-    methods
+    methods,
+    DOSE
