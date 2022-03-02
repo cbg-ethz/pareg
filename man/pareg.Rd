@@ -61,5 +61,5 @@ df_terms <- rbind(
     gene = paste("g", 11:20, sep = "")
   )
 )
-pareg(df_genes, df_terms)
+pareg(df_genes, df_terms, max_iterations = 10)
 }

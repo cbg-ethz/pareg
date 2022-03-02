@@ -86,7 +86,7 @@ create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
 #'     gene = paste("g", 11:20, sep = "")
 #'   )
 #' )
-#' fit <- pareg(df_genes, df_terms)
+#' fit <- pareg(df_genes, df_terms, max_iterations = 10)
 #' as.data.frame(fit)
 #' @importFrom rlang .data
 #' @importFrom dplyr mutate filter rename arrange desc

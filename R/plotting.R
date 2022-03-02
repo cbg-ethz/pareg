@@ -28,7 +28,7 @@
 #'     gene = paste("g", 11:20, sep = "")
 #'   )
 #' )
-#' fit <- pareg(df_genes, df_terms)
+#' fit <- pareg(df_genes, df_terms, max_iterations = 10)
 #' plot(fit)
 #' @import tidyverse ggraph ggplot2
 #' @importFrom rlang .data
