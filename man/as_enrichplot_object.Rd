@@ -17,7 +17,7 @@ Object of class \code{enrichResult}.
 \description{
 The resulting object can be passed to any method from the
  enrichplot package and thus allows for nice visualizations of the
- enrichment results.
+ enrichment results. Note: term similarities are included if available.
 }
 \examples{
 df_genes <- data.frame(
