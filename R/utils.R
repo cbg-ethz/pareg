@@ -112,7 +112,7 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
 #'
 #' @description The resulting object can be passed to any method from the
 #'  enrichplot package and thus allows for nice visualizations of the
-#'  enrichment results.
+#'  enrichment results. Note: term similarities are included if available.
 #'
 #' @export
 #'
@@ -172,7 +172,7 @@ as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
   }
 
   # create class
-  new(
+  cls <- new(
     "enrichResult",
     result = x %>%
       as.data.frame() %>%
@@ -200,6 +200,15 @@ as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
     keytype = "UNKNOWN",
     ontology = "UNKNOWN"
   )
+
+  if (!is.null(x$term_network)) {
+    cls@method <- "pareg"
+
+    cls@termsim <- x$term_network
+    cls@termsim[lower.tri(cls@termsim, diag = TRUE)] <- NA
+  }
+
+  cls
 }
 
 
