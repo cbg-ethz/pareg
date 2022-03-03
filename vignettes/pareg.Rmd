@@ -176,6 +176,8 @@ obj <- as_enrichplot_object(fit)
 
 dotplot(obj) +
   scale_colour_continuous(name = "Enrichment Score")
+treeplot(obj) +
+  scale_colour_continuous(name = "Enrichment Score")
 ```
 
 ## Session information
