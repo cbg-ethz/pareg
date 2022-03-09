@@ -29,10 +29,10 @@ df %>%
 # misc
 saveRDS(fit, file.path(dirname(snakemake@output$fname), "fit.rds"))
 
-df_loss <- do.call(rbind, fit$obj$loss_hist) %>%
+df_loss <- do.call(rbind, fit$obj$fit$loss_hist) %>%
   as_tibble() %>%
   unnest(everything()) %>%
-  mutate(iteration = seq_along(fit$obj$loss_hist))
+  mutate(iteration = seq_along(fit$obj$fit$loss_hist))
 df_loss %>%
   write_csv(file.path(dirname(snakemake@output$fname), "loss.csv"))
 
@@ -49,7 +49,7 @@ ggsave(
 )
 
 data.frame(
-  pseudo_r_squared = fit$obj$pseudo_r_squared
+  pseudo_r_squared = fit$obj$fit$pseudo_r_squared
 ) %>%
   write_csv(file.path(dirname(snakemake@output$fname), "extra_stats.csv"))
 
