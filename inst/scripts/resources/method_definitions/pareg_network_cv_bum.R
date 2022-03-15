@@ -4,6 +4,7 @@ source(snakemake@params$setup_code_fname)
 devtools::load_all("../..")
 
 # run model
+future::plan(future::multisession)
 fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
