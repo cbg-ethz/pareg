@@ -19,8 +19,11 @@ cv.edgenet(
   maxit = 1e+05,
   learning.rate = 0.01,
   family = gaussian,
-  optim.maxit = 100,
   optim.thresh = 0.01,
+  optim.maxit = 100,
+  lambda_range = seq(0, 2, length.out = 10),
+  psigx_range = seq(0, 500, length.out = 10),
+  psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2
 )
 
@@ -36,8 +39,11 @@ cv.edgenet(
   maxit = 1e+05,
   learning.rate = 0.01,
   family = gaussian,
-  optim.maxit = 100,
   optim.thresh = 0.01,
+  optim.maxit = 100,
+  lambda_range = seq(0, 2, length.out = 10),
+  psigx_range = seq(0, 500, length.out = 10),
+  psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2
 )
 
@@ -53,8 +59,11 @@ cv.edgenet(
   maxit = 1e+05,
   learning.rate = 0.01,
   family = gaussian,
-  optim.maxit = 100,
   optim.thresh = 0.01,
+  optim.maxit = 100,
+  lambda_range = seq(0, 2, length.out = 10),
+  psigx_range = seq(0, 500, length.out = 10),
+  psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2
 )
 }
@@ -107,11 +116,17 @@ set, estimation of the optimal parameter will \emph{not} be conducted.}
 
 \item{family}{family of response, e.g. \emph{gaussian} or \emph{binomial}}
 
+\item{optim.thresh}{\code{numerical} threshold criterion for the
+optimization to stop.  Usually 1e-3 is a good choice.}
+
 \item{optim.maxit}{the maximum number of iterations for the optimization
 (\code{integer}). Usually 1e4 is a good choice.}
 
-\item{optim.thresh}{\code{numerical} threshold criterion for the
-optimization to stop.  Usually 1e-3 is a good choice.}
+\item{lambda_range}{range of lambda to use in CV grid.}
+
+\item{psigx_range}{range of psigx to use in CV grid.}
+
+\item{psigy_range}{range of psigy to use in CV grid.}
 
 \item{nfolds}{the number of folds to be used - default is 10}
 }
@@ -151,7 +166,7 @@ fit <- cv.edgenet(
   Y = Y,
   family = gaussian,
   maxit = 1,
-  optim.maxit = 1
+  lambda_range = c(0, 1)
 )
 ## only provide one matrix and estimate lambda
 fit <- cv.edgenet(
@@ -161,7 +176,7 @@ fit <- cv.edgenet(
   psigx = 1,
   family = gaussian,
   maxit = 1,
-  optim.maxit = 1
+  lambda_range = c(0, 1)
 )
 ## estimate only lambda with two matrices
 fit <- cv.edgenet(
@@ -173,7 +188,7 @@ fit <- cv.edgenet(
   psigy = 1,
   family = gaussian,
   maxit = 1,
-  optim.maxit = 1
+  lambda_range = c(0, 1)
 )
 ## estimate only psigx
 fit <- cv.edgenet(
@@ -185,7 +200,7 @@ fit <- cv.edgenet(
   psigy = 1,
   family = gaussian,
   maxit = 1,
-  optim.maxit = 1
+  psigx_range = c(0, 1)
 )
 ## estimate all parameters
 fit <- cv.edgenet(
@@ -195,7 +210,9 @@ fit <- cv.edgenet(
   G.Y,
   family = gaussian,
   maxit = 1,
-  optim.maxit = 1
+  lambda_range = c(0, 1),
+  psigx_range = c(0, 1),
+  psigy_range = c(0, 1)
 )
 ## if Y is vectorial, we cannot use an affinity matrix for Y
 fit <- cv.edgenet(
@@ -204,6 +221,7 @@ fit <- cv.edgenet(
   G.X = G.X,
   family = gaussian,
   maxit = 1,
-  optim.maxit = 1
+  lambda_range = c(0, 1),
+  psigx_range = c(0, 1),
 )
 }

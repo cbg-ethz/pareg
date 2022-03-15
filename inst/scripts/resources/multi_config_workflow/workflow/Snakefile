@@ -1,12 +1,21 @@
 from snakemake.io import load_configfile
 
 
+def load_config(path):
+    config = load_configfile(path)
+    config["subworkflow_run"] = True
+    return config
+
+onstart:
+    shell("Rscript -e 'devtools::install(quick = TRUE, dependencies = FALSE)'")
+
+
 # import modules
 module dispersion_fitting:
     snakefile:
         "../../../workflow/Snakefile"
     config:
-        load_configfile("config_dispersion_fitting/config.yaml")
+        load_config("config_dispersion_fitting/config.yaml")
     replace_prefix:
         {"results/": "results/dispersion_fitting/"}
 
@@ -18,7 +27,7 @@ module response_distribution:
     snakefile:
         "../../../workflow/Snakefile"
     config:
-        load_configfile("config_response_distribution/config.yaml")
+        load_config("config_response_distribution/config.yaml")
     replace_prefix:
         {"results/": "results/response_distribution/"}
 
@@ -30,7 +39,7 @@ module regularization_parameter:
     snakefile:
         "../../../workflow/Snakefile"
     config:
-        load_configfile("config_regularization_parameter/config.yaml")
+        load_config("config_regularization_parameter/config.yaml")
     replace_prefix:
         {"results/": "results/regularization_parameter/"}
 
@@ -42,7 +51,7 @@ module noise:
     snakefile:
         "../../../workflow/Snakefile"
     config:
-        load_configfile("config_noise/config.yaml")
+        load_config("config_noise/config.yaml")
     replace_prefix:
         {"results/": "results/noise/"}
 
@@ -54,7 +63,7 @@ module regularization_effect:
     snakefile:
         "../../../workflow/Snakefile"
     config:
-        load_configfile("config_regularization_effect/config.yaml")
+        load_config("config_regularization_effect/config.yaml")
     replace_prefix:
         {"results/": "results/regularization_effect/"}
 
@@ -66,7 +75,7 @@ module real_datasets:
     snakefile:
         "../../../workflow/Snakefile"
     config:
-        load_configfile("config_real_datasets/config.yaml")
+        load_config("config_real_datasets/config.yaml")
     replace_prefix:
         {"results/": "results/real_datasets/"}
 

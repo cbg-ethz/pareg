@@ -840,6 +840,9 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'  optimization to stop.  Usually 1e-3 is a good choice.
 #' @param optim.maxit  the maximum number of iterations for the optimization
 #'   (\code{integer}). Usually 1e4 is a good choice.
+#' @param lambda_range range of lambda to use in CV grid.
+#' @param psigx_range range of psigx to use in CV grid.
+#' @param psigy_range range of psigy to use in CV grid.
 #' @param nfolds  the number of folds to be used - default is 10
 #'
 #' @return An object of class \code{cv.edgenet}
@@ -872,7 +875,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   Y = Y,
 #'   family = gaussian,
 #'   maxit = 1,
-#'   optim.maxit = 1
+#'   lambda_range = c(0, 1)
 #' )
 #' ## only provide one matrix and estimate lambda
 #' fit <- cv.edgenet(
@@ -882,7 +885,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   psigx = 1,
 #'   family = gaussian,
 #'   maxit = 1,
-#'   optim.maxit = 1
+#'   lambda_range = c(0, 1)
 #' )
 #' ## estimate only lambda with two matrices
 #' fit <- cv.edgenet(
@@ -894,7 +897,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   psigy = 1,
 #'   family = gaussian,
 #'   maxit = 1,
-#'   optim.maxit = 1
+#'   lambda_range = c(0, 1)
 #' )
 #' ## estimate only psigx
 #' fit <- cv.edgenet(
@@ -906,7 +909,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   psigy = 1,
 #'   family = gaussian,
 #'   maxit = 1,
-#'   optim.maxit = 1
+#'   psigx_range = c(0, 1)
 #' )
 #' ## estimate all parameters
 #' fit <- cv.edgenet(
@@ -916,7 +919,9 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   G.Y,
 #'   family = gaussian,
 #'   maxit = 1,
-#'   optim.maxit = 1
+#'   lambda_range = c(0, 1),
+#'   psigx_range = c(0, 1),
+#'   psigy_range = c(0, 1)
 #' )
 #' ## if Y is vectorial, we cannot use an affinity matrix for Y
 #' fit <- cv.edgenet(
@@ -925,7 +930,8 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   G.X = G.X,
 #'   family = gaussian,
 #'   maxit = 1,
-#'   optim.maxit = 1
+#'   lambda_range = c(0, 1),
+#'   psigx_range = c(0, 1),
 #' )
 setGeneric(
   "cv.edgenet",
@@ -941,8 +947,11 @@ setGeneric(
   maxit = 1e5,
   learning.rate = 0.01,
   family = gaussian,
-  optim.maxit = 1e2,
   optim.thresh = 1e-2,
+  optim.maxit = 1e2,
+  lambda_range = seq(0, 2, length.out = 10),
+  psigx_range = seq(0, 500, length.out = 10),
+  psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2
   ) {
     standardGeneric("cv.edgenet")
@@ -967,8 +976,11 @@ setMethod(
   maxit = 1e5,
   learning.rate = 0.01,
   family = gaussian,
-  optim.maxit = 1e2,
   optim.thresh = 1e-2,
+  optim.maxit = 1e2,
+  lambda_range = seq(0, 2, length.out = 10),
+  psigx_range = seq(0, 500, length.out = 10),
+  psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2
   ) {
     cv.edgenet(
@@ -983,8 +995,11 @@ setMethod(
       maxit,
       learning.rate,
       family,
-      optim.maxit,
       optim.thresh,
+      optim.maxit,
+      lambda_range,
+      psigx_range,
+      psigy_range,
       nfolds
     )
   }
@@ -1007,8 +1022,11 @@ setMethod(
   maxit = 1e5,
   learning.rate = 0.01,
   family = gaussian,
-  optim.maxit = 1e2,
   optim.thresh = 1e-2,
+  optim.maxit = 1e2,
+  lambda_range = seq(0, 2, length.out = 10),
+  psigx_range = seq(0, 500, length.out = 10),
+  psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2
   ) {
     stopifnot(
@@ -1047,7 +1065,24 @@ setMethod(
     if (n < nfolds) nfolds <- n
     folds <- sample(rep(seq_len(10), length.out = n))
 
-    ret <- .cv.edgenet(
+    # ret <- .cv.edgenet_optim(
+    #   X,
+    #   Y,
+    #   G.X,
+    #   G.Y,
+    #   lambda,
+    #   psigx,
+    #   psigy,
+    #   family,
+    #   thresh,
+    #   maxit,
+    #   learning.rate,
+    #   nfolds,
+    #   folds,
+    #   optim.maxit,
+    #   optim.thresh
+    # )
+    ret <- .cv.edgenet_gridsearch(
       X,
       Y,
       G.X,
@@ -1061,8 +1096,9 @@ setMethod(
       learning.rate,
       nfolds,
       folds,
-      optim.maxit,
-      optim.thresh
+      lambda_range,
+      psigx_range,
+      psigy_range
     )
 
     ret$fit <- edgenet(
@@ -1089,7 +1125,7 @@ setMethod(
 
 #' @noRd
 #' @importFrom matrixLaplacian matrixLaplacian
-.cv.edgenet <- function(
+.cv.edgenet_optim <- function(
   x,
   y,
   gx,
@@ -1173,6 +1209,134 @@ setMethod(
 
   ret <- .cv.edgenet.post.process(opt, estimatable.params, fixed.params)
   ret$family <- family
+  class(ret) <- paste0(family$family, ".cv.edgenet")
+
+  ret
+}
+
+
+#' @noRd
+#' @importFrom matrixLaplacian matrixLaplacian
+#' @importFrom future plan multisession
+#' @importFrom furrr future_pmap_dfr
+.cv.edgenet_gridsearch <- function(
+  x,
+  y,
+  gx,
+  gy,
+  lambda,
+  psigx,
+  psigy,
+  family,
+  thresh,
+  maxit,
+  learning.rate,
+  nfolds,
+  folds,
+  lambda_range,
+  psigx_range,
+  psigy_range
+) {
+  # define parameter grid
+  param_values <- list()
+  if (is.na(lambda)) {
+    param_values$lambda <- lambda_range
+  }
+  if (is.na(psigx)) {
+    param_values$psigx <- psigx_range
+  }
+  if (is.na(psigy)) {
+    param_values$psigy <- psigy_range
+  }
+  param_grid <- expand_grid(!!!param_values)
+
+  # sanity checks
+  if (is.null(gx) & is.null(gy) & !is.na(lambda)) {
+    stop(
+      "you didn't set graphs and lambda != NA_real_. Got nothing to estimate",
+      call. = FALSE
+    )
+  }
+  if (dim(param_grid)[[1]] == 0) {
+    stop(
+      "please set either of lambda/psigx/psigy to NA_real_",
+      call. = FALSE
+    )
+  }
+
+  # finalize param grid
+  if (!"lambda" %in% colnames(param_grid)) {
+    param_grid$lambda <- 0
+  }
+  if (!"psigx" %in% colnames(param_grid)) {
+    param_grid$psigx <- 0
+  }
+  if (!"psigy" %in% colnames(param_grid)) {
+    param_grid$psigy <- 0
+  }
+
+  # cross-validation
+  plan(multisession)
+  loss_grid <- future_pmap_dfr(param_grid, function(lambda, psigx, psigy) {
+    # prepare model
+    if (!is.null(gx)) {
+      gx <- cast_float(matrixLaplacian(gx, FALSE, FALSE)$LaplacianMatrix)
+    }
+    if (!is.null(gy)) {
+      gy <- cast_float(matrixLaplacian(gy, FALSE, FALSE)$LaplacianMatrix)
+    }
+
+    lambda.tensor <- init_zero_scalar(FALSE)
+    psigx.tensor <- init_zero_scalar(FALSE)
+    psigy.tensor <- init_zero_scalar(FALSE)
+
+    mod <- model(ncol(x), ncol(y), family)
+    loss <- edgenet.loss(
+      lambda.tensor,
+      psigx.tensor,
+      psigy.tensor,
+      gx,
+      gy,
+      family
+    )
+    fn <- cross.validate(
+      mod,
+      loss,
+      x,
+      y,
+      lambda.tensor,
+      psigx.tensor,
+      psigy.tensor,
+      nfolds,
+      folds,
+      maxit,
+      thresh,
+      learning.rate
+    )
+
+    # run CV
+    loss <- fn(c(lambda, psigx, psigy), var.args = c())
+
+    data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
+  }, .progress = TRUE, .options = furrr::furrr_options(seed = 42))
+
+  row_optim <- loss_grid[which.min(loss_grid$loss), ]
+  lambda_optim <- row_optim$lambda
+  psigx_optim <- row_optim$psigx
+  psigy_optim <- row_optim$psigy
+
+  # finalize output
+  reg.params <- list(lambda = lambda, psigx = psigx, psigy = psigy)
+  estimatable.params <- Filter(is.na, reg.params)
+  fixed.params <- Filter(is.finite, reg.params)
+
+  ret <- .cv.edgenet.post.process(
+    list(par = c(lambda_optim, psigx_optim, psigy_optim)),
+    estimatable.params,
+    fixed.params
+  )
+  ret$family <- family
+  ret$loss_grid <- loss_grid
   class(ret) <- paste0(family$family, ".cv.edgenet")
 
   ret

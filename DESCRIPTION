@@ -49,6 +49,7 @@ Imports:
     tidyverse,
     tidyr,
     purrr,
+    furrr,
     tibble,
     glue,
     tidygraph,
@@ -67,4 +68,5 @@ Imports:
     shadowtext,
     methods,
     DOSE,
-    stringr
+    stringr,
+    future

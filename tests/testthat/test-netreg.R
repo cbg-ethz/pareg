@@ -50,7 +50,13 @@ test_that("Cross-validation works", {
   Y <- rnorm(1000, X %*% beta + alpha)
 
   # small iteration count to reduce runtime
-  fit <- pareg::cv.edgenet(X, Y, family = pareg::gaussian, maxit = 10)
+  fit <- pareg::cv.edgenet(
+    X,
+    Y,
+    family = pareg::gaussian,
+    maxit = 10,
+    lambda_range = c(0, 1)
+  )
 
   # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.02)
 })
@@ -73,7 +79,9 @@ test_that("Cross-validation with network regularization works", {
     Y,
     G.X = amat,
     family = pareg::gaussian,
-    maxit = 10
+    maxit = 10,
+    lambda_range = c(0, 1),
+    psigx_range = c(0, 5, 10)
   )
 
   # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.02)
