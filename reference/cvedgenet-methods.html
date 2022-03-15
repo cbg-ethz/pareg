@@ -72,8 +72,11 @@
   maxit <span class="op">=</span> <span class="fl">1e+05</span>,
   learning.rate <span class="op">=</span> <span class="fl">0.01</span>,
   family <span class="op">=</span> <span class="va">gaussian</span>,
-  optim.maxit <span class="op">=</span> <span class="fl">100</span>,
   optim.thresh <span class="op">=</span> <span class="fl">0.01</span>,
+  optim.maxit <span class="op">=</span> <span class="fl">100</span>,
+  lambda_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
+  psigx_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
+  psigy_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
   nfolds <span class="op">=</span> <span class="fl">2</span>
 <span class="op">)</span>
 
@@ -90,8 +93,11 @@
   maxit <span class="op">=</span> <span class="fl">1e+05</span>,
   learning.rate <span class="op">=</span> <span class="fl">0.01</span>,
   family <span class="op">=</span> <span class="va">gaussian</span>,
-  optim.maxit <span class="op">=</span> <span class="fl">100</span>,
   optim.thresh <span class="op">=</span> <span class="fl">0.01</span>,
+  optim.maxit <span class="op">=</span> <span class="fl">100</span>,
+  lambda_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
+  psigx_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
+  psigy_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
   nfolds <span class="op">=</span> <span class="fl">2</span>
 <span class="op">)</span>
 
@@ -108,8 +114,11 @@
   maxit <span class="op">=</span> <span class="fl">1e+05</span>,
   learning.rate <span class="op">=</span> <span class="fl">0.01</span>,
   family <span class="op">=</span> <span class="va">gaussian</span>,
-  optim.maxit <span class="op">=</span> <span class="fl">100</span>,
   optim.thresh <span class="op">=</span> <span class="fl">0.01</span>,
+  optim.maxit <span class="op">=</span> <span class="fl">100</span>,
+  lambda_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
+  psigx_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
+  psigy_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
   nfolds <span class="op">=</span> <span class="fl">2</span>
 <span class="op">)</span></code></pre></div>
     </div>
@@ -164,12 +173,18 @@ set, estimation of the optimal parameter will <em>not</em> be conducted.</p></dd
 <dd><p>step size for Adam optimizer (<code>numerical</code>)</p></dd>
 <dt>family</dt>
 <dd><p>family of response, e.g. <em>gaussian</em> or <em>binomial</em></p></dd>
-<dt>optim.maxit</dt>
-<dd><p>the maximum number of iterations for the optimization
-(<code>integer</code>). Usually 1e4 is a good choice.</p></dd>
 <dt>optim.thresh</dt>
 <dd><p><code>numerical</code> threshold criterion for the
 optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
+<dt>optim.maxit</dt>
+<dd><p>the maximum number of iterations for the optimization
+(<code>integer</code>). Usually 1e4 is a good choice.</p></dd>
+<dt>lambda_range</dt>
+<dd><p>range of lambda to use in CV grid.</p></dd>
+<dt>psigx_range</dt>
+<dd><p>range of psigx to use in CV grid.</p></dd>
+<dt>psigy_range</dt>
+<dd><p>range of psigy to use in CV grid.</p></dd>
 <dt>nfolds</dt>
 <dd><p>the number of folds to be used - default is 10</p></dd>
 </dl></div>
@@ -215,8 +230,10 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  Y <span class="op">=</span> <span class="va">Y</span>,</span>
 <span class="r-in">  family <span class="op">=</span> <span class="va">gaussian</span>,</span>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
+<span class="r-in">  lambda_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
 <span class="r-in"><span class="co">## only provide one matrix and estimate lambda</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -225,8 +242,10 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  psigx <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  family <span class="op">=</span> <span class="va">gaussian</span>,</span>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
+<span class="r-in">  lambda_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
 <span class="r-in"><span class="co">## estimate only lambda with two matrices</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -237,8 +256,10 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  psigy <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  family <span class="op">=</span> <span class="va">gaussian</span>,</span>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
+<span class="r-in">  lambda_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
 <span class="r-in"><span class="co">## estimate only psigx</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -249,8 +270,10 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  psigy <span class="op">=</span> <span class="fl">1</span>,</span>
 <span class="r-in">  family <span class="op">=</span> <span class="va">gaussian</span>,</span>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
+<span class="r-in">  psigx_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
 <span class="r-in"><span class="co">## estimate all parameters</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -259,8 +282,13 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  <span class="va">G.Y</span>,</span>
 <span class="r-in">  family <span class="op">=</span> <span class="va">gaussian</span>,</span>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
+<span class="r-in">  lambda_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span class="r-in">  psigx_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span class="r-in">  psigy_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
 <span class="r-in"><span class="co">## if Y is vectorial, we cannot use an affinity matrix for Y</span></span>
 <span class="r-in"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">cv.edgenet</span><span class="op">(</span></span>
 <span class="r-in">  X <span class="op">=</span> <span class="va">X</span>,</span>
@@ -268,8 +296,12 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <span class="r-in">  G.X <span class="op">=</span> <span class="va">G.X</span>,</span>
 <span class="r-in">  family <span class="op">=</span> <span class="va">gaussian</span>,</span>
 <span class="r-in">  maxit <span class="op">=</span> <span class="fl">1</span>,</span>
-<span class="r-in">  optim.maxit <span class="op">=</span> <span class="fl">1</span></span>
+<span class="r-in">  lambda_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span class="r-in">  psigx_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span class="r-in"><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loaded Tensorflow version 2.3.0</span>
 </code></pre></div>
     </div>
   </div>
