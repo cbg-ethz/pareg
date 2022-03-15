@@ -100,8 +100,9 @@ rule run_method:
         params=paramspace.instance,
         script_name=lambda wildcards, input: input.script,
         setup_code_fname=srcdir("scripts/model_setup_code.R"),
+    threads: lambda wildcards: (32 if "cv" in wildcards.method else 2)
     resources:
-        mem_mb=lambda wildcards: (30_000 if "cv" in wildcards.method else 20000),
+        mem_mb=lambda wildcards: (1_000 if "cv" in wildcards.method else 10_000),
         time_min=lambda wildcards, attempt: (
             60 * 23 if "cv" in wildcards.method else 60 * 10
         )
