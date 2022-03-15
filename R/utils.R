@@ -166,7 +166,7 @@ as_enrichplot_object <- function(x, pvalue_threshold = 0.05) {
     df %>%
       filter(
         variable == .data$term &
-        .data$gene %in% sig_genes
+          .data$gene %in% sig_genes
       ) %>%
       pluck(dim, 1)
   }

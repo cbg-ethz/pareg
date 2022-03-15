@@ -779,9 +779,13 @@ cross.validate <- function(
 #' @noRd
 #' @import nloptr
 optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
-  bobele <- nloptr::bobyqa(par, fn,
-    lower = lower, upper = upper,
-    control = control, ...
+  bobele <- nloptr::bobyqa(
+    par,
+    fn,
+    lower = lower,
+    upper = upper,
+    control = control,
+    ...
   )
   bobele
 }
@@ -1613,7 +1617,7 @@ setMethod(
   mod$build(input_shape)
   loss <- edgenet.loss(lambda, psigx, psigy, gx, gy, family)
   res <- fit(mod, loss, x, y, maxit, learning.rate, thresh)
-  mod$compute_output_shape(input_shape = input_shape)  # needed to save to disk
+  mod$compute_output_shape(input_shape = input_shape) # needed to save to disk
 
   # finalize output
   beta <- res$beta

@@ -32,9 +32,9 @@ test_that("Beta case works", {
   fit <- pareg::edgenet(X, Y, family = pareg::beta_phi_var())
 
   expect_equal(
-      c(as.vector(coef(fit)), fit$dispersion),
-      as.vector(coef(fit_br)),
-      tolerance = 0.05
+    c(as.vector(coef(fit)), fit$dispersion),
+    as.vector(coef(fit_br)),
+    tolerance = 0.05
   )
   # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.05)
 })
