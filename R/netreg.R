@@ -1222,7 +1222,6 @@ setMethod(
 
 #' @noRd
 #' @importFrom matrixLaplacian matrixLaplacian
-#' @importFrom future plan multisession
 #' @importFrom furrr future_pmap_dfr
 #' @importFrom tidyr expand_grid
 .cv.edgenet_gridsearch <- function(
@@ -1282,7 +1281,6 @@ setMethod(
   }
 
   # cross-validation
-  plan(multisession)
   loss_grid <- future_pmap_dfr(param_grid, function(lambda, psigx, psigy) {
     # prepare model
     if (!is.null(gx)) {

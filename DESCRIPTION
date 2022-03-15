@@ -68,5 +68,4 @@ Imports:
     shadowtext,
     methods,
     DOSE,
-    stringr,
-    future
+    stringr

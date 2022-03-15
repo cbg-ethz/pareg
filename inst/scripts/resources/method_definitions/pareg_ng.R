@@ -4,6 +4,7 @@ source(snakemake@params$setup_code_fname)
 devtools::load_all("../..")
 
 # run model
+future::plan(future::multisession, worker = snakemake@threads)
 fit <- pareg::pareg(
   study$df %>%
     select(gene, pvalue) %>%
@@ -17,6 +18,7 @@ fit <- pareg::pareg(
   cv = TRUE,
   family = pareg::gaussian
 )
+future::plan(future::sequential) # shut down workers
 
 df <- fit %>%
   as.data.frame() %>%

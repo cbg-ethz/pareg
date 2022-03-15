@@ -15,6 +15,7 @@
 #' @param response_column_name Which column of model dataframe
 #' to use as response.
 #' @param max_iterations How many iterations to maximally run optimizer for.
+#' @param ... Further arguments to pass to `(cv.)edgenet`.
 #'
 #' @return An object of class \code{pareg}.
 #'
@@ -49,7 +50,8 @@ pareg <- function(
   cv = FALSE,
   family = beta,
   response_column_name = "pvalue",
-  max_iterations = 1e5
+  max_iterations = 1e5,
+  ...
 ) {
   # generate design matrix
   df_model <- create_model_df(df_genes, df_terms)
@@ -117,7 +119,8 @@ pareg <- function(
     psigx = network_param,
     psigy = 0,
     family = family,
-    maxit = max_iterations
+    maxit = max_iterations,
+    ...
   )
 
   # update parameters to cross-validation estimates if needed
