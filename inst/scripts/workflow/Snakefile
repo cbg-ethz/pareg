@@ -104,7 +104,7 @@ rule run_method:
     resources:
         mem_mb=lambda wildcards: (1_000 if "cv" in wildcards.method else 10_000),
         time_min=lambda wildcards, attempt: (
-            60 * 23 if "cv" in wildcards.method else 60 * 10
+            60 * 24 if "cv" in wildcards.method else 60 * 4
         )
         * attempt,
     script:
