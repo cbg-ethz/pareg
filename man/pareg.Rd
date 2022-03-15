@@ -13,7 +13,8 @@ pareg(
   cv = FALSE,
   family = beta,
   response_column_name = "pvalue",
-  max_iterations = 1e+05
+  max_iterations = 1e+05,
+  ...
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ pareg(
 to use as response.}
 
 \item{max_iterations}{How many iterations to maximally run optimizer for.}
+
+\item{...}{Further arguments to pass to `(cv.)edgenet`.}
 }
 \value{
 An object of class \code{pareg}.
