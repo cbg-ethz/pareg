@@ -18,6 +18,7 @@ fit <- pareg::pareg(
   cv = TRUE,
   family = pareg::gaussian
 )
+future::plan(future::sequential) # shut down workers
 
 df <- fit %>%
   as.data.frame() %>%

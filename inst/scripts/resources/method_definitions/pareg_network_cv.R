@@ -11,6 +11,7 @@ fit <- pareg::pareg(
   term_network = term_similarities_sub,
   cv = TRUE
 )
+future::plan(future::sequential) # shut down workers
 
 df <- fit %>%
   as.data.frame() %>%

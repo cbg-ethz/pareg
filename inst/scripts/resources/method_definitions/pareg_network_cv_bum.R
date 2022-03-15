@@ -12,6 +12,7 @@ fit <- pareg::pareg(
   cv = TRUE,
   family = pareg::bum
 )
+future::plan(future::sequential) # shut down workers
 
 df <- fit %>%
   as.data.frame() %>%
