@@ -21,7 +21,8 @@
 #'   gene = c("g1", "g2", "g1", "g2", "g2")
 #' )
 #' create_model_df(df_genes, df_terms)
-#' @importFrom dplyr group_by mutate ungroup mutate_at vars right_join select one_of rename_at
+#' @importFrom dplyr group_by mutate ungroup mutate_at
+#' @importFrom dplyr vars right_join select one_of rename_at
 #' @importFrom tidyr pivot_wider
 #' @importFrom rlang .data
 create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
