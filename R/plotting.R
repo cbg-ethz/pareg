@@ -30,12 +30,13 @@
 #' )
 #' fit <- pareg(df_genes, df_terms, max_iterations = 10)
 #' plot(fit)
-#' @import tidyverse ggraph ggplot2
+#' @importFrom ggraph ggraph
 #' @importFrom rlang .data
 #' @importFrom dplyr group_by summarize distinct pull
 #' @importFrom magrittr %<>% extract2
 #' @importFrom tidygraph as_tbl_graph activate mutate
 #' @importFrom shadowtext geom_shadowtext
+#' @importFrom igraph graph_from_adjacency_matrix
 plot_pareg_with_args <- function(
   x,
   show_term_names = TRUE,
@@ -63,7 +64,7 @@ plot_pareg_with_args <- function(
   term_network[term_network < min_similarity] <- 0
 
   # create plot
-  term_graph <- as_tbl_graph(igraph::graph_from_adjacency_matrix(
+  term_graph <- as_tbl_graph(graph_from_adjacency_matrix(
     term_network,
     weighted = TRUE
   )) %>%

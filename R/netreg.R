@@ -7,7 +7,7 @@
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 linear.predictor <- function(alpha, beta, x) {
   eta <- tf$matmul(x, beta) + alpha
   eta
@@ -26,7 +26,7 @@ model <- function(p, q, family) {
     if (family$family %in% c("beta_phi_var")) {
       initializer <- tf$keras.initializers$Ones()
       self$dispersion <- tf$Variable(
-        initializer(tf$shape(1), tensorflow::tf$float32)
+        initializer(tf$shape(1), tf$float32)
       )
     }
     self$family <- family
@@ -213,45 +213,45 @@ warn.experimental <- function(family) {
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 cast_float <- function(x) {
-  tensorflow::tf$cast(x, tensorflow::tf$float32)
+  tf$cast(x, tf$float32)
 }
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 constant_float <- function(x) {
-  tensorflow::tf$constant(x, tensorflow::tf$float32)
+  tf$constant(x, tf$float32)
 }
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 init_matrix <- function(m, n, trainable = TRUE) {
   initializer <- tf$keras.initializers$glorot_normal(23L)
-  tensorflow::tf$Variable(
-    initializer(shape(m, n), tensorflow::tf$float32),
+  tf$Variable(
+    initializer(shape(m, n), tf$float32),
     trainable = trainable
   )
 }
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 init_vector <- function(m, trainable = TRUE) {
   initializer <- tf$keras.initializers$glorot_normal(23L)
-  tensorflow::tf$Variable(
-    initializer(shape(m), tensorflow::tf$float32),
+  tf$Variable(
+    initializer(shape(m), tf$float32),
     trainable = trainable
   )
 }
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 init_zero_scalar <- function(trainable = TRUE) {
-  tensorflow::tf$Variable(
-    tf$zeros(shape(), tensorflow::tf$float32),
+  tf$Variable(
+    tf$zeros(shape(), tf$float32),
     trainable = trainable
   )
 }
@@ -353,14 +353,15 @@ bernoulli <- function(link = c("logit", "probit", "log")) {
 
 #' @export
 #' @rdname family-methods
+#' @importFrom stats binomial
 beta <- function(link = c("logit", "probit", "log")) {
   warn.experimental("beta")
   link <- match.arg(link)
   linkfun <- switch(
     link,
-    "logit" = stats::binomial(link = "logit")$linkfun,
-    "log" = stats::binomial(link = "log")$linkfun,
-    "probit" = stats::binomial(link = "probit")$linkfun,
+    "logit" = binomial(link = "logit")$linkfun,
+    "log" = binomial(link = "log")$linkfun,
+    "probit" = binomial(link = "probit")$linkfun,
   )
   linkinv <- switch(
     link,
@@ -386,14 +387,15 @@ beta <- function(link = c("logit", "probit", "log")) {
 
 #' @export
 #' @rdname family-methods
+#' @importFrom stats binomial
 beta_phi_lm <- function(link = c("logit", "probit", "log")) {
   warn.experimental("beta_phi_lm")
   link <- match.arg(link)
   linkfun <- switch(
     link,
-    "logit" = stats::binomial(link = "logit")$linkfun,
-    "log" = stats::binomial(link = "log")$linkfun,
-    "probit" = stats::binomial(link = "probit")$linkfun,
+    "logit" = binomial(link = "logit")$linkfun,
+    "log" = binomial(link = "log")$linkfun,
+    "probit" = binomial(link = "probit")$linkfun,
   )
   linkinv <- switch(
     link,
@@ -416,14 +418,15 @@ beta_phi_lm <- function(link = c("logit", "probit", "log")) {
 
 #' @export
 #' @rdname family-methods
+#' @importFrom stats binomial
 beta_phi_var <- function(link = c("logit", "probit", "log")) {
   warn.experimental("beta_phi_var")
   link <- match.arg(link)
   linkfun <- switch(
     link,
-    "logit" = stats::binomial(link = "logit")$linkfun,
-    "log" = stats::binomial(link = "log")$linkfun,
-    "probit" = stats::binomial(link = "probit")$linkfun,
+    "logit" = binomial(link = "logit")$linkfun,
+    "log" = binomial(link = "log")$linkfun,
+    "probit" = binomial(link = "probit")$linkfun,
   )
   linkinv <- switch(
     link,
@@ -478,14 +481,14 @@ beta_phi_var <- function(link = c("logit", "probit", "log")) {
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 .edgenet.x.penalty <- function(gx, beta) {
   tf$linalg$trace(tf$matmul(tf$transpose(beta), tf$matmul(gx, beta)))
 }
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 .edgenet.y.penalty <- function(gy, beta) {
   tf$linalg$trace(tf$matmul(beta, tf$matmul(gy, tf$transpose(beta))))
 }
@@ -508,7 +511,7 @@ gaussian.loss <- function(y, mu.hat, ...) {
 bernoulli.loss <- function(y, mu.hat, ...) {
   obj <- 0
   for (j in seq(ncol(y))) {
-    prob <- tfprobability::tfd_bernoulli(probs = mu.hat[, j])
+    prob <- tfd_bernoulli(probs = mu.hat[, j])
     obj <- obj + tf$reduce_sum(prob$log_prob(y[, j]))
   }
 
@@ -536,7 +539,7 @@ beta.loss <- function(y, mu.hat, phi_hat, ...) {
     p.trans <- tf$math$maximum(p, eps)
     q.trans <- tf$math$maximum(q, eps)
 
-    prob <- tfprobability::tfd_beta(
+    prob <- tfd_beta(
       concentration1 = p.trans,
       concentration0 = q.trans
     )
@@ -548,7 +551,7 @@ beta.loss <- function(y, mu.hat, phi_hat, ...) {
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 edgenet.loss <- function(lambda, psigx, psigy, gx, gy, family) {
   invlink <- family$linkinv
   loss.function <- family$loss
@@ -612,7 +615,7 @@ edgenet.loss <- function(lambda, psigx, psigy, gx, gy, family) {
 
 
 #' @noRd
-#' @import tensorflow
+#' @importFrom tensorflow tf
 #' @importFrom purrr transpose
 #' @importFrom keras optimizer_adam
 fit <- function(
@@ -649,7 +652,7 @@ fit <- function(
       break
     }
 
-    optimizer$apply_gradients(purrr::transpose(list(
+    optimizer$apply_gradients(transpose(list(
       gradients,
       mod$trainable_variables
     )))
@@ -777,9 +780,9 @@ cross.validate <- function(
 
 
 #' @noRd
-#' @import nloptr
+#' @importFrom nloptr bobyqa
 optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
-  bobele <- nloptr::bobyqa(
+  bobele <- bobyqa(
     par,
     fn,
     lower = lower,
@@ -1587,6 +1590,7 @@ setMethod(
 #' @noRd
 #' @importFrom matrixLaplacian matrixLaplacian
 #' @importFrom stats cor
+#' @importFrom keras shape
 .edgenet <- function(
   x,
   y,
@@ -1612,7 +1616,7 @@ setMethod(
     gy <- cast_float(matrixLaplacian(gy, FALSE, FALSE)$LaplacianMatrix)
   }
 
-  input_shape <- keras::shape(dim(x)[[1]], dim(x)[[2]])
+  input_shape <- shape(dim(x)[[1]], dim(x)[[2]])
   mod <- model(ncol(x), ncol(y), family)
   mod$build(input_shape)
   loss <- edgenet.loss(lambda, psigx, psigy, gx, gy, family)

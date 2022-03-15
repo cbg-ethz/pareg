@@ -37,7 +37,7 @@
 #'   )
 #' )
 #' pareg(df_genes, df_terms, max_iterations = 10)
-#' @import tidyverse
+#' @importFrom dplyr select ends_with all_of
 #' @importFrom glue glue_collapse
 pareg <- function(
   df_genes,

@@ -64,7 +64,7 @@ compute_term_similarities <- function(
     select(.data$term, .data$gene) %>%
     pipe_split("term", "gene")
 
-  term_similarities <- proxy::simil(
+  term_similarities <- simil(
     x = term_list_list,
     method = similarity_function,
     pairwise = TRUE
