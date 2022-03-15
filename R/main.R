@@ -76,10 +76,11 @@ pareg <- function(
 
     term_diff <- setdiff(ordered_terms, rownames(term_network))
     if (length(term_diff) > 0) {
-      stop(paste(
+      msg <- paste(
         "The following covariates do not appear in term network:",
         glue_collapse(term_diff, sep = ", ")
-      ))
+      )
+      stop(msg)
     }
 
     term_network <- term_network[ordered_terms, ordered_terms]
