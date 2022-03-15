@@ -1226,6 +1226,7 @@ setMethod(
 #' @importFrom matrixLaplacian matrixLaplacian
 #' @importFrom future plan multisession
 #' @importFrom furrr future_pmap_dfr
+#' @importFrom tidyr expand_grid
 .cv.edgenet_gridsearch <- function(
   x,
   y,

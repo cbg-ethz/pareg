@@ -39,6 +39,7 @@
 #' pareg(df_genes, df_terms, max_iterations = 10)
 #' @importFrom dplyr select ends_with all_of
 #' @importFrom glue glue_collapse
+#' @importFrom magrittr %>%
 pareg <- function(
   df_genes,
   df_terms,

@@ -55,6 +55,7 @@ overlap_coefficient <- function(x, y) {
 #' @importFrom rlang .data
 #' @importFrom dplyr select
 #' @importFrom proxy simil
+#' @importFrom magrittr %>%
 compute_term_similarities <- function(
   df_terms,
   similarity_function = jaccard,

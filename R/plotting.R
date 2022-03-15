@@ -30,13 +30,15 @@
 #' )
 #' fit <- pareg(df_genes, df_terms, max_iterations = 10)
 #' plot(fit)
-#' @importFrom ggraph ggraph
+#' @importFrom ggraph ggraph geom_node_point geom_edge_link scale_edge_alpha
 #' @importFrom rlang .data
-#' @importFrom dplyr group_by summarize distinct pull
-#' @importFrom magrittr %<>% extract2
+#' @importFrom dplyr group_by summarize distinct pull as_tibble n left_join
+#' @importFrom magrittr %<>% extract2 %>%
 #' @importFrom tidygraph as_tbl_graph activate mutate
 #' @importFrom shadowtext geom_shadowtext
 #' @importFrom igraph graph_from_adjacency_matrix
+#' @importFrom ggplot2 aes scale_size scale_color_gradient2
+#' @importFrom ggplot2 coord_fixed theme element_rect
 plot_pareg_with_args <- function(
   x,
   show_term_names = TRUE,

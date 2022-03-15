@@ -24,6 +24,7 @@
 #' @importFrom dplyr group_by mutate ungroup mutate_at
 #' @importFrom dplyr vars right_join select one_of rename_at
 #' @importFrom tidyr pivot_wider
+#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
   df_terms %>%
@@ -93,6 +94,7 @@ create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
 #' @importFrom rlang .data
 #' @importFrom dplyr mutate filter rename arrange desc
 #' @importFrom tidyr extract
+#' @importFrom magrittr %>%
 #' @importFrom tibble rownames_to_column
 #' @importFrom stats coef
 as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
@@ -145,7 +147,8 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
 #' as_enrichplot_object(fit)
 #' @importFrom rlang .data
 #' @importFrom methods new
-#' @importFrom dplyr mutate filter rename inner_join rowwise
+#' @importFrom dplyr mutate filter rename inner_join rowwise tally n
+#' @importFrom magrittr %>%
 #' @importFrom tibble column_to_rownames
 #' @importFrom purrr pluck
 #' @importFrom stringr str_c
