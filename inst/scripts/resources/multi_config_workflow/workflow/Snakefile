@@ -1,10 +1,12 @@
 from snakemake.io import load_configfile
 
 
+# setup workflow
 def load_config(path):
     config = load_configfile(path)
     config["subworkflow_run"] = True
     return config
+
 
 onstart:
     shell("Rscript -e 'devtools::install(quick = TRUE, dependencies = FALSE)'")

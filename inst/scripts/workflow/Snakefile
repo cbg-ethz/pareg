@@ -7,7 +7,9 @@ from snakemake.utils import Paramspace
 # setup workflow
 configfile: "config/config.yaml"
 
+
 if not config["subworkflow_run"]:
+
     # do not install package multiple times when run as subworkflow
     # package installation is needed for multiprocessing
     onstart:
