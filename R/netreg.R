@@ -205,10 +205,8 @@ not.supported.yet <- function(family) {
 
 
 warn.experimental <- function(family) {
-  warning(
-    paste("family", family, "is still experimental. enjoy with care."),
-    call. = FALSE
-  )
+  msg <- paste("family", family, "is still experimental. enjoy with care.")
+  warning(msg, call. = FALSE)
 }
 
 
