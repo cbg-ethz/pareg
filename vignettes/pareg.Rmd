@@ -13,10 +13,7 @@ vignette: >
 
 # Overview
 
-This vignette is an introduction to the usage of `pareg`.
-It estimates pathway enrichment scores by regressing differential expression p-values of all genes considered in an experiment on their membership to a set of biological pathways.
-These scores are computed using a regularized generalized linear model with LASSO and network regularization terms.
-The network regularization term is based on a pathway similarity matrix (e.g., defined by Jaccard similarity) and thus classifies this method as a modular enrichment analysis tool [@huang2009bioinformatics].
+This vignette is an introduction to the usage of `pareg`. It estimates pathway enrichment scores by regressing differential expression p-values of all genes considered in an experiment on their membership to a set of biological pathways. These scores are computed using a regularized generalized linear model with LASSO and network regularization terms. The network regularization term is based on a pathway similarity matrix (e.g., defined by Jaccard similarity) and thus classifies this method as a modular enrichment analysis tool [@huang2009bioinformatics].
 
 # Installation
 
@@ -101,8 +98,7 @@ Heatmap(
 
 ## Create synthetic study
 
-We then select a subset of pathways to be activated.
-In a performance evaluation, these would be considered to be true positives.
+We then select a subset of pathways to be activated. In a performance evaluation, these would be considered to be true positives.
 
 ```{r}
 active_terms <- similarity_sample(mat_similarities, 5)
