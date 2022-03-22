@@ -69,4 +69,5 @@ Imports:
     shadowtext,
     methods,
     DOSE,
-    stringr
+    stringr,
+    reticulate

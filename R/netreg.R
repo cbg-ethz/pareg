@@ -616,6 +616,7 @@ edgenet.loss <- function(lambda, psigx, psigy, gx, gy, family) {
 #' @importFrom tensorflow tf
 #' @importFrom purrr transpose
 #' @importFrom keras optimizer_adam
+#' @importFrom reticulate %as%
 fit <- function(
   mod,
   loss,
