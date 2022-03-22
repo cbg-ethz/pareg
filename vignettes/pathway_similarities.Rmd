@@ -1,0 +1,72 @@
+---
+title: "Pathway similarities"
+author: "Kim Philipp Jablonski"
+package: pareg
+graphics: yes
+output: BiocStyle::html_document
+bibliography: bibliography.bib
+vignette: >
+    %\VignetteIndexEntry{Get started}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
+---
+
+# Prelude
+
+```{r message=FALSE}
+library(tidyverse)
+library(ComplexHeatmap)
+library(circlize)
+library(GGally)
+
+library(pareg)
+
+set.seed(42)
+```
+
+# Introduction
+
+Pathway similarities describe how similar two pathways are (you're welcome). For example, when interpreting pathways as gene sets, one could count how many genes are shared between two sets. Many more sophisticated methods, such as the Jaccard index, exist [@simplifyEnrichment].
+
+`pareg` provides various pre-computed similarity measures (`r names(pathway_similarities[[1]])`) for selected pathway databases (`r names(pathway_similarities)`) in matrix form.
+
+```{r}
+mat <- pathway_similarities$`C2@CP:KEGG`$jaccard
+mat[1:3, 1:3]
+
+Heatmap(
+  mat,
+  name = "similarity",
+  col = colorRamp2(c(0, 1), c("white", "black")),
+  show_row_names = FALSE,
+  show_column_names = FALSE
+)
+```
+
+# Comparison of similarity measures
+
+To see the effect of using different pathway similarity measures, we can compare them.
+
+```{r}
+df_sim <- pathway_similarities$`C2@CP:KEGG` %>%
+  map_dfr(function(mat) {
+    mat %>%
+    as.data.frame %>%
+    rownames_to_column() %>%
+    pivot_longer(-rowname)
+  }, .id = "measure") %>%
+  filter(value > 0) %>%
+  pivot_wider(names_from = measure, values_from = value) %>%
+  select(-rowname, -name)
+
+ggpairs(df_sim) +
+  theme_minimal()
+```
+
+# Session information
+
+```{r}
+sessionInfo()
+```
+
+# References

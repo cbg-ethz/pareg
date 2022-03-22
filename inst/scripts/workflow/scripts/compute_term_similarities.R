@@ -15,21 +15,16 @@ dir.create(plotdir, recursive = TRUE)
 # read data
 df_terms <- read_csv(fname_terms)
 
-# define distance measure
-jaccard <- function(x, y) {
-  return(1 - length(intersect(x, y)) / length(union(x, y)))
-}
-
-# compute term overlaps
+# compute term similarities
 term_list_list <- df_terms %>%
   select(term, gene) %>%
-  {
-    split(.$gene, .$term)
-  }
+  pipe_split("term", "gene")
 
 term_similarities <- 1 - proxy::dist(
   x = term_list_list,
-  method = jaccard,
+  method = function(x, y) {
+    1 - jaccard(x, y)
+  },
   diag = TRUE, pairwise = TRUE
 ) %>%
   as.matrix()
@@ -38,7 +33,7 @@ term_similarities <- 1 - proxy::dist(
 term_similarities %>%
   write.csv(fname_out)
 
-# simlarity histogram
+# similarity histogram
 df_sim <- data.frame(similarity = term_similarities[upper.tri(term_similarities)])
 
 df_sim %>%
