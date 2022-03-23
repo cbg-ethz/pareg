@@ -1,12 +1,11 @@
 library(tidyverse)
 
+devtools::load_all("../..")
+
 
 # parameters
-fname_terms <- "results/term_database.csv"
-category <- "C2"
-
-
 fname_terms <- snakemake@input$fname_terms
+similarity_measure <- snakemake@params$params$similaritymeasure
 fname_out <- snakemake@output$fname
 
 plotdir <- snakemake@output$plotdir
@@ -14,6 +13,10 @@ dir.create(plotdir, recursive = TRUE)
 
 # read data
 df_terms <- read_csv(fname_terms)
+
+# select similarity function
+similarity_function <- match.fun(similarity_measure, descend = FALSE)
+similarity_function
 
 # compute term similarities
 term_list_list <- df_terms %>%
@@ -23,7 +26,7 @@ term_list_list <- df_terms %>%
 term_similarities <- 1 - proxy::dist(
   x = term_list_list,
   method = function(x, y) {
-    1 - jaccard(x, y)
+    1 - similarity_function(x, y)
   },
   diag = TRUE, pairwise = TRUE
 ) %>%

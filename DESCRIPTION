@@ -43,7 +43,8 @@ Suggests:
     circlize,
     enrichplot,
     ggnewscale,
-    tidyverse
+    tidyverse,
+    cowplot
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:

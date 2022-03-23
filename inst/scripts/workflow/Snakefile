@@ -61,8 +61,8 @@ rule compute_term_similarities:
     input:
         fname_terms="results/terms/{termsource}/term_database.csv",
     output:
-        fname="results/terms/{termsource}/term_similarities.csv",
-        plotdir=directory("results/terms/{termsource}/plots/"),
+        fname="results/terms/{termsource}/{similaritymeasure}/term_similarities.csv",
+        plotdir=directory("results/terms/{termsource}/{similaritymeasure}/plots/"),
     params:
         params=paramspace.instance,
     resources:
@@ -74,7 +74,7 @@ rule compute_term_similarities:
 rule create_synthetic_study:
     input:
         fname_terms="results/terms/{termsource}/term_database.csv",
-        fname_sim="results/terms/{termsource}/term_similarities.csv",
+        fname_sim="results/terms/{termsource}/{similaritymeasure}/term_similarities.csv",
     output:
         fname_rds=f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds",
         plotdir=directory(
@@ -93,7 +93,7 @@ rule run_method:
         script=srcdir("../resources/method_definitions/{method}.R"),
         fname_study=f"results/studies/{paramspace.wildcard_pattern}/replicates/{{replicate}}/study.rds",
         fname_terms="results/terms/{termsource}/term_database.csv",
-        fname_term_sim="results/terms/{termsource}/term_similarities.csv",
+        fname_term_sim="results/terms/{termsource}/{similaritymeasure}/term_similarities.csv",
     output:
         fname=f"results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv",
     params:
