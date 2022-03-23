@@ -353,7 +353,6 @@ bernoulli <- function(link = c("logit", "probit", "log")) {
 #' @rdname family-methods
 #' @importFrom stats binomial
 beta <- function(link = c("logit", "probit", "log")) {
-  warn.experimental("beta")
   link <- match.arg(link)
   linkfun <- switch(
     link,
@@ -387,7 +386,6 @@ beta <- function(link = c("logit", "probit", "log")) {
 #' @rdname family-methods
 #' @importFrom stats binomial
 beta_phi_lm <- function(link = c("logit", "probit", "log")) {
-  warn.experimental("beta_phi_lm")
   link <- match.arg(link)
   linkfun <- switch(
     link,
@@ -418,7 +416,6 @@ beta_phi_lm <- function(link = c("logit", "probit", "log")) {
 #' @rdname family-methods
 #' @importFrom stats binomial
 beta_phi_var <- function(link = c("logit", "probit", "log")) {
-  warn.experimental("beta_phi_var")
   link <- match.arg(link)
   linkfun <- switch(
     link,
