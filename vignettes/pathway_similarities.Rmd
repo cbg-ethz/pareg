@@ -31,7 +31,8 @@ Pathway similarities describe how similar two pathways are (you're welcome). For
 `pareg` provides various pre-computed similarity measures (`r names(pathway_similarities[[1]])`) for selected pathway databases (`r names(pathway_similarities)`) in matrix form.
 
 ```{r}
-mat <- pathway_similarities$`C2@CP:KEGG`$jaccard
+mat <- pathway_similarities$`C2@CP:KEGG`$jaccard %>%
+  as_dense_sim()
 mat[1:3, 1:3]
 
 Heatmap(
@@ -51,9 +52,10 @@ To see the effect of using different pathway similarity measures, we can compare
 df_sim <- pathway_similarities$`C2@CP:KEGG` %>%
   map_dfr(function(mat) {
     mat %>%
-    as.data.frame %>%
-    rownames_to_column() %>%
-    pivot_longer(-rowname)
+      as_dense_sim() %>%
+      as.data.frame %>%
+      rownames_to_column() %>%
+      pivot_longer(-rowname)
   }, .id = "measure") %>%
   filter(value > 0) %>%
   pivot_wider(names_from = measure, values_from = value) %>%

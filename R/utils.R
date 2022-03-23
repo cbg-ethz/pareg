@@ -314,3 +314,25 @@ pipe_split <- function(df, group_col, value_col) {
   df <- as.data.frame(df)
   split(df[, value_col], df[, group_col])
 }
+
+
+#' @title Convert matrices.
+#'
+#' @description Convert sparse similarity matrix from package data to a
+#' dense version with 1 on its diagonal.
+#' This matrix can then be used by \code{pareg}.
+#'
+#' @export
+#' @param mat_sparse Sparse matrix.
+#'
+#' @return Dense matrix
+#'
+#' @examples
+#' transform_y(c(0, 0.5, 1))
+#' @importFrom Matrix forceSymmetric
+as_dense_sim <- function(mat_sparse) {
+  mat_sparse <- forceSymmetric(mat_sparse, uplo = "U")
+  mat_dense <- as.matrix(mat_sparse)
+  diag(mat_dense) <- 1
+  mat_dense
+}

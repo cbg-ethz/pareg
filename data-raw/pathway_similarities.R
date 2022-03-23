@@ -29,8 +29,8 @@ pathway_similarities <- df_grp %>%
       pipe_split("term", "gene")
 
     map(similarity_function_list, function(func) {
-      # double "1-" because func is similarity, bt we assume distance
-      1 - dist(
+      # double "1-" because func is similarity, but we assume distance
+      mat <- 1 - dist(
         x = term_list_list,
         method = function(x, y) {
           1 - func(x, y)
@@ -38,6 +38,9 @@ pathway_similarities <- df_grp %>%
         diag = TRUE, pairwise = TRUE
       ) %>%
         as.matrix()
+
+      mat[lower.tri(mat, diag = TRUE)] <- 0
+      as(mat, "sparseMatrix")
     }) %>%
       set_names(names(similarity_function_list))
   }) %>%

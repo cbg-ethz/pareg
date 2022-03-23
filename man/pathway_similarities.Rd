@@ -24,5 +24,7 @@ pathway_similarities
 }
 \description{
 Contains matrices for various pathway databases and similarity measures.
+Note that the matrices are sparse and upper triangular.
+To use with \code{pareg}, transform them using \code{pareg::as_dense_sim}.
 }
 \keyword{datasets}
