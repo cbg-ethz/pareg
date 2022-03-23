@@ -111,7 +111,8 @@
 <p>Pathway similarities describe how similar two pathways are (you’re welcome). For example, when interpreting pathways as gene sets, one could count how many genes are shared between two sets. Many more sophisticated methods, such as the Jaccard index, exist <span class="citation">(Gu and Huebschmann 2021)</span>.</p>
 <p><code>pareg</code> provides various pre-computed similarity measures (jaccard, overlap_coefficient) for selected pathway databases (<a href="mailto:C2@CP" class="email">C2@CP</a>:KEGG, <a href="mailto:C2@CP" class="email">C2@CP</a>:REACTOME) in matrix form.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mat</span> <span class="op">&lt;-</span> <span class="va">pathway_similarities</span><span class="op">$</span><span class="va">`C2@CP:KEGG`</span><span class="op">$</span><span class="va">jaccard</span>
+<code class="sourceCode R"><span class="va">mat</span> <span class="op">&lt;-</span> <span class="va">pathway_similarities</span><span class="op">$</span><span class="va">`C2@CP:KEGG`</span><span class="op">$</span><span class="va">jaccard</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
+  <span class="fu"><a href="../reference/as_dense_sim.html">as_dense_sim</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">mat</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></code></pre></div>
 <pre><code><span class="co">##                             KEGG_ABC_TRANSPORTERS KEGG_ACUTE_MYELOID_LEUKEMIA</span>
 <span class="co">## KEGG_ABC_TRANSPORTERS                           1                  0.00000000</span>
@@ -139,9 +140,10 @@
 <code class="sourceCode R"><span class="va">df_sim</span> <span class="op">&lt;-</span> <span class="va">pathway_similarities</span><span class="op">$</span><span class="va">`C2@CP:KEGG`</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dfr</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">{</span>
     <span class="va">mat</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="va">as.data.frame</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames_to_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
-    <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="op">-</span><span class="va">rowname</span><span class="op">)</span>
+      <span class="fu"><a href="../reference/as_dense_sim.html">as_dense_sim</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="va">as.data.frame</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html" class="external-link">rownames_to_column</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
+      <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="op">-</span><span class="va">rowname</span><span class="op">)</span>
   <span class="op">}</span>, .id <span class="op">=</span> <span class="st">"measure"</span><span class="op">)</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">value</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">measure</span>, values_from <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -207,7 +209,7 @@
 <span class="co">##  [73] labeling_0.4.2         reshape2_1.4.4         tidyselect_1.1.2      </span>
 <span class="co">##  [76] rlang_1.0.2            AnnotationDbi_1.56.2   munsell_0.5.0         </span>
 <span class="co">##  [79] cellranger_1.1.0       tools_4.1.3            cachem_1.0.6          </span>
-<span class="co">##  [82] cli_3.2.0              generics_0.1.2         RSQLite_2.2.10        </span>
+<span class="co">##  [82] cli_3.2.0              generics_0.1.2         RSQLite_2.2.11        </span>
 <span class="co">##  [85] broom_0.7.12           evaluate_0.15          fastmap_1.1.0         </span>
 <span class="co">##  [88] yaml_2.3.5             ragg_1.1.3             bit64_4.0.5           </span>
 <span class="co">##  [91] knitr_1.37             fs_1.5.2               tidygraph_1.2.0       </span>
