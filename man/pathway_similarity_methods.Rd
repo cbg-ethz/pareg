@@ -2,9 +2,12 @@
 % Please edit documentation in R/term_similarities.R
 \name{jaccard}
 \alias{jaccard}
+\alias{overlap_coefficient}
 \title{Jaccard similarity.}
 \usage{
 jaccard(x, y)
+
+overlap_coefficient(x, y)
 }
 \arguments{
 \item{x}{First set.}
@@ -13,10 +16,15 @@ jaccard(x, y)
 }
 \value{
 Jaccard similarity between set x and y.
+
+Overlap coefficient between set x and y.
 }
 \description{
 Compute Jaccard similarity between two sets.
+
+Compute overlap coefficient between two sets.
 }
 \examples{
 jaccard(c(1, 2, 3), c(2, 3, 4))
+overlap_coefficient(c(1, 2, 3), c(2, 3, 4))
 }

@@ -3,6 +3,7 @@
 #' @description Compute Jaccard similarity between two sets.
 #'
 #' @export
+#' @rdname pathway_similarity_methods
 #'
 #' @param x First set.
 #' @param y Second set.
@@ -21,6 +22,7 @@ jaccard <- function(x, y) {
 #' @description Compute overlap coefficient between two sets.
 #'
 #' @export
+#' @rdname pathway_similarity_methods
 #'
 #' @param x First set.
 #' @param y Second set.
