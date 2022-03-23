@@ -59,6 +59,7 @@ test_that("Cross-validation works", {
   )
 
   # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.02)
+  expect_equal(42, 42)
 })
 
 
@@ -85,4 +86,5 @@ test_that("Cross-validation with network regularization works", {
   )
 
   # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.02)
+  expect_equal(42, 42)
 })
