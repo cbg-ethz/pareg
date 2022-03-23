@@ -3,7 +3,7 @@
 #' @description Compute Jaccard similarity between two sets.
 #'
 #' @export
-#' @rdname pathway_similarity_methods
+#' @family pathway similarity methods
 #'
 #' @param x First set.
 #' @param y Second set.
@@ -13,7 +13,7 @@
 #' @examples
 #' jaccard(c(1, 2, 3), c(2, 3, 4))
 jaccard <- function(x, y) {
-  return(length(intersect(x, y)) / length(union(x, y)))
+  length(intersect(x, y)) / length(union(x, y))
 }
 
 
@@ -22,7 +22,7 @@ jaccard <- function(x, y) {
 #' @description Compute overlap coefficient between two sets.
 #'
 #' @export
-#' @rdname pathway_similarity_methods
+#' @family pathway similarity methods
 #'
 #' @param x First set.
 #' @param y Second set.
@@ -32,7 +32,7 @@ jaccard <- function(x, y) {
 #' @examples
 #' overlap_coefficient(c(1, 2, 3), c(2, 3, 4))
 overlap_coefficient <- function(x, y) {
-  return(length(intersect(x, y)) / min(length(x), length(y)))
+  length(intersect(x, y)) / min(length(x), length(y))
 }
 
 
@@ -75,5 +75,5 @@ compute_term_similarities <- function(
     as.matrix()
   diag(term_similarities) <- max_similarity
 
-  return(term_similarities)
+  term_similarities
 }

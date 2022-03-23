@@ -271,8 +271,8 @@ coef.edgenet <- function(object, ...) {
 
 
 #' @export
-#' @method coef cv.edgenet
-coef.cv.edgenet <- function(object, ...) {
+#' @method coef cv_edgenet
+coef.cv_edgenet <- function(object, ...) {
   coef(object$fit)
 }
 
@@ -353,7 +353,6 @@ bernoulli <- function(link = c("logit", "probit", "log")) {
 #' @rdname family-methods
 #' @importFrom stats binomial
 beta <- function(link = c("logit", "probit", "log")) {
-  warn.experimental("beta")
   link <- match.arg(link)
   linkfun <- switch(
     link,
@@ -387,7 +386,6 @@ beta <- function(link = c("logit", "probit", "log")) {
 #' @rdname family-methods
 #' @importFrom stats binomial
 beta_phi_lm <- function(link = c("logit", "probit", "log")) {
-  warn.experimental("beta_phi_lm")
   link <- match.arg(link)
   linkfun <- switch(
     link,
@@ -418,7 +416,6 @@ beta_phi_lm <- function(link = c("logit", "probit", "log")) {
 #' @rdname family-methods
 #' @importFrom stats binomial
 beta_phi_var <- function(link = c("logit", "probit", "log")) {
-  warn.experimental("beta_phi_var")
   link <- match.arg(link)
   linkfun <- switch(
     link,
@@ -851,7 +848,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #' @param psigy_range range of psigy to use in CV grid.
 #' @param nfolds  the number of folds to be used - default is 10
 #'
-#' @return An object of class \code{cv.edgenet}
+#' @return An object of class \code{cv_edgenet}
 #' \item{parameters }{ the estimated, optimal regularization parameters}
 #' \item{lambda }{ optimal estimated value for regularization parameter lambda
 #'   (or, if provided as argument, the value of the parameter)}
@@ -876,7 +873,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #' Y <- X %*% b + matrix(rnorm(100 * 10), 100)
 #'
 #' ## dont use affinity matrices and estimate lambda
-#' fit <- cv.edgenet(
+#' fit <- cv_edgenet(
 #'   X = X,
 #'   Y = Y,
 #'   family = gaussian,
@@ -884,7 +881,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   lambda_range = c(0, 1)
 #' )
 #' ## only provide one matrix and estimate lambda
-#' fit <- cv.edgenet(
+#' fit <- cv_edgenet(
 #'   X = X,
 #'   Y = Y,
 #'   G.X = G.X,
@@ -894,7 +891,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   lambda_range = c(0, 1)
 #' )
 #' ## estimate only lambda with two matrices
-#' fit <- cv.edgenet(
+#' fit <- cv_edgenet(
 #'   X = X,
 #'   Y = Y,
 #'   G.X = G.X,
@@ -906,7 +903,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   lambda_range = c(0, 1)
 #' )
 #' ## estimate only psigx
-#' fit <- cv.edgenet(
+#' fit <- cv_edgenet(
 #'   X = X,
 #'   Y = Y,
 #'   G.X = G.X,
@@ -918,7 +915,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   psigx_range = c(0, 1)
 #' )
 #' ## estimate all parameters
-#' fit <- cv.edgenet(
+#' fit <- cv_edgenet(
 #'   X = X,
 #'   Y = Y,
 #'   G.X = G.X,
@@ -930,7 +927,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   psigy_range = c(0, 1)
 #' )
 #' ## if Y is vectorial, we cannot use an affinity matrix for Y
-#' fit <- cv.edgenet(
+#' fit <- cv_edgenet(
 #'   X = X,
 #'   Y = Y[, 1],
 #'   G.X = G.X,
@@ -940,7 +937,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #'   psigx_range = c(0, 1),
 #' )
 setGeneric(
-  "cv.edgenet",
+  "cv_edgenet",
   function(
   X,
   Y,
@@ -960,7 +957,7 @@ setGeneric(
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2
   ) {
-    standardGeneric("cv.edgenet")
+    standardGeneric("cv_edgenet")
   },
   package = "pareg"
 )
@@ -968,7 +965,7 @@ setGeneric(
 
 #' @rdname cvedgenet-methods
 setMethod(
-  "cv.edgenet",
+  "cv_edgenet",
   signature = signature(X = "matrix", Y = "numeric"),
   function(
   X,
@@ -989,7 +986,7 @@ setMethod(
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2
   ) {
-    cv.edgenet(
+    cv_edgenet(
       X,
       as.matrix(Y),
       G.X,
@@ -1014,7 +1011,7 @@ setMethod(
 
 #' @rdname cvedgenet-methods
 setMethod(
-  "cv.edgenet",
+  "cv_edgenet",
   signature = signature(X = "matrix", Y = "matrix"),
   function(
   X,
@@ -1071,7 +1068,7 @@ setMethod(
     if (n < nfolds) nfolds <- n
     folds <- sample(rep(seq_len(10), length.out = n))
 
-    # ret <- .cv.edgenet_optim(
+    # ret <- cv_edgenet_optim(
     #   X,
     #   Y,
     #   G.X,
@@ -1088,7 +1085,7 @@ setMethod(
     #   optim.maxit,
     #   optim.thresh
     # )
-    ret <- .cv.edgenet_gridsearch(
+    ret <- cv_edgenet_gridsearch(
       X,
       Y,
       G.X,
@@ -1122,7 +1119,7 @@ setMethod(
     )
 
     ret$call <- match.call()
-    class(ret) <- c(class(ret), "cv.edgenet")
+    class(ret) <- c(class(ret), "cv_edgenet")
 
     ret
   }
@@ -1131,7 +1128,7 @@ setMethod(
 
 #' @noRd
 #' @importFrom matrixLaplacian matrixLaplacian
-.cv.edgenet_optim <- function(
+cv_edgenet_optim <- function(
   x,
   y,
   gx,
@@ -1213,9 +1210,9 @@ setMethod(
     )
   )
 
-  ret <- .cv.edgenet.post.process(opt, estimatable.params, fixed.params)
+  ret <- cv_edgenet_post_process(opt, estimatable.params, fixed.params)
   ret$family <- family
-  class(ret) <- paste0(family$family, ".cv.edgenet")
+  class(ret) <- paste0(family$family, ".cv_edgenet")
 
   ret
 }
@@ -1225,7 +1222,7 @@ setMethod(
 #' @importFrom matrixLaplacian matrixLaplacian
 #' @importFrom furrr future_pmap_dfr
 #' @importFrom tidyr expand_grid
-.cv.edgenet_gridsearch <- function(
+cv_edgenet_gridsearch <- function(
   x,
   y,
   gx,
@@ -1335,21 +1332,21 @@ setMethod(
   estimatable.params <- Filter(is.na, reg.params)
   fixed.params <- Filter(is.finite, reg.params)
 
-  ret <- .cv.edgenet.post.process(
+  ret <- cv_edgenet_post_process(
     list(par = c(lambda_optim, psigx_optim, psigy_optim)),
     estimatable.params,
     fixed.params
   )
   ret$family <- family
   ret$loss_grid <- loss_grid
-  class(ret) <- paste0(family$family, ".cv.edgenet")
+  class(ret) <- paste0(family$family, ".cv_edgenet")
 
   ret
 }
 
 
 #' @noRd
-.cv.edgenet.post.process <- function(opt, estimatable.params, fixed.params) {
+cv_edgenet_post_process <- function(opt, estimatable.params, fixed.params) {
   ret <- list(
     parameters = c(),
     "lambda" = NA_real_,

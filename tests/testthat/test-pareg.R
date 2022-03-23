@@ -165,4 +165,5 @@ test_that("cross-validation works", {
   #   res %>% as.data.frame() %>% filter(term == "foo") %>% pull(enrichment),
   #   res %>% as.data.frame() %>% filter(term == "bar") %>% pull(enrichment)
   # )
+  expect_equal(res %>% as.data.frame() %>% dim(), c(2, 2))
 })

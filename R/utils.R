@@ -44,7 +44,7 @@ create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
     select(
       # use `one_of` to handle case where NA does not exist
       # (happens when a gene appears in no term)
-      -one_of("NA")
+      -any_of("NA")
     ) %>%
     rename_at(vars(-.data$gene, -.data$pvalue), ~ paste0(., ".member")) %>%
     mutate_at(
