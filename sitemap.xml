@@ -52,13 +52,16 @@
     <loc>https://cbg-ethz.github.io/pareg/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://cbg-ethz.github.io/pareg/reference/jaccard.html</loc>
+  </url>
+  <url>
+    <loc>https://cbg-ethz.github.io/pareg/reference/overlap_coefficient.html</loc>
+  </url>
+  <url>
     <loc>https://cbg-ethz.github.io/pareg/reference/pareg.html</loc>
   </url>
   <url>
     <loc>https://cbg-ethz.github.io/pareg/reference/pathway_similarities.html</loc>
-  </url>
-  <url>
-    <loc>https://cbg-ethz.github.io/pareg/reference/pathway_similarity_methods.html</loc>
   </url>
   <url>
     <loc>https://cbg-ethz.github.io/pareg/reference/plot.pareg.html</loc>
