@@ -18,6 +18,7 @@ BugReports: https://github.com/cbg-ethz/pareg/issues
 biocViews: Software, StatisticalMethod, GraphAndNetwork, Regression, GeneExpression, DifferentialExpression, NetworkEnrichment, Network
 License: GPL-3
 Encoding: UTF-8
+LazyData: true
 Depends:
     R (>= 4.1),
     tensorflow (>= 2.2.0),
