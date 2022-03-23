@@ -1119,7 +1119,7 @@ setMethod(
     )
 
     ret$call <- match.call()
-    class(ret) <- c(class(ret), ".cv_edgenet")
+    class(ret) <- c(class(ret), "cv_edgenet")
 
     ret
   }
