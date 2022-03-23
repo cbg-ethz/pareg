@@ -22,7 +22,7 @@
 #' )
 #' create_model_df(df_genes, df_terms)
 #' @importFrom dplyr group_by mutate ungroup mutate_at
-#' @importFrom dplyr vars right_join select one_of rename_at
+#' @importFrom dplyr vars right_join select any_of rename_at
 #' @importFrom tidyr pivot_wider
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
@@ -42,7 +42,7 @@ create_model_df <- function(df_genes, df_terms, pvalue_threshold = 0.05) {
       values_fill = FALSE
     ) %>%
     select(
-      # use `one_of` to handle case where NA does not exist
+      # use `any_of` to handle case where NA does not exist
       # (happens when a gene appears in no term)
       -any_of("NA")
     ) %>%
