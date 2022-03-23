@@ -5,7 +5,10 @@ library(proxy)
 
 
 # parameters
-similarity_function_list <- list(jaccard = jaccard, overlap_coefficient = overlap_coefficient)
+similarity_function_list <- list(
+  jaccard = jaccard,
+  overlap_coefficient = overlap_coefficient
+)
 pathway_db_list <- c("C2@CP:KEGG", "C2@CP:REACTOME")
 
 # retrieve pathways
