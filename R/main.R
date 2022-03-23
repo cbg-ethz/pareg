@@ -99,7 +99,7 @@ pareg <- function(
 
   # fit model
   if (cv) {
-    fit_func <- cv.edgenet
+    fit_func <- cv_edgenet
   } else {
     fit_func <- edgenet
 
