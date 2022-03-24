@@ -36,7 +36,10 @@ pathway_similarities <- df_grp %>%
       pipe_split("term", "gene")
 
     # subset to limit resource consumption
-    term_list_list <- sample(term_list_list, min(length(term_list_list), max_term_count))
+    term_list_list <- sample(
+      term_list_list,
+      min(length(term_list_list), max_term_count)
+    )
 
     imap(similarity_function_list, function(func, name) {
       if (name == "semantic") {
