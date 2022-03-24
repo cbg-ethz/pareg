@@ -85,6 +85,18 @@ module real_datasets:
 use rule * from real_datasets as real_datasets_*
 
 
+module similarity_measures:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_config("config_similarity_measures/config.yaml")
+    replace_prefix:
+        {"results/": "results/similarity_measures/"}
+
+
+use rule * from similarity_measures as similarity_measures_*
+
+
 # custom logic
 rule compare_rocauc_vs_loss:
     input:
@@ -126,4 +138,5 @@ rule all:
         ),
         rules.noise_all.input,
         rules.real_datasets_all.input,
+        rules.similarity_measures_all.input,
     default_target: True
