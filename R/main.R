@@ -105,7 +105,13 @@ pareg <- function(
 
   # fit model
   if (cv) {
-    fit_func <- cv_edgenet
+    fit_func <- function(...) {
+      cv_edgenet(
+        ...,
+        lambda_range = lasso_param_range,
+        psigx_range = network_param_range
+      )
+    }
   } else {
     fit_func <- edgenet
 
@@ -126,8 +132,6 @@ pareg <- function(
     psigy = 0,
     family = family,
     maxit = max_iterations,
-    lambda_range = lasso_param_range,
-    psigx_range = network_param_range,
     ...
   )
 
