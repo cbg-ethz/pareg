@@ -15,6 +15,10 @@
 #' @param response_column_name Which column of model dataframe
 #' to use as response.
 #' @param max_iterations How many iterations to maximally run optimizer for.
+#' @param lasso_param_range LASSO regularization parameter search space
+#' in grid search of CV.
+#' @param network_param_range Network regularization parameter search space
+#' in grid search of CV.
 #' @param ... Further arguments to pass to `(cv.)edgenet`.
 #'
 #' @return An object of class \code{pareg}.
@@ -51,6 +55,8 @@ pareg <- function(
   family = beta,
   response_column_name = "pvalue",
   max_iterations = 1e5,
+  lasso_param_range = seq(0, 2, length.out = 10),
+  network_param_range = seq(0, 500, length.out = 10),
   ...
 ) {
   # generate design matrix
@@ -99,7 +105,13 @@ pareg <- function(
 
   # fit model
   if (cv) {
-    fit_func <- cv_edgenet
+    fit_func <- function(...) {
+      cv_edgenet(
+        ...,
+        lambda_range = lasso_param_range,
+        psigx_range = network_param_range
+      )
+    }
   } else {
     fit_func <- edgenet
 
