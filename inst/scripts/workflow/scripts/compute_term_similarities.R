@@ -47,6 +47,10 @@ if (similarity_measure == "overlap") {
     stopifnot(setequal(rownames(mat), term_list))
     mat <- mat[term_list, term_list]
 
+    # otherwise laplacian computation fails with
+    # "Error in eigen(N) : infinite or missing values in 'x'"
+    diag(mat) <- 1
+
     mat
   }
 } else {
