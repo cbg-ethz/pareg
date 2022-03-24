@@ -109,19 +109,15 @@
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>Pathway similarities describe how similar two pathways are (you’re welcome). For example, when interpreting pathways as gene sets, one could count how many genes are shared between two sets. Many more sophisticated methods, such as the Jaccard index, exist <span class="citation">(Gu and Huebschmann 2021)</span>.</p>
-<p><code>pareg</code> provides various pre-computed similarity measures (jaccard, overlap_coefficient) for selected pathway databases (<a href="mailto:C2@CP" class="email">C2@CP</a>:KEGG, <a href="mailto:C2@CP" class="email">C2@CP</a>:REACTOME) in matrix form.</p>
+<p><code>pareg</code> provides various pre-computed similarity measures (jaccard, overlap_coefficient, semantic) for selected pathway databases (<a href="mailto:C2@CP" class="email">C2@CP</a>:KEGG, <a href="mailto:C5@GO" class="email">C5@GO</a>:BP) in matrix form.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mat</span> <span class="op">&lt;-</span> <span class="va">pathway_similarities</span><span class="op">$</span><span class="va">`C2@CP:KEGG`</span><span class="op">$</span><span class="va">jaccard</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="../reference/as_dense_sim.html">as_dense_sim</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">mat</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></code></pre></div>
-<pre><code><span class="co">##                             KEGG_ABC_TRANSPORTERS KEGG_ACUTE_MYELOID_LEUKEMIA</span>
-<span class="co">## KEGG_ABC_TRANSPORTERS                           1                  0.00000000</span>
-<span class="co">## KEGG_ACUTE_MYELOID_LEUKEMIA                     0                  1.00000000</span>
-<span class="co">## KEGG_ADHERENS_JUNCTION                          0                  0.04477612</span>
-<span class="co">##                             KEGG_ADHERENS_JUNCTION</span>
-<span class="co">## KEGG_ABC_TRANSPORTERS                   0.00000000</span>
-<span class="co">## KEGG_ACUTE_MYELOID_LEUKEMIA             0.04477612</span>
-<span class="co">## KEGG_ADHERENS_JUNCTION                  1.00000000</span></code></pre>
+<pre><code><span class="co">##          hsa00970    hsa05340    hsa04621</span>
+<span class="co">## hsa00970        1 0.000000000 0.000000000</span>
+<span class="co">## hsa05340        0 1.000000000 0.008196721</span>
+<span class="co">## hsa04621        0 0.008196721 1.000000000</span></code></pre>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html" class="external-link">Heatmap</a></span><span class="op">(</span>
   <span class="va">mat</span>,
@@ -135,10 +131,14 @@
 <div class="section level2">
 <h2 id="comparison-of-similarity-measures">Comparison of similarity measures<a class="anchor" aria-label="anchor" href="#comparison-of-similarity-measures"></a>
 </h2>
-<p>To see the effect of using different pathway similarity measures, we can compare them.</p>
+<p>On the Gene Ontology’s Biological Process subcategory, we can observe how much pathway similarity measures can differ from each other.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df_sim</span> <span class="op">&lt;-</span> <span class="va">pathway_similarities</span><span class="op">$</span><span class="va">`C2@CP:KEGG`</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
+<code class="sourceCode R"><span class="va">df_sim</span> <span class="op">&lt;-</span> <span class="va">pathway_similarities</span><span class="op">$</span><span class="va">`C5@GO:BP`</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dfr</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">{</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>
+    <span class="op">}</span>
+
     <span class="va">mat</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
       <span class="fu"><a href="../reference/as_dense_sim.html">as_dense_sim</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
       <span class="va">as.data.frame</span> <span class="op"><a href="https://ggobi.github.io/ggally/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -151,12 +151,24 @@
 
 <span class="fu"><a href="https://ggobi.github.io/ggally/reference/ggpairs.html" class="external-link">ggpairs</a></span><span class="op">(</span><span class="va">df_sim</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Warning: Removed 514552 rows containing non-finite values (stat_density).</span></code></pre>
+<pre><code><span class="co">## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :</span>
+<span class="co">## Removed 514552 rows containing missing values</span></code></pre>
+<pre><code><span class="co">## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :</span>
+<span class="co">## Removed 586334 rows containing missing values</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 514552 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 514552 rows containing non-finite values (stat_density).</span></code></pre>
+<pre><code><span class="co">## Warning in ggally_statistic(data = data, mapping = mapping, na.rm = na.rm, :</span>
+<span class="co">## Removed 586334 rows containing missing values</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 586334 rows containing missing values (geom_point).</span>
+<span class="co">## Removed 586334 rows containing missing values (geom_point).</span></code></pre>
+<pre><code><span class="co">## Warning: Removed 71782 rows containing non-finite values (stat_density).</span></code></pre>
 <p><img src="pathway_similarities_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## R version 4.1.3 (2022-03-10)</span>
 <span class="co">## Platform: x86_64-apple-darwin17.0 (64-bit)</span>
