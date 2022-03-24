@@ -15,22 +15,61 @@ dir.create(plotdir, recursive = TRUE)
 df_terms <- read_csv(fname_terms)
 
 # select similarity function
-similarity_function <- match.fun(similarity_measure, descend = FALSE)
-similarity_function
+if (similarity_measure == "overlap") {
+  # fix till https://github.com/snakemake/snakemake/pull/1299 lands
+  similarity_function <- overlap_coefficient
+} else if (similarity_measure == "semantic") {
+  similarity_function <- function(term_list) {
+    # convert to upper case because workflow assumes lower case
+    term_list_orig <- str_replace_all(str_to_upper(term_list), "_", ":")
+
+    # actually compute similarities
+    mat <- simplifyEnrichment::GO_similarity(term_list_orig, measure = "Rel")
+
+    # fix term names
+    stopifnot(all(rownames(mat) == colnames(mat)))
+    rownames(mat) <- str_replace_all(str_to_lower(rownames(mat)), ":", "_")
+    colnames(mat) <- str_replace_all(str_to_lower(colnames(mat)), ":", "_")
+
+    # include terms which have no associated semantic similarity
+    # there must be a better way?!
+    current_rownames <- rownames(mat)
+    for (term in setdiff(term_list, current_rownames)) {
+      print(paste("Adding missing GO term", term))
+
+      mat <- rbind(cbind(mat, foo = 0), foo = 0)
+
+      rownames(mat)[length(rownames(mat))] <- term
+      colnames(mat)[length(colnames(mat))] <- term
+    }
+
+    # make sure matrix is ordered correctly
+    stopifnot(setequal(rownames(mat), term_list))
+    mat <- mat[term_list, term_list]
+
+    mat
+  }
+} else {
+  similarity_function <- match.fun(similarity_measure, descend = FALSE)
+}
 
 # compute term similarities
 term_list_list <- df_terms %>%
   select(term, gene) %>%
   pipe_split("term", "gene")
 
-term_similarities <- 1 - proxy::dist(
-  x = term_list_list,
-  method = function(x, y) {
-    1 - similarity_function(x, y)
-  },
-  diag = TRUE, pairwise = TRUE
-) %>%
-  as.matrix()
+if (similarity_measure == "semantic") {
+  term_similarities <- similarity_function(names(term_list_list))
+} else {
+  term_similarities <- 1 - proxy::dist(
+    x = term_list_list,
+    method = function(x, y) {
+      1 - similarity_function(x, y)
+    },
+    diag = TRUE, pairwise = TRUE
+  ) %>%
+    as.matrix()
+}
 
 # save result
 term_similarities %>%
@@ -71,6 +110,8 @@ png(
 ComplexHeatmap::Heatmap(
   term_similarities_subsample,
   name = "similarity",
-  col = circlize::colorRamp2(c(0, 1), c("white", "black"))
+  col = circlize::colorRamp2(c(0, 1), c("white", "black")),
+  show_row_names = FALSE,
+  show_column_names = FALSE
 )
 dev.off()

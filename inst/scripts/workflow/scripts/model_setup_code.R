@@ -16,7 +16,7 @@ df_terms <- read_csv(fname_terms)
 df_terms %>% dim()
 df_terms %>% head()
 
-term_similarities <- read.csv(fname_term_sim, row.names = 1)
+term_similarities <- read.csv(fname_term_sim, row.names = 1, check.names = FALSE)
 
 # prepare data
 study_genes <- study$df %>%
