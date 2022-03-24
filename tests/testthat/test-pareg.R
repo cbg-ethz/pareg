@@ -1,4 +1,6 @@
 test_that("package doesn't crash for trivial case", {
+  skip_on_bioc()
+
   # create synthetic data
   set.seed(42)
 
@@ -33,6 +35,8 @@ test_that("package doesn't crash for trivial case", {
 
 
 test_that("pareg works with term network", {
+  skip_on_bioc()
+
   # create synthetic data
   set.seed(42)
 
@@ -75,6 +79,8 @@ test_that("pareg works with term network", {
 
 
 test_that("Bernoulli family works", {
+  skip_on_bioc()
+
   # create synthetic data
   set.seed(42)
 

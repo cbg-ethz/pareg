@@ -1,4 +1,6 @@
 test_that("Gaussian case works", {
+  skip_on_bioc()
+
   set.seed(42)
 
   alpha <- 2.3
@@ -14,6 +16,8 @@ test_that("Gaussian case works", {
 
 
 test_that("Beta case works", {
+  skip_on_bioc()
+
   set.seed(42)
 
   N <- 1000
