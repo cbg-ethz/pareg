@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   pareg: pareg.html
   pathway_similarities: pathway_similarities.html
-last_built: 2022-03-24T09:02Z
+last_built: 2022-03-24T10:38Z
 urls:
   reference: https://cbg-ethz.github.io/pareg/reference
   article: https://cbg-ethz.github.io/pareg/articles
