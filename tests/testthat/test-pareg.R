@@ -135,6 +135,8 @@ test_that("term input network mismatch leads to crash", {
 })
 
 test_that("cross-validation works", {
+  skip_on_bioc()
+
   # create synthetic data
   set.seed(42)
 
