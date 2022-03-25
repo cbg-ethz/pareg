@@ -48,7 +48,7 @@ ggsave(
 
 ggplot(fit$obj$loss_grid, aes(x = lambda, y = psigx, fill = loss)) +
   geom_tile() +
-  geom_text(aes(label = round(loss)), color = "white", size = 1) +
+  geom_text(aes(label = round(loss, 2)), color = "white", size = 1) +
   theme_minimal()
 ggsave(
   file.path(dirname(snakemake@output$fname), "loss_grid.pdf"),
