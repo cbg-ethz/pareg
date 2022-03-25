@@ -29,41 +29,7 @@ df %>%
   head()
 
 # misc
-saveRDS(fit, file.path(dirname(snakemake@output$fname), "fit.rds"))
-
-df_loss <- do.call(rbind, fit$obj$fit$loss_hist) %>%
-  as_tibble() %>%
-  unnest(everything()) %>%
-  mutate(iteration = seq_along(fit$obj$fit$loss_hist))
-df_loss %>%
-  write_csv(file.path(dirname(snakemake@output$fname), "loss.csv"))
-
-df_loss %>%
-  pivot_longer(-iteration) %>%
-  ggplot(aes(x = iteration, y = value, color = name)) +
-    geom_line() +
-    # geom_point() +
-    theme_minimal()
-ggsave(
-  file.path(dirname(snakemake@output$fname), "loss.pdf"),
-  width = 8,
-  height = 6
-)
-
-ggplot(fit$obj$loss_grid, aes(x = lambda, y = psigx, fill = loss)) +
-  geom_tile() +
-  geom_text(aes(label = round(loss, 2)), color = "white", size = 1) +
-  theme_minimal()
-ggsave(
-  file.path(dirname(snakemake@output$fname), "loss_grid.pdf"),
-  width = 8,
-  height = 6
-)
-
-data.frame(
-  pseudo_r_squared = fit$obj$fit$pseudo_r_squared
-) %>%
-  write_csv(file.path(dirname(snakemake@output$fname), "extra_stats.csv"))
+pareg_post_processing(fit, dirname(snakemake@output$fname))
 
 # save result
 df %>%
