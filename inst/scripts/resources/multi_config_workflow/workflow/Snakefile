@@ -128,15 +128,15 @@ rule compare_rocauc_vs_loss:
 # define required output files
 rule all:
     input:
-        rules.dispersion_fitting_all.input,
+        # rules.dispersion_fitting_all.input,
         rules.response_distribution_all.input,
-        rules.regularization_effect_all.input,
-        rules.regularization_parameter_all.input,
-        expand(
-            "results/regularization_parameter/rocauc_vs_loss/{params}/",
-            params=regularization_parameter.paramspace.instance_patterns,
-        ),
-        rules.noise_all.input,
-        rules.real_datasets_all.input,
-        rules.similarity_measures_all.input,
+        # rules.regularization_effect_all.input,
+        # rules.regularization_parameter_all.input,
+        # expand(
+        #     "results/regularization_parameter/rocauc_vs_loss/{params}/",
+        #     params=regularization_parameter.paramspace.instance_patterns,
+        # ),
+        # rules.noise_all.input,
+        # rules.real_datasets_all.input,
+        # rules.similarity_measures_all.input,
     default_target: True

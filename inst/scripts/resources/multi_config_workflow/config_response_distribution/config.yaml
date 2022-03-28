@@ -3,13 +3,11 @@
 # `null` will execut all methods
 # list of strings will execute selected methods
 method_list:
-    - pareg
-    - pareg_clip
-    - pareg_ber
-    - pareg_gau
-    - pareg_network
-    - pareg_network_ber
-    - pareg_network_gau
+    - pareg_bernoulli
+    - pareg_gaussian
+    - pareg_beta
+    - pareg_beta_lm
+    - pareg_beta_var
 
 term_filter:
     min_size: null
@@ -20,7 +18,7 @@ replicate_count: 10
 
 parameters:
     similarityfactor: [0.5]
-    ontermcount: [5]
-    siggenescaling: ["membercount"]
+    ontermcount: [20]
+    siggenescaling: [0.1]
 
 params_path: config_response_distribution/params.csv
