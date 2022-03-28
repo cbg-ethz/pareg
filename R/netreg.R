@@ -16,6 +16,7 @@ linear.predictor <- function(alpha, beta, x) {
 
 #' @noRd
 #' @importFrom keras keras_model_custom
+#' @importFrom keras shape
 model <- function(p, q, family) {
   keras_model_custom(function(self) {
     self$alpha <- init_vector(q)
@@ -26,7 +27,7 @@ model <- function(p, q, family) {
     if (family$family %in% c("beta_phi_var")) {
       initializer <- tf$keras.initializers$Ones()
       self$dispersion <- tf$Variable(
-        initializer(tf$shape(1), tf$float32)
+        initializer(shape(1), tf$float32)
       )
     }
     self$family <- family
@@ -226,6 +227,7 @@ constant_float <- function(x) {
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom keras shape
 init_matrix <- function(m, n, trainable = TRUE) {
   initializer <- tf$keras.initializers$glorot_normal(23L)
   tf$Variable(
@@ -237,6 +239,7 @@ init_matrix <- function(m, n, trainable = TRUE) {
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom keras shape
 init_vector <- function(m, trainable = TRUE) {
   initializer <- tf$keras.initializers$glorot_normal(23L)
   tf$Variable(
@@ -247,6 +250,7 @@ init_vector <- function(m, trainable = TRUE) {
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom keras shape
 init_zero_scalar <- function(trainable = TRUE) {
   tf$Variable(
     tf$zeros(shape(), tf$float32),
