@@ -18,7 +18,9 @@ pathway_similarities
 }
 \description{
 Contains matrices for various pathway databases and similarity measures.
-Note that the matrices are sparse and upper triangular.
-To use with \code{pareg}, transform them using \code{pareg::as_dense_sim}.
+Note that the matrices are sparse, upper triangular and subsampled to
+a maximum size of $1000x1000$ if necessary.
+They can be transformed to a dense representation
+using \code{pareg::as_dense_sim}.
 }
 \keyword{datasets}

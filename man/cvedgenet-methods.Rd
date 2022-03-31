@@ -24,7 +24,8 @@ cv_edgenet(
   lambda_range = seq(0, 2, length.out = 10),
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
-  nfolds = 2
+  nfolds = 2,
+  cv_method = c("grid_search", "optim")
 )
 
 \S4method{cv_edgenet}{matrix,numeric}(
@@ -44,7 +45,8 @@ cv_edgenet(
   lambda_range = seq(0, 2, length.out = 10),
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
-  nfolds = 2
+  nfolds = 2,
+  cv_method = c("grid_search", "optim")
 )
 
 \S4method{cv_edgenet}{matrix,matrix}(
@@ -64,7 +66,8 @@ cv_edgenet(
   lambda_range = seq(0, 2, length.out = 10),
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
-  nfolds = 2
+  nfolds = 2,
+  cv_method = c("grid_search", "optim")
 )
 }
 \arguments{
@@ -128,7 +131,9 @@ optimization to stop.  Usually 1e-3 is a good choice.}
 
 \item{psigy_range}{range of psigy to use in CV grid.}
 
-\item{nfolds}{the number of folds to be used - default is 10}
+\item{nfolds}{the number of folds to be used - default is 10.}
+
+\item{cv_method}{which cross-validation method to use.}
 }
 \value{
 An object of class \code{cv_edgenet}

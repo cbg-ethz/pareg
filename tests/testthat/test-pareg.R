@@ -1,4 +1,6 @@
 test_that("package doesn't crash for trivial case", {
+  skip_on_bioc()
+
   # create synthetic data
   set.seed(42)
 
@@ -33,6 +35,8 @@ test_that("package doesn't crash for trivial case", {
 
 
 test_that("pareg works with term network", {
+  skip_on_bioc()
+
   # create synthetic data
   set.seed(42)
 
@@ -75,6 +79,8 @@ test_that("pareg works with term network", {
 
 
 test_that("Bernoulli family works", {
+  skip_on_bioc()
+
   # create synthetic data
   set.seed(42)
 
@@ -135,6 +141,8 @@ test_that("term input network mismatch leads to crash", {
 })
 
 test_that("cross-validation works", {
+  skip_on_bioc()
+
   # create synthetic data
   set.seed(42)
 
@@ -157,8 +165,19 @@ test_that("cross-validation works", {
     )
   )
 
+  term_sims <- matrix(c(1, 0.5, 0.5, 1), 2, 2)
+  rownames(term_sims) <- colnames(term_sims) <- c("foo", "bar")
+
   # run model (small iteration count to reduce runtime)
-  res <- pareg(df_genes, df_terms, cv = TRUE, max_iterations = 10)
+  res <- pareg(
+    df_genes,
+    df_terms,
+    term_network = term_sims,
+    cv = TRUE,
+    max_iterations = 10,
+    lasso_param_range = c(0, 1),
+    network_param_range = c(0, 100)
+  )
 
   # check results
   # expect_lt(

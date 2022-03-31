@@ -6,23 +6,17 @@ devtools::load_all("../..")
 # run model
 future::plan(future::multisession, workers = snakemake@threads)
 fit <- pareg::pareg(
-  study$df %>%
-    select(gene, pvalue) %>%
-    mutate(pvalue = -ifelse(
-      pvalue > 0,
-      log10(pvalue),
-      log10(min(pvalue[pvalue > 0]))
-    )),
+  study$df %>% select(gene, pvalue),
   df_terms,
-  term_network = term_similarities_sub,
   cv = TRUE,
-  family = pareg::gaussian
+  family = pareg::bernoulli,
+  response_column_name = "pvalue_sig"
 )
 future::plan(future::sequential) # shut down workers
 
 df <- fit %>%
   as.data.frame() %>%
-  mutate(method = "pareg_ng", enrichment = abs(enrichment))
+  mutate(method = "pareg_bernoulli", enrichment = abs(enrichment))
 
 df %>%
   arrange(desc(abs(enrichment))) %>%

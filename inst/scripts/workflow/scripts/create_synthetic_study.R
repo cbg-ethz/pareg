@@ -20,7 +20,7 @@ sig_gene_scaling <- snakemake@params$params$siggenescaling
 
 # read data
 df_terms <- read_csv(fname_terms)
-sim_mat <- read.csv(fname_sim, row.names = 1)
+sim_mat <- read.csv(fname_sim, row.names = 1, check.names = FALSE)
 
 # select activated terms
 # on_terms <- df_terms %>%

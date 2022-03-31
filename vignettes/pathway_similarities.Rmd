@@ -46,11 +46,15 @@ Heatmap(
 
 # Comparison of similarity measures
 
-To see the effect of using different pathway similarity measures, we can compare them.
+On the Gene Ontology's Biological Process subcategory, we can observe how much pathway similarity measures can differ from each other.
 
 ```{r}
-df_sim <- pathway_similarities$`C2@CP:KEGG` %>%
+df_sim <- pathway_similarities$`C5@GO:BP` %>%
   map_dfr(function(mat) {
+    if (is.null(mat)) {
+      return(NULL)
+    }
+
     mat %>%
       as_dense_sim() %>%
       as.data.frame %>%

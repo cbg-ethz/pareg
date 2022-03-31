@@ -1,4 +1,6 @@
 test_that("Gaussian case works", {
+  skip_on_bioc()
+
   set.seed(42)
 
   alpha <- 2.3
@@ -14,6 +16,8 @@ test_that("Gaussian case works", {
 
 
 test_that("Beta case works", {
+  skip_on_bioc()
+
   set.seed(42)
 
   N <- 1000
@@ -41,6 +45,8 @@ test_that("Beta case works", {
 
 
 test_that("Cross-validation works", {
+  skip_on_bioc()
+
   set.seed(42)
 
   alpha <- 2.3
@@ -64,6 +70,8 @@ test_that("Cross-validation works", {
 
 
 test_that("Cross-validation with network regularization works", {
+  skip_on_bioc()
+
   set.seed(42)
 
   alpha <- 2.3
