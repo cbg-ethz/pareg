@@ -126,6 +126,6 @@ test_that("enrichplot integration works", {
 
   enrichplot::emapplot(obj) +
     scale_fill_continuous(name = "Enrichment Score")
-  enrichplot::treeplot(obj, nCluster = 2) +
-    scale_colour_continuous(name = "Enrichment Score")
+  # enrichplot::treeplot(obj, nCluster = 2) +
+  #   scale_colour_continuous(name = "Enrichment Score")
 })
