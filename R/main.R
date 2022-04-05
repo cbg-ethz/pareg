@@ -152,10 +152,10 @@ pareg <- function(
       X = X,
       Y = Y,
       response_column_name = response_column_name,
+      cv = cv,
       params = list(
         lasso_param = lasso_param,
-        network_param = network_param,
-        cv = cv
+        network_param = network_param
       )
     ),
     class = "pareg"

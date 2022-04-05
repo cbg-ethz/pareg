@@ -4,7 +4,7 @@ source(snakemake@params$setup_code_fname)
 devtools::load_all("../..")
 
 # run model
-future::plan(future::multisession, worker = snakemake@threads)
+future::plan(future::multisession, workers = snakemake@threads)
 fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
@@ -48,7 +48,7 @@ ggsave(
 
 ggplot(fit$obj$loss_grid, aes(x = lambda, y = psigx, fill = loss)) +
   geom_tile() +
-  geom_text(aes(label = round(loss)), color = "white", size = 1) +
+  geom_text(aes(label = round(loss, 2)), color = "white", size = 1) +
   theme_minimal()
 ggsave(
   file.path(dirname(snakemake@output$fname), "loss_grid.pdf"),

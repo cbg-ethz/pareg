@@ -16,6 +16,7 @@ linear.predictor <- function(alpha, beta, x) {
 
 #' @noRd
 #' @importFrom keras keras_model_custom
+#' @importFrom keras shape
 model <- function(p, q, family) {
   keras_model_custom(function(self) {
     self$alpha <- init_vector(q)
@@ -26,7 +27,7 @@ model <- function(p, q, family) {
     if (family$family %in% c("beta_phi_var")) {
       initializer <- tf$keras.initializers$Ones()
       self$dispersion <- tf$Variable(
-        initializer(tf$shape(1), tf$float32)
+        initializer(shape(1), tf$float32)
       )
     }
     self$family <- family
@@ -226,6 +227,7 @@ constant_float <- function(x) {
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom keras shape
 init_matrix <- function(m, n, trainable = TRUE) {
   initializer <- tf$keras.initializers$glorot_normal(23L)
   tf$Variable(
@@ -237,6 +239,7 @@ init_matrix <- function(m, n, trainable = TRUE) {
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom keras shape
 init_vector <- function(m, trainable = TRUE) {
   initializer <- tf$keras.initializers$glorot_normal(23L)
   tf$Variable(
@@ -247,6 +250,7 @@ init_vector <- function(m, trainable = TRUE) {
 
 #' @noRd
 #' @importFrom tensorflow tf
+#' @importFrom keras shape
 init_zero_scalar <- function(trainable = TRUE) {
   tf$Variable(
     tf$zeros(shape(), tf$float32),
@@ -846,7 +850,8 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #' @param lambda_range range of lambda to use in CV grid.
 #' @param psigx_range range of psigx to use in CV grid.
 #' @param psigy_range range of psigy to use in CV grid.
-#' @param nfolds  the number of folds to be used - default is 10
+#' @param nfolds the number of folds to be used - default is 10.
+#' @param cv_method which cross-validation method to use.
 #'
 #' @return An object of class \code{cv_edgenet}
 #' \item{parameters }{ the estimated, optimal regularization parameters}
@@ -955,7 +960,8 @@ setGeneric(
   lambda_range = seq(0, 2, length.out = 10),
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
-  nfolds = 2
+  nfolds = 2,
+  cv_method = c("grid_search", "optim")
   ) {
     standardGeneric("cv_edgenet")
   },
@@ -984,7 +990,8 @@ setMethod(
   lambda_range = seq(0, 2, length.out = 10),
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
-  nfolds = 2
+  nfolds = 2,
+  cv_method = c("grid_search", "optim")
   ) {
     cv_edgenet(
       X,
@@ -1003,7 +1010,8 @@ setMethod(
       lambda_range,
       psigx_range,
       psigy_range,
-      nfolds
+      nfolds,
+      cv_method
     )
   }
 )
@@ -1030,7 +1038,8 @@ setMethod(
   lambda_range = seq(0, 2, length.out = 10),
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
-  nfolds = 2
+  nfolds = 2,
+  cv_method = c("grid_search", "optim")
   ) {
     stopifnot(
       is.numeric(nfolds),
@@ -1059,6 +1068,7 @@ setMethod(
     thresh <- check.param(thresh, 0, `<`, 1e-5)
     optim.thresh <- check.param(optim.thresh, 0, `<`, 1e-2)
     family <- get.family(family)
+    cv_method <- match.arg(cv_method)
 
     if (ncol(Y) == 1) {
       psigy <- 0
@@ -1068,40 +1078,43 @@ setMethod(
     if (n < nfolds) nfolds <- n
     folds <- sample(rep(seq_len(10), length.out = n))
 
-    # ret <- cv_edgenet_optim(
-    #   X,
-    #   Y,
-    #   G.X,
-    #   G.Y,
-    #   lambda,
-    #   psigx,
-    #   psigy,
-    #   family,
-    #   thresh,
-    #   maxit,
-    #   learning.rate,
-    #   nfolds,
-    #   folds,
-    #   optim.maxit,
-    #   optim.thresh
-    # )
-    ret <- cv_edgenet_gridsearch(
-      X,
-      Y,
-      G.X,
-      G.Y,
-      lambda,
-      psigx,
-      psigy,
-      family,
-      thresh,
-      maxit,
-      learning.rate,
-      nfolds,
-      folds,
-      lambda_range,
-      psigx_range,
-      psigy_range
+    ret <- switch(
+      cv_method,
+      grid_search = cv_edgenet_gridsearch(
+        X,
+        Y,
+        G.X,
+        G.Y,
+        lambda,
+        psigx,
+        psigy,
+        family,
+        thresh,
+        maxit,
+        learning.rate,
+        nfolds,
+        folds,
+        lambda_range,
+        psigx_range,
+        psigy_range
+      ),
+      optim = cv_edgenet_optim(
+        X,
+        Y,
+        G.X,
+        G.Y,
+        lambda,
+        psigx,
+        psigy,
+        family,
+        thresh,
+        maxit,
+        learning.rate,
+        nfolds,
+        folds,
+        optim.maxit,
+        optim.thresh
+      )
     )
 
     ret$fit <- edgenet(
@@ -1220,7 +1233,7 @@ cv_edgenet_optim <- function(
 
 #' @noRd
 #' @importFrom matrixLaplacian matrixLaplacian
-#' @importFrom furrr future_pmap_dfr
+#' @importFrom furrr future_pmap_dfr furrr_options
 #' @importFrom tidyr expand_grid
 cv_edgenet_gridsearch <- function(
   x,
@@ -1320,7 +1333,7 @@ cv_edgenet_gridsearch <- function(
     loss <- fn(c(lambda, psigx, psigy), var.args = c())
 
     data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
-  }, .progress = TRUE, .options = furrr::furrr_options(seed = 42))
+  }, .progress = TRUE, .options = furrr_options(seed = 42))
 
   row_optim <- loss_grid[which.min(loss_grid$loss), ]
   lambda_optim <- row_optim$lambda

@@ -22,7 +22,7 @@ future::plan(future::sequential) # shut down workers
 
 df <- fit %>%
   as.data.frame() %>%
-  mutate(method = "pareg_ng", enrichment = abs(enrichment))
+  mutate(method = "pareg_gaussian", enrichment = abs(enrichment))
 
 df %>%
   arrange(desc(abs(enrichment))) %>%

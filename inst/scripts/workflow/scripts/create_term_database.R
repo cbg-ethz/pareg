@@ -40,9 +40,12 @@ if (parts[[1]] == "msigdb") {
         .
       }
     } %>%
-    select(gs_name, gene_symbol) %>%
-    rename(term = gs_name, gene = gene_symbol) %>%
-    distinct(.keep_all = TRUE)
+    select(gs_exact_source, gene_symbol) %>% # gs_name
+    rename(term = gs_exact_source, gene = gene_symbol) %>%
+    distinct(.keep_all = TRUE) %>%
+    mutate(
+      term = str_replace_all(term, ":", "_")
+    )
 } else if (parts[[1]] == "custom") {
   group_num <- parts[[2]]
   group_size <- parts[[3]]
