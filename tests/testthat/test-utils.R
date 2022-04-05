@@ -115,12 +115,12 @@ test_that("enrichplot integration works", {
   enrichplot::cnetplot(obj)
   enrichplot::dotplot(obj) +
     scale_colour_continuous(name = "Enrichment Score")
-  expect_equal(obj@result$GeneRatio, c("8/10", "2/15"))
+  expect_equal(obj@result[c("foo", "bar"), ]$GeneRatio, c("8/10", "2/15"))
 
   obj <- enrichplot::pairwise_termsim(obj)
   termsim <- matrix(c(NA, NA, 0, NA), 2, 2)
   rownames(termsim) <- colnames(termsim) <- c("foo", "bar")
-  expect_equal(obj@termsim, termsim)
+  expect_equal(obj@termsim[c("foo", "bar"), c("foo", "bar")], termsim)
 
   enrichplot::emapplot(obj) +
     scale_fill_continuous(name = "Enrichment Score")
