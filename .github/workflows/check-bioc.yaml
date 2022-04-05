@@ -22,7 +22,11 @@
 
 on:
   push:
+    branches-ignore:
+      - bioc
   pull_request:
+    branches-ignore:
+      - bioc
 
 name: check-bioc
 
