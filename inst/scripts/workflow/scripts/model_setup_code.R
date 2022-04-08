@@ -100,3 +100,7 @@ pareg_post_processing <- function(fit, outdir) {
   df_stats %>%
     write_csv(file.path(outdir, "extra_stats.csv"))
 }
+
+# misc setup code
+size_mb <- 2000
+options(future.globals.maxSize = size_mb * 1024^2)
