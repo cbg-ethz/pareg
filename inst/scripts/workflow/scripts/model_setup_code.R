@@ -73,6 +73,9 @@ pareg_post_processing <- function(fit, outdir) {
 
   # loss grid for CV calls
   if ("loss_grid" %in% names(fit$obj)) {
+    fit$obj$loss_grid %>%
+      write_csv(file.path(outdir, "loss_grid.csv"))
+
     ggplot(fit$obj$loss_grid, aes(x = lambda, y = psigx, fill = loss)) +
       geom_tile() +
       geom_fit_text(aes(label = round(loss, 2)), color = "white") +
