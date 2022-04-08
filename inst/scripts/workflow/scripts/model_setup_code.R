@@ -79,6 +79,7 @@ pareg_post_processing <- function(fit, outdir) {
     ggplot(fit$obj$loss_grid, aes(x = lambda, y = psigx, fill = loss)) +
       geom_tile() +
       geom_fit_text(aes(label = round(loss, 2)), color = "white") +
+      scale_fill_viridis_c(direction = -1) +
       theme_minimal()
     ggsave(
       file.path(outdir, "loss_grid.pdf"),
