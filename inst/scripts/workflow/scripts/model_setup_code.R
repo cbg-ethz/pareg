@@ -1,4 +1,5 @@
 library(tidyverse)
+library(ggfittext)
 
 
 # parameters
@@ -74,7 +75,7 @@ pareg_post_processing <- function(fit, outdir) {
   if ("loss_grid" %in% names(fit$obj)) {
     ggplot(fit$obj$loss_grid, aes(x = lambda, y = psigx, fill = loss)) +
       geom_tile() +
-      geom_text(aes(label = round(loss, 2)), color = "white", size = 1) +
+      geom_fit_text(aes(label = round(loss, 2)), color = "white") +
       theme_minimal()
     ggsave(
       file.path(outdir, "loss_grid.pdf"),
