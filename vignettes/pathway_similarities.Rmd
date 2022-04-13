@@ -20,6 +20,7 @@ library(circlize)
 library(GGally)
 
 library(pareg)
+data(pathway_similarities, package = "pareg")
 
 set.seed(42)
 ```

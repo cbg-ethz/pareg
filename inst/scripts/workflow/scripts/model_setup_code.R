@@ -1,4 +1,5 @@
 library(tidyverse)
+library(ggfittext)
 
 
 # parameters
@@ -72,9 +73,13 @@ pareg_post_processing <- function(fit, outdir) {
 
   # loss grid for CV calls
   if ("loss_grid" %in% names(fit$obj)) {
+    fit$obj$loss_grid %>%
+      write_csv(file.path(outdir, "loss_grid.csv"))
+
     ggplot(fit$obj$loss_grid, aes(x = lambda, y = psigx, fill = loss)) +
       geom_tile() +
-      geom_text(aes(label = round(loss, 2)), color = "white", size = 1) +
+      geom_fit_text(aes(label = round(loss, 2)), color = "white") +
+      scale_fill_viridis_c(direction = -1) +
       theme_minimal()
     ggsave(
       file.path(outdir, "loss_grid.pdf"),
@@ -95,3 +100,7 @@ pareg_post_processing <- function(fit, outdir) {
   df_stats %>%
     write_csv(file.path(outdir, "extra_stats.csv"))
 }
+
+# misc setup code
+size_mb <- 2000
+options(future.globals.maxSize = size_mb * 1024^2)
