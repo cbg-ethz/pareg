@@ -1233,7 +1233,7 @@ cv_edgenet_optim <- function(
 
 #' @noRd
 #' @importFrom matrixLaplacian matrixLaplacian
-#' @importFrom furrr future_pmap_dfr furrr_options
+#' @importFrom doParallel foreach %dopar%
 #' @importFrom tidyr expand_grid
 cv_edgenet_gridsearch <- function(
   x,
@@ -1292,7 +1292,19 @@ cv_edgenet_gridsearch <- function(
   }
 
   # cross-validation
-  loss_grid <- future_pmap_dfr(param_grid, function(lambda, psigx, psigy) {
+  loss_grid <- foreach(
+    i = seq_len(nrow(param_grid)),
+    .combine = rbind,
+    .inorder = FALSE,
+    .packages = c("pareg")
+  ) %dopar% {
+    # extract arguments
+    row <- param_grid[i, ]
+
+    lambda <- row$lambda
+    psigx <- row$psigx
+    psigy <- row$psigy
+
     # prepare model
     if (!is.null(gx)) {
       gx <- cast_float(matrixLaplacian(gx, FALSE, FALSE)$LaplacianMatrix)
@@ -1333,7 +1345,7 @@ cv_edgenet_gridsearch <- function(
     loss <- fn(c(lambda, psigx, psigy), var.args = c())
 
     data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
-  }, .progress = TRUE, .options = furrr_options(seed = 42))
+  }
 
   row_optim <- loss_grid[which.min(loss_grid$loss), ]
   lambda_optim <- row_optim$lambda

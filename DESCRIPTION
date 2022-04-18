@@ -52,7 +52,7 @@ Imports:
     stats,
     tidyr,
     purrr,
-    furrr,
+    doParallel,
     tibble,
     glue,
     tidygraph,
