@@ -96,6 +96,8 @@ rule run_method:
         fname_term_sim="results/terms/{termsource}/{similaritymeasure}/term_similarities.csv",
     output:
         fname=f"results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv",
+    benchmark:
+        f"results/benchmarks/{{method}}/{paramspace.wildcard_pattern}_{{replicate}}.benchmark.tsv"
     params:
         params=paramspace.instance,
         script_name=lambda wildcards, input: input.script,
