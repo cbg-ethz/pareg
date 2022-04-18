@@ -4,7 +4,6 @@ source(snakemake@params$setup_code_fname)
 devtools::load_all("../..")
 
 # run model
-future::plan(future::multisession, workers = snakemake@threads)
 fit <- pareg::pareg(
   study$df %>%
     select(gene, pvalue) %>%
@@ -16,9 +15,10 @@ fit <- pareg::pareg(
   df_terms,
   term_network = term_similarities_sub,
   cv = TRUE,
-  family = pareg::gaussian
+  family = pareg::gaussian,
+  lasso_param_range = lasso_param_range,
+  network_param_range = network_param_range
 )
-future::plan(future::sequential) # shut down workers
 
 df <- fit %>%
   as.data.frame() %>%

@@ -1,11 +1,14 @@
 library(tidyverse)
 library(ggfittext)
+library(doParallel)
 
 
 # parameters
 fname_study <- snakemake@input$fname_study
 fname_terms <- snakemake@input$fname_terms
 fname_term_sim <- snakemake@input$fname_term_sim
+
+thread_count <- snakemake@threads
 
 fname_out <- snakemake@output$fname
 
@@ -102,5 +105,7 @@ pareg_post_processing <- function(fit, outdir) {
 }
 
 # misc setup code
-size_mb <- 2000
-options(future.globals.maxSize = size_mb * 1024^2)
+registerDoParallel(thread_count)
+
+lasso_param_range <- seq(0, 2, length.out = 7)
+network_param_range <- seq(0, 500, length.out = 7)

@@ -97,16 +97,16 @@ rule run_method:
     output:
         fname=f"results/enrichments/{paramspace.wildcard_pattern}/replicates/{{replicate}}/{{method}}/enrichment_result.csv",
     benchmark:
-        f"results/benchmarks/{{method}}/{paramspace.wildcard_pattern}_{{replicate}}.benchmark.tsv"
+        f"results/benchmarks/{{method}}/{{method}}__{paramspace.wildcard_pattern}__{{replicate}}.benchmark.tsv"
     params:
         params=paramspace.instance,
         script_name=lambda wildcards, input: input.script,
         setup_code_fname=workflow.source_path("scripts/model_setup_code.R"),
-    threads: lambda wildcards: (32 if "cv" in wildcards.method else 2)
+    threads: lambda wildcards: (64 if "pareg" in wildcards.method else 2)
     resources:
-        mem_mb=lambda wildcards: (1_000 if "cv" in wildcards.method else 10_000),
+        mem_mb=lambda wildcards: (1_000 if "pareg" in wildcards.method else 10_000),
         time_min=lambda wildcards, attempt: (
-            60 * 24 if "cv" in wildcards.method else 60 * 4
+            60 * 24 if "pareg" in wildcards.method else 60 * 4
         )
         * attempt,
     script:
