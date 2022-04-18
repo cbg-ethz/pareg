@@ -1233,7 +1233,7 @@ cv_edgenet_optim <- function(
 
 #' @noRd
 #' @importFrom matrixLaplacian matrixLaplacian
-#' @importFrom doParallel foreach %dopar%
+#' @importFrom foreach foreach %dopar%
 #' @importFrom tidyr expand_grid
 cv_edgenet_gridsearch <- function(
   x,

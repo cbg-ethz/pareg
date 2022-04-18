@@ -53,6 +53,7 @@ Imports:
     tidyr,
     purrr,
     doParallel,
+    foreach,
     tibble,
     glue,
     tidygraph,
