@@ -96,3 +96,21 @@ test_that("Cross-validation with network regularization works", {
   # expect_equal(as.vector(coef(fit)), c(alpha, beta), tolerance = 0.02)
   expect_equal(dim(coef(fit)), c(4, 1))
 })
+
+
+test_that("laplacian computation works", {
+  mat_adj <- matrix(c(1, 0.5, 0, 0.5, 1, 0.8, 0, 0.8, 1), 3, 3)
+  mat_lap <- compute_norm_laplacian(mat_adj)
+
+  netReg:::laplacian_(mat_adj)
+
+  expect_equal(
+    mat_lap,
+    matrix(c(
+      0.3333333, -0.2691910, 0,
+      -0.2691910, 0.5652174, -0.3931785,
+      0, -0.3931785, 0.4444444
+    ), 3, 3),
+    tolerance = 1e-7
+  )
+})

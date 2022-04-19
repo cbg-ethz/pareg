@@ -259,6 +259,32 @@ init_zero_scalar <- function(trainable = TRUE) {
 }
 
 
+#' @noRd
+compute_norm_laplacian <- function(mat_adj) {
+  # compute node degrees
+  degrees <- colSums(mat_adj)
+
+  # compute normalized laplacian
+  mat_lap <- matrix()
+  length(mat_lap) <- nrow(mat_adj) * ncol(mat_adj)
+  dim(mat_lap) <- dim(mat_adj)
+
+  for (i in seq_len(nrow(mat_adj))) {
+    for (j in seq_len(ncol(mat_adj))) {
+      if (i == j && degrees[i] != 0) {
+        mat_lap[i, j] <- 1 - (mat_adj[i, j] / degrees[i])
+      } else if (i != j && mat_adj[i, j] != 0) {
+        mat_lap[i, j] <- -mat_adj[i, j] / sqrt(degrees[i] * degrees[j])
+      } else {
+        mat_lap[i, j] <- 0.0
+      }
+    }
+  }
+
+  mat_lap
+}
+
+
 ### edgenet methods ###
 
 
@@ -1140,7 +1166,6 @@ setMethod(
 
 
 #' @noRd
-#' @importFrom matrixLaplacian matrixLaplacian
 cv_edgenet_optim <- function(
   x,
   y,
@@ -1175,10 +1200,10 @@ cv_edgenet_optim <- function(
   }
 
   if (!is.null(gx)) {
-    gx <- cast_float(matrixLaplacian(gx, FALSE, FALSE)$LaplacianMatrix)
+    gx <- cast_float(compute_norm_laplacian(gx))
   }
   if (!is.null(gy)) {
-    gy <- cast_float(matrixLaplacian(gy, FALSE, FALSE)$LaplacianMatrix)
+    gy <- cast_float(compute_norm_laplacian(gy))
   }
 
   lambda.tensor <- init_zero_scalar(FALSE)
@@ -1232,7 +1257,6 @@ cv_edgenet_optim <- function(
 
 
 #' @noRd
-#' @importFrom matrixLaplacian matrixLaplacian
 #' @importFrom foreach foreach %dopar%
 #' @importFrom tidyr expand_grid
 cv_edgenet_gridsearch <- function(
@@ -1307,10 +1331,10 @@ cv_edgenet_gridsearch <- function(
 
     # prepare model
     if (!is.null(gx)) {
-      gx <- cast_float(matrixLaplacian(gx, FALSE, FALSE)$LaplacianMatrix)
+      gx <- cast_float(compute_norm_laplacian(gx))
     }
     if (!is.null(gy)) {
-      gy <- cast_float(matrixLaplacian(gy, FALSE, FALSE)$LaplacianMatrix)
+      gy <- cast_float(compute_norm_laplacian(gy))
     }
 
     lambda.tensor <- init_zero_scalar(FALSE)
@@ -1608,7 +1632,6 @@ setMethod(
 
 
 #' @noRd
-#' @importFrom matrixLaplacian matrixLaplacian
 #' @importFrom stats cor
 #' @importFrom keras shape
 .edgenet <- function(
@@ -1630,10 +1653,10 @@ setMethod(
   y <- cast_float(y)
 
   if (!is.null(gx)) {
-    gx <- cast_float(matrixLaplacian(gx, FALSE, FALSE)$LaplacianMatrix)
+    gx <- cast_float(compute_norm_laplacian(gx))
   }
   if (!is.null(gy)) {
-    gy <- cast_float(matrixLaplacian(gy, FALSE, FALSE)$LaplacianMatrix)
+    gy <- cast_float(compute_norm_laplacian(gy))
   }
 
   input_shape <- shape(dim(x)[[1]], dim(x)[[2]])
