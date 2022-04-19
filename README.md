@@ -4,6 +4,7 @@
 [![Mega-Linter](https://github.com/cbg-ethz/pareg/actions/workflows/mega-linter.yaml/badge.svg)](https://github.com/cbg-ethz/pareg/actions/workflows/mega-linter.yaml)
 [![check-bioc](https://github.com/cbg-ethz/pareg/actions/workflows/check-bioc.yaml/badge.svg)](https://github.com/cbg-ethz/pareg/actions/workflows/check-bioc.yaml)
 [![pkgdown](https://github.com/cbg-ethz/pareg/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/cbg-ethz/pareg/actions/workflows/pkgdown.yaml)
+[![BioC status](http://www.bioconductor.org/shields/build/devel/bioc/pareg.svg)](https://bioconductor.org/checkResults/devel/bioc-LATEST/pareg)
 
 Pathway enrichment computations using a regularized regression approach to incorporate inter-pathway relations in the statistical model.
 
