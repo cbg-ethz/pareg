@@ -1315,6 +1315,14 @@ cv_edgenet_gridsearch <- function(
     param_grid$psigy <- 0
   }
 
+  # preparations
+  if (!is.null(gx)) {
+    gx <- cast_float(compute_norm_laplacian(gx))
+  }
+  if (!is.null(gy)) {
+    gy <- cast_float(compute_norm_laplacian(gy))
+  }
+
   # cross-validation
   loss_grid <- foreach(
     i = seq_len(nrow(param_grid)),
@@ -1330,13 +1338,6 @@ cv_edgenet_gridsearch <- function(
     psigy <- row$psigy
 
     # prepare model
-    if (!is.null(gx)) {
-      gx <- cast_float(compute_norm_laplacian(gx))
-    }
-    if (!is.null(gy)) {
-      gy <- cast_float(compute_norm_laplacian(gy))
-    }
-
     lambda.tensor <- init_zero_scalar(FALSE)
     psigx.tensor <- init_zero_scalar(FALSE)
     psigy.tensor <- init_zero_scalar(FALSE)
