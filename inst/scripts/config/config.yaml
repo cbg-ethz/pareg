@@ -22,5 +22,3 @@ parameters:
     siggenescaling: [0.1]
 
 params_path: config/params.csv
-
-subworkflow_run: false

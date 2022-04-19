@@ -8,14 +8,6 @@ from snakemake.utils import Paramspace
 configfile: "config/config.yaml"
 
 
-if not config["subworkflow_run"]:
-
-    # do not install package multiple times when run as subworkflow
-    # package installation is needed for multiprocessing
-    onstart:
-        shell("Rscript -e 'devtools::install(quick = TRUE, dependencies = FALSE)'")
-
-
 # method selection
 if config["method_list"] is None:
     (method_list,) = glob_wildcards(
