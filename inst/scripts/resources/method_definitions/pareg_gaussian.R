@@ -17,7 +17,8 @@ fit <- pareg::pareg(
   cv = TRUE,
   family = pareg::gaussian,
   lasso_param_range = lasso_param_range,
-  network_param_range = network_param_range
+  network_param_range = network_param_range,
+  log_level = logger::TRACE
 )
 
 df <- fit %>%
