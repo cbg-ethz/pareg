@@ -16,6 +16,7 @@ pareg(
   max_iterations = 1e+05,
   lasso_param_range = seq(0, 2, length.out = 10),
   network_param_range = seq(0, 500, length.out = 10),
+  log_level = INFO,
   ...
 )
 }
@@ -44,6 +45,8 @@ in grid search of CV.}
 
 \item{network_param_range}{Network regularization parameter search space
 in grid search of CV.}
+
+\item{log_level}{Control verbosity (logger::INFO, logger::DEBUG, ...).}
 
 \item{...}{Further arguments to pass to `(cv.)edgenet`.}
 }

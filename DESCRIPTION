@@ -73,4 +73,5 @@ Imports:
     methods,
     DOSE,
     stringr,
-    reticulate
+    reticulate,
+    logger

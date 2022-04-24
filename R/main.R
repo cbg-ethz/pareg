@@ -19,6 +19,7 @@
 #' in grid search of CV.
 #' @param network_param_range Network regularization parameter search space
 #' in grid search of CV.
+#' @param log_level Control verbosity (logger::INFO, logger::DEBUG, ...).
 #' @param ... Further arguments to pass to `(cv.)edgenet`.
 #'
 #' @return An object of class \code{pareg}.
@@ -45,6 +46,7 @@
 #' @importFrom dplyr select ends_with all_of
 #' @importFrom glue glue_collapse
 #' @importFrom magrittr %>%
+#' @importFrom logger log_threshold INFO
 pareg <- function(
   df_genes,
   df_terms,
@@ -57,8 +59,11 @@ pareg <- function(
   max_iterations = 1e5,
   lasso_param_range = seq(0, 2, length.out = 10),
   network_param_range = seq(0, 500, length.out = 10),
+  log_level = INFO,
   ...
 ) {
+  log_threshold(log_level)
+
   # generate design matrix
   df_model <- create_model_df(df_genes, df_terms)
 
