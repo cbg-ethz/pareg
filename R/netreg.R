@@ -1340,7 +1340,7 @@ cv_edgenet_gridsearch <- function(
     psigx <- row$psigx
     psigy <- row$psigy
 
-    log_trace(glue("Fitting lambda={lambda}, psigx={psigx}, psigy={psigy}"))
+    log_trace(glue("Started lambda={lambda}, psigx={psigx}, psigy={psigy}"))
 
     # prepare model
     lambda.tensor <- init_zero_scalar(FALSE)
@@ -1373,7 +1373,10 @@ cv_edgenet_gridsearch <- function(
 
     # run CV
     loss <- fn(c(lambda, psigx, psigy), var.args = c())
-    log_trace(glue("Finished lambda={lambda}, psigx={psigx}, psigy={psigy}"))
+    log_trace(glue(
+      "Finished lambda={lambda}, psigx={psigx}, psigy={psigy} ",
+      "loss={round(loss, 2)})"
+    ))
 
     data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
   }
