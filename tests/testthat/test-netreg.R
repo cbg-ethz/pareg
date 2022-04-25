@@ -48,6 +48,8 @@ test_that("Cross-validation works", {
   skip_on_bioc()
 
   set.seed(42)
+  registerDoParallel(1)
+  log_threshold(TRACE)
 
   alpha <- 2.3
   beta <- c(1.7, -0.4, 6)
@@ -73,6 +75,8 @@ test_that("Cross-validation with network regularization works", {
   skip_on_bioc()
 
   set.seed(42)
+  registerDoParallel(1)
+  log_threshold(TRACE)
 
   alpha <- 2.3
   beta <- c(1.7, -0.4, 6)
