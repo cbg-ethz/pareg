@@ -45,8 +45,7 @@ Suggests:
     ggnewscale,
     tidyverse,
     cowplot,
-    ggfittext,
-    parallel
+    ggfittext
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
