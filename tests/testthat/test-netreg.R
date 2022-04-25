@@ -102,8 +102,6 @@ test_that("laplacian computation works", {
   mat_adj <- matrix(c(1, 0.5, 0, 0.5, 1, 0.8, 0, 0.8, 1), 3, 3)
   mat_lap <- compute_norm_laplacian(mat_adj)
 
-  netReg:::laplacian_(mat_adj)
-
   expect_equal(
     mat_lap,
     matrix(c(
