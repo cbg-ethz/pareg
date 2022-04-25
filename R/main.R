@@ -47,7 +47,7 @@
 #' @importFrom dplyr select ends_with all_of
 #' @importFrom glue glue_collapse
 #' @importFrom magrittr %>%
-#' @importFrom logger log_threshold INFO
+#' @importFrom logger log_threshold INFO log_debug
 #' @importFrom doParallel registerDoParallel
 #' @importFrom parallel makeCluster
 pareg <- function(
@@ -94,6 +94,10 @@ pareg <- function(
   Y <- df_model %>%
     select(response_column_name) %>%
     as.matrix()
+
+  log_debug("Model summary:")
+  log_debug(glue("  #observations = {nrow(X)}"))
+  log_debug(glue("  #covariates = {ncol(X)}"))
 
   if (!is.null(term_network)) {
     ordered_terms <- vapply(
