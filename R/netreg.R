@@ -1260,6 +1260,7 @@ cv_edgenet_optim <- function(
 #' @importFrom foreach foreach %dopar%
 #' @importFrom tidyr expand_grid
 #' @importFrom logger log_trace log_debug
+#' @importFrom hms as_hms
 cv_edgenet_gridsearch <- function(
   x,
   y,
@@ -1327,6 +1328,7 @@ cv_edgenet_gridsearch <- function(
   # cross-validation
   log_debug("Running CV with {nrow(param_grid)} parameter combinations")
 
+  global_start_time <- Sys.time()
   i <- NULL # avoid 'no visible binding for global variable'
   loss_grid <- foreach(
     i = seq_len(nrow(param_grid)),
@@ -1342,6 +1344,7 @@ cv_edgenet_gridsearch <- function(
     psigy <- row$psigy
 
     log_trace("Started lambda={lambda}, psigx={psigx}, psigy={psigy}")
+    start_time <- Sys.time()
 
     # prepare model
     lambda.tensor <- init_zero_scalar(FALSE)
@@ -1374,9 +1377,11 @@ cv_edgenet_gridsearch <- function(
 
     # run CV
     loss <- fn(c(lambda, psigx, psigy), var.args = c())
+
+    duration <- as_hms(Sys.time() - start_time)
     log_trace(
       "Finished lambda={lambda}, psigx={psigx}, psigy={psigy} ",
-      "(loss={round(loss, 2)})"
+      "(loss={round(loss, 2)}, duration={duration})"
     )
 
     data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
@@ -1387,10 +1392,11 @@ cv_edgenet_gridsearch <- function(
   psigx_optim <- row_optim$psigx
   psigy_optim <- row_optim$psigy
 
+  global_duration <- as_hms(Sys.time() - global_start_time)
   log_debug(
     "Optimal parameters: ",
     "lambda={lambda_optim}, psigx={psigx_optim}, psigy={psigy_optim} ",
-    "(loss={round(row_optim$loss, 2)})"
+    "(loss={round(row_optim$loss, 2)}, duration={global_duration})"
   )
 
   # finalize output

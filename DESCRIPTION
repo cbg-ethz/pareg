@@ -74,4 +74,5 @@ Imports:
     DOSE,
     stringr,
     reticulate,
-    logger
+    logger,
+    hms
