@@ -47,7 +47,7 @@
 #' @importFrom dplyr select ends_with all_of
 #' @importFrom glue glue_collapse
 #' @importFrom magrittr %>%
-#' @importFrom logger log_threshold INFO log_debug
+#' @importFrom logger log_threshold log_debug
 #' @importFrom doParallel registerDoParallel
 #' @importFrom parallel makeCluster
 pareg <- function(
