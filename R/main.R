@@ -59,10 +59,13 @@ pareg <- function(
   max_iterations = 1e5,
   lasso_param_range = seq(0, 2, length.out = 10),
   network_param_range = seq(0, 500, length.out = 10),
-  log_level = INFO,
+  log_level = NULL,
   ...
 ) {
-  log_threshold(log_level)
+  # preparations
+  if (!is.null(log_level)) {
+    log_threshold(log_level)
+  }
 
   # generate design matrix
   df_model <- create_model_df(df_genes, df_terms)

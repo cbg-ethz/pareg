@@ -2,6 +2,7 @@ library(tidyverse)
 library(ggfittext)
 library(parallel)
 library(doParallel)
+library(logger)
 
 
 # parameters
@@ -108,6 +109,8 @@ pareg_post_processing <- function(fit, outdir) {
 # misc setup code
 cl <- makeCluster(thread_count, outfile = "")
 registerDoParallel(cl)
+
+log_threshold(TRACE)
 
 lasso_param_range <- seq(0, 2, length.out = 7)
 network_param_range <- seq(0, 500, length.out = 7)

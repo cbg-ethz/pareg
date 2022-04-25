@@ -16,8 +16,7 @@ fit <- pareg::pareg(
   df_terms,
   term_network = term_similarities_sub,
   cv = TRUE,
-  family = pareg::gaussian,
-  log_level = logger::TRACE
+  family = pareg::gaussian
 )
 future::plan(future::sequential) # shut down workers
 
