@@ -1260,7 +1260,6 @@ cv_edgenet_optim <- function(
 #' @importFrom foreach foreach %dopar%
 #' @importFrom tidyr expand_grid
 #' @importFrom logger log_trace log_debug
-#' @importFrom glue glue
 cv_edgenet_gridsearch <- function(
   x,
   y,
@@ -1326,7 +1325,7 @@ cv_edgenet_gridsearch <- function(
   }
 
   # cross-validation
-  log_debug(glue("Running CV with {nrow(param_grid)} parameter combinations"))
+  log_debug("Running CV with {nrow(param_grid)} parameter combinations")
   loss_grid <- foreach(
     i = seq_len(nrow(param_grid)),
     .combine = rbind,
@@ -1340,7 +1339,7 @@ cv_edgenet_gridsearch <- function(
     psigx <- row$psigx
     psigy <- row$psigy
 
-    log_trace(glue("Started lambda={lambda}, psigx={psigx}, psigy={psigy}"))
+    log_trace("Started lambda={lambda}, psigx={psigx}, psigy={psigy}")
 
     # prepare model
     lambda.tensor <- init_zero_scalar(FALSE)
@@ -1373,10 +1372,10 @@ cv_edgenet_gridsearch <- function(
 
     # run CV
     loss <- fn(c(lambda, psigx, psigy), var.args = c())
-    log_trace(glue(
+    log_trace(
       "Finished lambda={lambda}, psigx={psigx}, psigy={psigy} ",
       "(loss={round(loss, 2)})"
-    ))
+    )
 
     data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
   }
@@ -1386,11 +1385,11 @@ cv_edgenet_gridsearch <- function(
   psigx_optim <- row_optim$psigx
   psigy_optim <- row_optim$psigy
 
-  log_debug(glue(
+  log_debug(
     "Optimal parameters: ",
     "lambda={lambda_optim}, psigx={psigx_optim}, psigy={psigy_optim} ",
     "(loss={round(row_optim$loss, 2)})"
-  ))
+  )
 
   # finalize output
   reg.params <- list(lambda = lambda, psigx = psigx, psigy = psigy)

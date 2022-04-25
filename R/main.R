@@ -96,8 +96,8 @@ pareg <- function(
     as.matrix()
 
   log_debug("Model summary:")
-  log_debug(glue("  #observations = {nrow(X)}"))
-  log_debug(glue("  #covariates = {ncol(X)}"))
+  log_debug("  #observations = {nrow(X)}")
+  log_debug("  #covariates = {ncol(X)}")
 
   if (!is.null(term_network)) {
     ordered_terms <- vapply(
