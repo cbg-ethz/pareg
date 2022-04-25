@@ -7,6 +7,7 @@ devtools::load_all("../..")
 fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
+  term_network = term_similarities_sub,
   cv = TRUE,
   family = pareg::bernoulli,
   response_column_name = "pvalue_sig",
