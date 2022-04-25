@@ -1375,7 +1375,7 @@ cv_edgenet_gridsearch <- function(
     loss <- fn(c(lambda, psigx, psigy), var.args = c())
     log_trace(glue(
       "Finished lambda={lambda}, psigx={psigx}, psigy={psigy} ",
-      "loss={round(loss, 2)})"
+      "(loss={round(loss, 2)})"
     ))
 
     data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
