@@ -1326,6 +1326,8 @@ cv_edgenet_gridsearch <- function(
 
   # cross-validation
   log_debug("Running CV with {nrow(param_grid)} parameter combinations")
+
+  i <- NULL # avoid 'no visible binding for global variable'
   loss_grid <- foreach(
     i = seq_len(nrow(param_grid)),
     .combine = rbind,
