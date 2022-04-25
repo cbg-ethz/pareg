@@ -116,7 +116,7 @@ if (thread_count == 1) {
 
 log_threshold(TRACE)
 
-lasso_param_range <- seq(0, 2, length.out = 7)
+lasso_param_range <- seq(0, 5, length.out = 7)
 network_param_range <- seq(0, 500, length.out = 7)
 
 # print information
