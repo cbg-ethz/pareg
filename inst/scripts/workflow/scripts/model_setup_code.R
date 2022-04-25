@@ -107,8 +107,12 @@ pareg_post_processing <- function(fit, outdir) {
 }
 
 # misc setup code
-cl <- makeCluster(thread_count, outfile = "")
-registerDoParallel(cl)
+if (thread_count == 1) {
+  registerDoParallel(thread_count)
+} else {
+  cl <- makeCluster(thread_count, outfile = "")
+  registerDoParallel(thread_count)
+}
 
 log_threshold(TRACE)
 

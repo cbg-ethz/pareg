@@ -11,6 +11,7 @@ pareg(
   network_param = NA_real_,
   term_network = NULL,
   cv = FALSE,
+  cv_cores = NULL,
   family = beta,
   response_column_name = "pvalue",
   max_iterations = 1e+05,
@@ -32,6 +33,8 @@ pareg(
 \item{term_network}{Term similarity network as adjacency matrix.}
 
 \item{cv}{Estimate best regularization parameters using cross-validation.}
+
+\item{cv_cores}{How many cores to use for CV parallelization.}
 
 \item{family}{Distribution family of response.}
 

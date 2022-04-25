@@ -11,6 +11,7 @@
 #' @param network_param Network regularization parameter.
 #' @param term_network Term similarity network as adjacency matrix.
 #' @param cv Estimate best regularization parameters using cross-validation.
+#' @param cv_cores How many cores to use for CV parallelization.
 #' @param family Distribution family of response.
 #' @param response_column_name Which column of model dataframe
 #' to use as response.
@@ -47,6 +48,8 @@
 #' @importFrom glue glue_collapse
 #' @importFrom magrittr %>%
 #' @importFrom logger log_threshold INFO
+#' @importFrom doParallel registerDoParallel
+#' @importFrom parallel makeCluster
 pareg <- function(
   df_genes,
   df_terms,
@@ -54,6 +57,7 @@ pareg <- function(
   network_param = NA_real_,
   term_network = NULL,
   cv = FALSE,
+  cv_cores = NULL,
   family = beta,
   response_column_name = "pvalue",
   max_iterations = 1e5,
@@ -65,6 +69,15 @@ pareg <- function(
   # preparations
   if (!is.null(log_level)) {
     log_threshold(log_level)
+  }
+
+  if (!is.null(cv_cores)) {
+    if (cv_cores == 1) {
+      registerDoParallel(cv_cores)
+    } else {
+      cl <- makeCluster(cv_cores, outfile = "") # enable printing to stdout
+      registerDoParallel(cv_cores)
+    }
   }
 
   # generate design matrix

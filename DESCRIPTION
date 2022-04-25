@@ -54,6 +54,7 @@ Imports:
     tidyr,
     purrr,
     doParallel,
+    parallel,
     foreach,
     tibble,
     glue,
