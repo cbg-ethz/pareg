@@ -120,4 +120,4 @@ lasso_param_range <- seq(0, 2, length.out = 7)
 network_param_range <- seq(0, 500, length.out = 7)
 
 # print information
-log_info("Running with {thread_count} cores")
+log_info("Running with {thread_count} core(s)")
