@@ -987,7 +987,7 @@ setGeneric(
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2,
-  cv_method = c("grid_search", "optim")
+  cv_method = c("grid_search", "grid_search_lsf", "optim")
   ) {
     standardGeneric("cv_edgenet")
   },
@@ -1017,7 +1017,7 @@ setMethod(
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2,
-  cv_method = c("grid_search", "optim")
+  cv_method = c("grid_search", "grid_search_lsf", "optim")
   ) {
     cv_edgenet(
       X,
@@ -1065,7 +1065,7 @@ setMethod(
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2,
-  cv_method = c("grid_search", "optim")
+  cv_method = c("grid_search", "grid_search_lsf", "optim")
   ) {
     stopifnot(
       is.numeric(nfolds),
@@ -1107,6 +1107,24 @@ setMethod(
     ret <- switch(
       cv_method,
       grid_search = cv_edgenet_gridsearch(
+        X,
+        Y,
+        G.X,
+        G.Y,
+        lambda,
+        psigx,
+        psigy,
+        family,
+        thresh,
+        maxit,
+        learning.rate,
+        nfolds,
+        folds,
+        lambda_range,
+        psigx_range,
+        psigy_range
+      ),
+      grid_search_lsf = cv_edgenet_gridsearch_lsf(
         X,
         Y,
         G.X,
@@ -1386,6 +1404,153 @@ cv_edgenet_gridsearch <- function(
 
     data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
   }
+
+  row_optim <- loss_grid[which.min(loss_grid$loss), ]
+  lambda_optim <- row_optim$lambda
+  psigx_optim <- row_optim$psigx
+  psigy_optim <- row_optim$psigy
+
+  global_duration <- as_hms(Sys.time() - global_start_time)
+  log_debug(
+    "Optimal parameters: ",
+    "lambda={lambda_optim}, psigx={psigx_optim}, psigy={psigy_optim} ",
+    "(loss={round(row_optim$loss, 2)}, duration={global_duration})"
+  )
+
+  # finalize output
+  reg.params <- list(lambda = lambda, psigx = psigx, psigy = psigy)
+  estimatable.params <- Filter(is.na, reg.params)
+  fixed.params <- Filter(is.finite, reg.params)
+
+  ret <- cv_edgenet_post_process(
+    list(par = c(lambda_optim, psigx_optim, psigy_optim)),
+    estimatable.params,
+    fixed.params
+  )
+  ret$family <- family
+  ret$loss_grid <- loss_grid
+  class(ret) <- paste0(family$family, ".cv_edgenet")
+
+  ret
+}
+
+
+#' @noRd
+#' @importFrom tidyr expand_grid
+#' @importFrom logger log_trace log_debug
+#' @importFrom hms as_hms
+cv_edgenet_gridsearch_lsf <- function(
+  x,
+  y,
+  gx,
+  gy,
+  lambda,
+  psigx,
+  psigy,
+  family,
+  thresh,
+  maxit,
+  learning.rate,
+  nfolds,
+  folds,
+  lambda_range,
+  psigx_range,
+  psigy_range
+) {
+  # define parameter grid
+  param_values <- list()
+  if (is.na(lambda)) {
+    param_values$lambda <- lambda_range
+  }
+  if (is.na(psigx)) {
+    param_values$psigx <- psigx_range
+  }
+  if (is.na(psigy)) {
+    param_values$psigy <- psigy_range
+  }
+  param_grid <- expand_grid(!!!param_values)
+
+  # sanity checks
+  if (is.null(gx) & is.null(gy) & !is.na(lambda)) {
+    stop(
+      "you didn't set graphs and lambda != NA_real_. Got nothing to estimate",
+      call. = FALSE
+    )
+  }
+  if (dim(param_grid)[[1]] == 0) {
+    stop(
+      "please set either of lambda/psigx/psigy to NA_real_",
+      call. = FALSE
+    )
+  }
+
+  # finalize param grid
+  if (!"lambda" %in% colnames(param_grid)) {
+    param_grid$lambda <- 0
+  }
+  if (!"psigx" %in% colnames(param_grid)) {
+    param_grid$psigx <- 0
+  }
+  if (!"psigy" %in% colnames(param_grid)) {
+    param_grid$psigy <- 0
+  }
+
+  # preparations
+  if (!is.null(gx)) {
+    gx <- cast_float(compute_norm_laplacian(gx))
+  }
+  if (!is.null(gy)) {
+    gy <- cast_float(compute_norm_laplacian(gy))
+  }
+
+  # cross-validation
+  log_debug("Running CV with {nrow(param_grid)} parameter combinations")
+
+  global_start_time <- Sys.time()
+  loss_grid <- cluster_apply(param_grid, function(lambda, psigx, psigy) {
+    log_trace("Started lambda={lambda}, psigx={psigx}, psigy={psigy}")
+    start_time <- Sys.time()
+
+    # prepare model
+    lambda.tensor <- init_zero_scalar(FALSE)
+    psigx.tensor <- init_zero_scalar(FALSE)
+    psigy.tensor <- init_zero_scalar(FALSE)
+
+    mod <- model(ncol(x), ncol(y), family)
+    loss <- edgenet.loss(
+      lambda.tensor,
+      psigx.tensor,
+      psigy.tensor,
+      gx,
+      gy,
+      family
+    )
+    fn <- cross.validate(
+      mod,
+      loss,
+      x,
+      y,
+      lambda.tensor,
+      psigx.tensor,
+      psigy.tensor,
+      nfolds,
+      folds,
+      maxit,
+      thresh,
+      learning.rate
+    )
+
+    # run CV
+    loss <- fn(c(lambda, psigx, psigy), var.args = c())
+
+    duration <- as_hms(Sys.time() - start_time)
+    log_trace(
+      "Finished lambda={lambda}, psigx={psigx}, psigy={psigy} ",
+      "(loss={round(loss, 2)}, duration={duration})"
+    )
+
+    data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
+  })
 
   row_optim <- loss_grid[which.min(loss_grid$loss), ]
   lambda_optim <- row_optim$lambda

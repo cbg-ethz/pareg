@@ -25,7 +25,7 @@ cv_edgenet(
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2,
-  cv_method = c("grid_search", "optim")
+  cv_method = c("grid_search", "grid_search_lsf", "optim")
 )
 
 \S4method{cv_edgenet}{matrix,numeric}(
@@ -46,7 +46,7 @@ cv_edgenet(
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2,
-  cv_method = c("grid_search", "optim")
+  cv_method = c("grid_search", "grid_search_lsf", "optim")
 )
 
 \S4method{cv_edgenet}{matrix,matrix}(
@@ -67,7 +67,7 @@ cv_edgenet(
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2,
-  cv_method = c("grid_search", "optim")
+  cv_method = c("grid_search", "grid_search_lsf", "optim")
 )
 }
 \arguments{
