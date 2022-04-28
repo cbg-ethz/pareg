@@ -1,4 +1,30 @@
-#' @noRd
+#' @title Parallelize function calls on LSF cluster.
+#'
+#' @description Run function for each row of input dataframe
+#'  in LSF job.
+#'
+#' @export
+#' @param df_iter Dataframe over whose rows to iterate.
+#' @param func Function to apply to each dataframe row.
+#'  Its arguments must be all dataframe columns.
+#' @param .bsub_params Parameters to pass to `bsub` during job submission.
+#' @param .tempdir Location to store auxiliary files in.
+#' @param .packages Packages to import in each job.
+#'
+#' @return Dataframe created by concatenating results of each function call.
+#'
+#' @examples
+#' \dontrun{
+#' foo <- 42
+#' cluster_apply(
+#'   data.frame(i = 1:3, group = c('A', 'B', 'C')),
+#'   function(i, group) {
+#'     log_debug("hello")
+#'     data.frame(group = group, i = i, foo = foo, result = foo + 2 * i)
+#'   },
+#'   .packages = c(logger)
+#' )
+#' }
 #' @importFrom logger log_trace log_debug log_error
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr bind_rows
