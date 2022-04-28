@@ -18,7 +18,8 @@ fit <- pareg::pareg(
   cv_method = cv_method,
   family = pareg::gaussian,
   lasso_param_range = lasso_param_range,
-  network_param_range = network_param_range
+  network_param_range = network_param_range,
+  tempdir = file.path(dirname(snakemake@output$fname), "cv_dump")
 )
 
 df <- fit %>%

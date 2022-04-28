@@ -9,8 +9,11 @@ cluster_apply <- function(
   df_iter,
   func,
   .bsub_params = c("-n", "2", "-W", "24:00", "-R", "rusage[mem=10000]"),
+  .tempdir = ".",
   ...
 ) {
+  dir.create(.tempdir, showWarnings = FALSE, recursive = TRUE)
+
   # submit jobs
   df_jobs <- tibble(
     index = numeric(),
@@ -19,7 +22,7 @@ cluster_apply <- function(
   )
   for (index in seq_len(nrow(df_iter))) {
     # save environment needed to execute function
-    image_path <- glue("./image_{index}.RData")
+    image_path <- file.path(.tempdir, glue("image_{index}.RData"))
     log_trace("[index={index}] Saving image to {image_path}")
 
     current_df_row <- df_iter[index, ]
@@ -37,8 +40,8 @@ cluster_apply <- function(
     )
 
     # create script
-    script_path <- glue("./script_{index}.R")
-    result_path <- glue("./result_{index}.rds")
+    script_path <- file.path(.tempdir, glue("script_{index}.R"))
+    result_path <- file.path(.tempdir, glue("result_{index}.rds"))
     code <- glue("
       load('{image_path}')
       result <- do.call(func, current_df_row)

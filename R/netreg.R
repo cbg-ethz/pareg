@@ -878,6 +878,7 @@ optim <- function(fn, par, ..., lower = -Inf, upper = Inf, control = list()) {
 #' @param psigy_range range of psigy to use in CV grid.
 #' @param nfolds the number of folds to be used - default is 10.
 #' @param cv_method which cross-validation method to use.
+#' @param tempdir where to store auxiliary files.
 #'
 #' @return An object of class \code{cv_edgenet}
 #' \item{parameters }{ the estimated, optimal regularization parameters}
@@ -987,7 +988,8 @@ setGeneric(
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2,
-  cv_method = c("grid_search", "grid_search_lsf", "optim")
+  cv_method = c("grid_search", "grid_search_lsf", "optim"),
+  tempdir = "."
   ) {
     standardGeneric("cv_edgenet")
   },
@@ -1017,7 +1019,8 @@ setMethod(
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2,
-  cv_method = c("grid_search", "grid_search_lsf", "optim")
+  cv_method = c("grid_search", "grid_search_lsf", "optim"),
+  tempdir = "."
   ) {
     cv_edgenet(
       X,
@@ -1037,7 +1040,8 @@ setMethod(
       psigx_range,
       psigy_range,
       nfolds,
-      cv_method
+      cv_method,
+      tempdir
     )
   }
 )
@@ -1065,7 +1069,8 @@ setMethod(
   psigx_range = seq(0, 500, length.out = 10),
   psigy_range = seq(0, 500, length.out = 10),
   nfolds = 2,
-  cv_method = c("grid_search", "grid_search_lsf", "optim")
+  cv_method = c("grid_search", "grid_search_lsf", "optim"),
+  tempdir = "."
   ) {
     stopifnot(
       is.numeric(nfolds),
@@ -1140,7 +1145,8 @@ setMethod(
         folds,
         lambda_range,
         psigx_range,
-        psigy_range
+        psigy_range,
+        tempdir
       ),
       optim = cv_edgenet_optim(
         X,
@@ -1456,7 +1462,8 @@ cv_edgenet_gridsearch_lsf <- function(
   folds,
   lambda_range,
   psigx_range,
-  psigy_range
+  psigy_range,
+  tempdir
 ) {
   # define parameter grid
   param_values <- list()
@@ -1554,7 +1561,7 @@ cv_edgenet_gridsearch_lsf <- function(
     )
 
     data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
-  })
+  }, .tempdir = tempdir)
 
   row_optim <- loss_grid[which.min(loss_grid$loss), ]
   lambda_optim <- row_optim$lambda

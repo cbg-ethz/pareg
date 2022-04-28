@@ -13,7 +13,8 @@ fit <- pareg::pareg(
   family = pareg::bernoulli,
   response_column_name = "pvalue_sig",
   lasso_param_range = lasso_param_range,
-  network_param_range = network_param_range
+  network_param_range = network_param_range,
+  tempdir = file.path(dirname(snakemake@output$fname), "cv_dump")
 )
 
 df <- fit %>%

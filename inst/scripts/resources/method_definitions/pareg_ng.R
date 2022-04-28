@@ -16,7 +16,8 @@ fit <- pareg::pareg(
   term_network = term_similarities_sub,
   cv = TRUE,
   cv_method = cv_method,
-  family = pareg::gaussian
+  family = pareg::gaussian,
+  tempdir = file.path(dirname(snakemake@output$fname), "cv_dump")
 )
 
 df <- fit %>%
