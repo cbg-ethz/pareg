@@ -644,6 +644,7 @@ edgenet.loss <- function(lambda, psigx, psigy, gx, gy, family) {
 #' @importFrom purrr transpose
 #' @importFrom keras optimizer_adam
 #' @importFrom reticulate %as%
+#' @importFrom logger log_trace
 fit <- function(
   mod,
   loss,
@@ -663,6 +664,9 @@ fit <- function(
       loss_obj <- loss(mod, x, y)
       lo <- loss_obj$obj
     })
+    if (step %% 100 == 0) {
+      log_trace("step={step}, loss={round(lo$numpy(), 2)}")
+    }
 
     loss_hist[[step]] <- loss_obj
     loss_hist[[step]][["obj"]] <- NULL
@@ -691,6 +695,11 @@ fit <- function(
       lo.old <- lo$numpy()
     }
   }
+  log_trace(
+    "Finished optimization with ",
+    "loss={round(lo$numpy(), 2)} and ",
+    "reason={stopping_reason}"
+  )
 
   ret <- list(
     beta = mod$beta$numpy(),
@@ -718,6 +727,7 @@ fit <- function(
 
 
 #' @noRd
+#' @importFrom logger log_trace
 cross.validate <- function(
   mod,
   loss,
@@ -741,6 +751,7 @@ cross.validate <- function(
     losses <- vector(mode = "double", length = nfolds)
 
     for (fold in seq(nfolds)) {
+      log_trace("Testing fold #{fold}")
       x.train <- x[which(folds != fold), , drop = FALSE]
       y.train <- y[which(folds != fold), , drop = FALSE]
       x.test <- x[which(folds == fold), , drop = FALSE]
@@ -1443,7 +1454,7 @@ cv_edgenet_gridsearch <- function(
 
 #' @noRd
 #' @importFrom tidyr expand_grid
-#' @importFrom logger log_trace log_debug
+#' @importFrom logger log_trace log_debug log_threshold TRACE
 #' @importFrom hms as_hms
 #' @importFrom devtools load_all
 cv_edgenet_gridsearch_lsf <- function(
@@ -1510,6 +1521,7 @@ cv_edgenet_gridsearch_lsf <- function(
   loss_grid <- cluster_apply(param_grid, function(lambda, psigx, psigy) {
     # hack to avoid explicitly loading attached packages
     load_all()
+    log_threshold(TRACE)
 
     log_trace("Started lambda={lambda}, psigx={psigx}, psigy={psigy}")
     start_time <- Sys.time()
