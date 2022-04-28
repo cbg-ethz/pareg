@@ -36,7 +36,7 @@ Run function for each row of input dataframe
 \dontrun{
 foo <- 42
 cluster_apply(
-  data.frame(i = 1:3, group = c('A', 'B', 'C')),
+  data.frame(i = seq_len(3), group = c("A", "B", "C")),
   function(i, group) {
     log_debug("hello")
     data.frame(group = group, i = i, foo = foo, result = foo + 2 * i)
