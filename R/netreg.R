@@ -1439,6 +1439,7 @@ cv_edgenet_gridsearch <- function(
 #' @importFrom tidyr expand_grid
 #' @importFrom logger log_trace log_debug
 #' @importFrom hms as_hms
+#' @importFrom devtools load_all
 cv_edgenet_gridsearch_lsf <- function(
   x,
   y,
@@ -1495,21 +1496,24 @@ cv_edgenet_gridsearch_lsf <- function(
     param_grid$psigy <- 0
   }
 
-  # preparations
-  if (!is.null(gx)) {
-    gx <- cast_float(compute_norm_laplacian(gx))
-  }
-  if (!is.null(gy)) {
-    gy <- cast_float(compute_norm_laplacian(gy))
-  }
-
   # cross-validation
   log_debug("Running CV with {nrow(param_grid)} parameter combinations")
 
   global_start_time <- Sys.time()
   loss_grid <- cluster_apply(param_grid, function(lambda, psigx, psigy) {
+    # hack to avoid explicitly loading attached packages
+    load_all()
+
     log_trace("Started lambda={lambda}, psigx={psigx}, psigy={psigy}")
     start_time <- Sys.time()
+
+    # prepare data
+    if (!is.null(gx)) {
+      gx <- cast_float(compute_norm_laplacian(gx))
+    }
+    if (!is.null(gy)) {
+      gy <- cast_float(compute_norm_laplacian(gy))
+    }
 
     # prepare model
     lambda.tensor <- init_zero_scalar(FALSE)
