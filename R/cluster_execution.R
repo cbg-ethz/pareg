@@ -10,6 +10,7 @@ cluster_apply <- function(
   func,
   .bsub_params = c("-n", "2", "-W", "24:00", "-R", "rusage[mem=10000]"),
   .tempdir = ".",
+  .packages = c(),
   ...
 ) {
   dir.create(.tempdir, showWarnings = FALSE, recursive = TRUE)
@@ -42,7 +43,19 @@ cluster_apply <- function(
     # create script
     script_path <- file.path(.tempdir, glue("script_{index}.R"))
     result_path <- file.path(.tempdir, glue("result_{index}.rds"))
+
+    header <- ""
+    if (length(.packages) > 0) {
+      for (pkg in .packages) {
+        header <- glue("
+          {header}
+          library({pkg})
+        ")
+      }
+    }
+
     code <- glue("
+      {header}
       load('{image_path}')
       result <- do.call(func, current_df_row)
       saveRDS(result, '{result_path}')

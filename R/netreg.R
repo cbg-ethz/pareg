@@ -1561,7 +1561,7 @@ cv_edgenet_gridsearch_lsf <- function(
     )
 
     data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
-  }, .tempdir = tempdir)
+  }, .tempdir = tempdir, .packages = c("devtools"))
 
   row_optim <- loss_grid[which.min(loss_grid$loss), ]
   lambda_optim <- row_optim$lambda
