@@ -88,7 +88,8 @@
   psigx_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
   psigy_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
   nfolds <span class="op">=</span> <span class="fl">2</span>,
-  cv_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grid_search"</span>, <span class="st">"grid_search_lsf"</span>, <span class="st">"optim"</span><span class="op">)</span>
+  cv_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grid_search"</span>, <span class="st">"grid_search_lsf"</span>, <span class="st">"optim"</span><span class="op">)</span>,
+  tempdir <span class="op">=</span> <span class="st">"."</span>
 <span class="op">)</span>
 
 <span class="co"># S4 method for matrix,numeric</span>
@@ -110,7 +111,8 @@
   psigx_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
   psigy_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
   nfolds <span class="op">=</span> <span class="fl">2</span>,
-  cv_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grid_search"</span>, <span class="st">"grid_search_lsf"</span>, <span class="st">"optim"</span><span class="op">)</span>
+  cv_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grid_search"</span>, <span class="st">"grid_search_lsf"</span>, <span class="st">"optim"</span><span class="op">)</span>,
+  tempdir <span class="op">=</span> <span class="st">"."</span>
 <span class="op">)</span>
 
 <span class="co"># S4 method for matrix,matrix</span>
@@ -132,7 +134,8 @@
   psigx_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
   psigy_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">500</span>, length.out <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>,
   nfolds <span class="op">=</span> <span class="fl">2</span>,
-  cv_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grid_search"</span>, <span class="st">"grid_search_lsf"</span>, <span class="st">"optim"</span><span class="op">)</span>
+  cv_method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"grid_search"</span>, <span class="st">"grid_search_lsf"</span>, <span class="st">"optim"</span><span class="op">)</span>,
+  tempdir <span class="op">=</span> <span class="st">"."</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -202,6 +205,8 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 <dd><p>the number of folds to be used - default is 10.</p></dd>
 <dt>cv_method</dt>
 <dd><p>which cross-validation method to use.</p></dd>
+<dt>tempdir</dt>
+<dd><p>where to store auxiliary files.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
