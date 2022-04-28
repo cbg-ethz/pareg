@@ -1,5 +1,5 @@
 #' @noRd
-#' @importFrom logger log_trace log_debug
+#' @importFrom logger log_trace log_debug log_error
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr bind_rows
 #' @importFrom glue glue
@@ -105,6 +105,12 @@ cluster_apply <- function(
         result_list[[row$index]] <- result
 
         pb$tick()
+      } else if (status == "EXIT") {
+        log_error("Job {row$job_id} crashed, killing all other jobs")
+        for (i in seq_len(nrow(df_jobs))) {
+          system2("bkill", df_jobs[i, ]$job_id)
+        }
+        stop("Cluster job crashed")
       }
 
       Sys.sleep(0.1)
