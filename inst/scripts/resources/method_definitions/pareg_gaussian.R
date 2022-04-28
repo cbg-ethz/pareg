@@ -15,6 +15,7 @@ fit <- pareg::pareg(
   df_terms,
   term_network = term_similarities_sub,
   cv = TRUE,
+  cv_method = cv_method,
   family = pareg::gaussian,
   lasso_param_range = lasso_param_range,
   network_param_range = network_param_range
