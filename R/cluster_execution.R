@@ -10,6 +10,7 @@
 #' @param .bsub_params Parameters to pass to `bsub` during job submission.
 #' @param .tempdir Location to store auxiliary files in.
 #' @param .packages Packages to import in each job.
+#' @param ... Extra arguments for function.
 #'
 #' @return Dataframe created by concatenating results of each function call.
 #'
@@ -52,7 +53,9 @@ cluster_apply <- function(
     image_path <- file.path(.tempdir, glue("image_{index}.RData"))
     log_trace("[index={index}] Saving image to {image_path}")
 
-    current_df_row <- df_iter[index, ]
+    current_df_row <- df_iter[index, , drop = FALSE]
+    extra_func_arguments <- list(...)
+    function_arguments <- c(current_df_row, extra_func_arguments)
 
     with(
       c(
@@ -83,7 +86,7 @@ cluster_apply <- function(
     code <- glue("
       {header}
       load('{image_path}')
-      result <- do.call(func, current_df_row)
+      result <- do.call(func, function_arguments)
       saveRDS(result, '{result_path}')
     ")
     log_trace("[index={index}] Writing script to {script_path}")

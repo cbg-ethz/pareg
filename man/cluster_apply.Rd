@@ -24,6 +24,8 @@ Its arguments must be all dataframe columns.}
 \item{.tempdir}{Location to store auxiliary files in.}
 
 \item{.packages}{Packages to import in each job.}
+
+\item{...}{Extra arguments for function.}
 }
 \value{
 Dataframe created by concatenating results of each function call.
