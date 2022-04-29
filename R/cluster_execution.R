@@ -137,7 +137,7 @@ cluster_apply <- function(
         c("-o", "stat", "-noheader", row$job_id),
         stdout = TRUE
       )
-      log_trace("Job {row$job_id} has status {status}")
+      # log_trace("Job {row$job_id} has status {status}")
 
       if (status == "DONE") {
         log_debug("Job {row$job_id} at index {row$index} is done")
