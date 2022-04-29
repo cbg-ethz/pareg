@@ -25,7 +25,7 @@
 #'   .packages = c(logger)
 #' )
 #' }
-#' @importFrom logger log_trace log_debug log_error
+#' @importFrom logger log_trace log_debug log_warn log_error
 #' @importFrom tibble tibble add_row
 #' @importFrom dplyr bind_rows
 #' @importFrom glue glue
@@ -132,11 +132,22 @@ cluster_apply <- function(
       }
 
       # check job
-      status <- system2(
-        "bjobs",
-        c("-o", "stat", "-noheader", row$job_id),
-        stdout = TRUE
-      )
+      status <- character(0)
+      while (length(status) == 0) {
+        status <- system2(
+          "bjobs",
+          c("-o", "stat", "-noheader", row$job_id),
+          stdout = TRUE
+        )
+
+        if (length(status) == 0) {
+          log_warn(
+            "Couldn't get status for job {row$job_id}. ",
+            "Retrying..."
+          )
+          Sys.sleep(1)
+        }
+      }
       # log_trace("Job {row$job_id} has status {status}")
 
       if (status == "DONE") {
