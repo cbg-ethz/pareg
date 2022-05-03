@@ -100,9 +100,7 @@ if (!is.null(term_filter_params$max_size)) {
 if (!is.null(term_filter_params$sample_num)) {
   print("Sampling pathways")
   df_term_tally %<>%
-    group_by(gs_cat) %>%
-    sample_n(min(term_filter_params$sample_num, n())) %>%
-    ungroup()
+    sample_n(min(term_filter_params$sample_num, n()))
 }
 
 term_selection <- df_term_tally %>%
