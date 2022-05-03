@@ -11,6 +11,9 @@ termsource <- snakemake@wildcards$termsource
 
 parts <- strsplit(termsource, "@")[[1]]
 
+# setup
+set.seed(42)
+
 # generate base term set
 if (parts[[1]] == "msigdb") {
   category <- parts[[2]]

@@ -18,6 +18,10 @@ on_term_count <- snakemake@params$params$ontermcount
 sig_gene_scaling <- snakemake@params$params$siggenescaling
 
 
+# setup
+set.seed(snakemake@wildcards$replicate)
+
+
 # read data
 df_terms <- read_csv(fname_terms)
 sim_mat <- read.csv(fname_sim, row.names = 1, check.names = FALSE)
