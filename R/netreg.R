@@ -652,7 +652,9 @@ fit <- function(
   y,
   maxit = 1000,
   learning.rate = 0.03,
-  thresh = 1e-4
+  thresh = 1e-4,
+  moving_avg_size = 100,
+  ma_thres = 1e-3
 ) {
   optimizer <- optimizer_adam(learning.rate)
   lo.old <- Inf
@@ -687,7 +689,24 @@ fit <- function(
       mod$trainable_variables
     )))
 
-    if (step %% 25 == 0) {
+    if (step > moving_avg_size && step %% 25 == 0) {
+      ma <- mean(vapply(
+        loss_hist[step - moving_avg_size : step],
+        function(x) x$total_loss,
+        numeric(1)
+      ))
+      ma2 <- mean(vapply(
+        loss_hist[step - (moving_avg_size - 1) : step],
+        function(x) x$total_loss,
+        numeric(1)
+      ))
+      rel_diff <- (ma - ma2) / ma
+
+      if (abs(rel_diff) < ma_thres) {
+        stopping_reason <- "moving_loss_threshold"
+        break
+      }
+
       if (sum(abs(lo$numpy() - lo.old)) < thresh) {
         stopping_reason <- "loss_threshold"
         break
