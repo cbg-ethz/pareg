@@ -654,7 +654,7 @@ fit <- function(
   learning.rate = 0.03,
   thresh = 1e-4,
   moving_avg_size = 100,
-  ma_thres = 1e-3
+  ma_thres = 1e-4
 ) {
   optimizer <- optimizer_adam(learning.rate)
   lo.old <- Inf
