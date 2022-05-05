@@ -92,19 +92,18 @@ cluster_apply <- function(
     log_trace("[index={index}] Writing script to {script_path}")
     writeLines(code, script_path)
 
+    # assemble bsub parameters
+    bsub_params <- c(
+      .bsub_params,
+      "-o", file.path(.tempdir, "job_%J.stdout"),
+      "-e", file.path(.tempdir, "job_%J.stderr"),
+      "Rscript", script_path
+    )
+
     # submit script
-    bsub_param_str <- paste(
-      c(.bsub_params, "Rscript", script_path),
-      sep = "",
-      collapse = " "
-    )
+    bsub_param_str <- paste(bsub_params, sep = "", collapse = " ")
     log_trace("[index={index}] Executing 'bsub {bsub_param_str}'")
-    stdout <- system2(
-      "bsub",
-      c(.bsub_params, "Rscript", script_path),
-      stdout = TRUE,
-      stderr = FALSE
-    )
+    stdout <- system2("bsub", bsub_params, stdout = TRUE, stderr = FALSE)
 
     job_id <- str_match(stdout, "Job <(.*?)>")[1, 2]
     log_debug("[index={index}] Submitted job {job_id}")
