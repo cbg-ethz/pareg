@@ -133,5 +133,5 @@ rule all:
         # ),
         # rules.noise_all.input,
         # rules.real_datasets_all.input,
-        # rules.similarity_measures_all.input,
+        rules.similarity_measures_all.input,
     default_target: True

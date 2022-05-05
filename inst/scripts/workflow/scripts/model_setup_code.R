@@ -116,8 +116,8 @@ if (thread_count == 1) {
 
 log_threshold(TRACE)
 
-lasso_param_range <- seq(0, 5, length.out = 7)
-network_param_range <- seq(0, 500, length.out = 7)
+lasso_param_range <- seq(0, 10, length.out = 5)
+network_param_range <- seq(0, 1000, length.out = 5)
 
 cv_method <- "grid_search_lsf"
 

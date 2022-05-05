@@ -10,11 +10,11 @@ method_list:
     - pareg_beta_var
 
 term_filter:
-    min_size: null
-    max_size: null
+    min_size: 50
+    max_size: 500
     sample_num: null
 
-replicate_count: 10
+replicate_count: 3
 
 parameters:
     similarityfactor: [0.5]

@@ -1,10 +1,10 @@
 termsource,alpha,beta,similaritymeasure
-msigdb@C5@GO:BP,0,0,jaccard
+msigdb@C5@GO:BP,0,0.25,jaccard
 msigdb@C5@GO:BP,0,0.5,jaccard
-msigdb@C5@GO:BP,0,0.8,jaccard
-msigdb@C5@GO:BP,0,0,overlap
+msigdb@C5@GO:BP,0,0.75,jaccard
+msigdb@C5@GO:BP,0,0.25,overlap
 msigdb@C5@GO:BP,0,0.5,overlap
-msigdb@C5@GO:BP,0,0.8,overlap
-msigdb@C5@GO:BP,0,0,semantic
+msigdb@C5@GO:BP,0,0.75,overlap
+msigdb@C5@GO:BP,0,0.25,semantic
 msigdb@C5@GO:BP,0,0.5,semantic
-msigdb@C5@GO:BP,0,0.8,semantic
+msigdb@C5@GO:BP,0,0.75,semantic

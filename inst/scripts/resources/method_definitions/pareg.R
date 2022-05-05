@@ -6,7 +6,14 @@ devtools::load_all("../..")
 # run model
 fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
-  df_terms
+  df_terms,
+  term_network = term_similarities_sub,
+  cv = TRUE,
+  cv_method = cv_method,
+  family = pareg::beta_phi_var,
+  lasso_param_range = lasso_param_range,
+  network_param_range = network_param_range,
+  tempdir = file.path(dirname(snakemake@output$fname), "cv_dump")
 )
 
 df <- fit %>%
