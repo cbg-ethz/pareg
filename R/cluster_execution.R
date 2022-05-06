@@ -40,7 +40,18 @@ cluster_apply <- function(
   .packages = c(),
   ...
 ) {
-  dir.create(.tempdir, showWarnings = FALSE, recursive = TRUE)
+  # create infrastructure
+  image_dir <- file.path(.tempdir, "images")
+  script_dir <- file.path(.tempdir, "scripts")
+  result_dir <- file.path(.tempdir, "results")
+  log_dir <- file.path(.tempdir, "logs")
+
+  lapply(
+    c(image_dir, script_dir, result_dir, log_dir),
+    function(x) {
+      dir.create(x, showWarnings = FALSE, recursive = TRUE)
+    }
+  )
 
   # submit jobs
   df_jobs <- tibble(
@@ -50,7 +61,7 @@ cluster_apply <- function(
   )
   for (index in seq_len(nrow(df_iter))) {
     # save environment needed to execute function
-    image_path <- file.path(.tempdir, glue("image_{index}.RData"))
+    image_path <- file.path(image_dir, glue("image_{index}.RData"))
     log_trace("[index={index}] Saving image to {image_path}")
 
     current_df_row <- df_iter[index, , drop = FALSE]
@@ -70,8 +81,8 @@ cluster_apply <- function(
     )
 
     # create script
-    script_path <- file.path(.tempdir, glue("script_{index}.R"))
-    result_path <- file.path(.tempdir, glue("result_{index}.rds"))
+    script_path <- file.path(script_dir, glue("script_{index}.R"))
+    result_path <- file.path(result_dir, glue("result_{index}.rds"))
 
     header <- ""
     if (length(.packages) > 0) {
@@ -95,8 +106,8 @@ cluster_apply <- function(
     # assemble bsub parameters
     bsub_params <- c(
       .bsub_params,
-      "-o", file.path(.tempdir, "job_%J.stdout"),
-      "-e", file.path(.tempdir, "job_%J.stderr"),
+      "-o", file.path(log_dir, "job_%J.stdout"),
+      "-e", file.path(log_dir, "job_%J.stderr"),
       "Rscript", script_path
     )
 
