@@ -44,7 +44,8 @@ Suggests:
     ggnewscale,
     tidyverse,
     cowplot,
-    ggfittext
+    ggfittext,
+    simplifyEnrichment
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
