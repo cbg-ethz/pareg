@@ -49,8 +49,15 @@ df <- GenTable(topgo_obj, enrichment = res_elim) %>%
   as_tibble %>%
   dplyr::select(GO.ID, enrichment) %>%
   dplyr::rename(term = GO.ID) %>%
-  mutate(term = term %>% str_to_lower %>% str_replace(":", "_")) %>%
-  mutate(method = "topgo", enrichment = -log10(as.numeric(enrichment)))
+  mutate(
+    term = term %>% str_to_lower %>% str_replace(":", "_"),
+    enrichment = as.numeric(if_else(
+      enrichment == "< 1e-30",
+      "1e-30",
+      enrichment
+    ))
+  ) %>%
+  mutate(method = "topgo", enrichment = -log10(enrichment))
 
 # there might be some NA terms because topGO uses its own ontology
 df %>%
