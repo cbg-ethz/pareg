@@ -53,6 +53,8 @@ df_enr %>%
           geom_roc() +
           geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
           ggtitle(glue("Parameter: {param_name}")) +
+          xlim(0, 1) +
+          ylim(0, 1) +
           theme_minimal()
       })
 
@@ -86,6 +88,8 @@ df_enr %>%
           ggplot(aes_string(x = "recall", y = "precision", color = param_name)) +
           geom_line() +
           ggtitle(glue("Parameter: {param_name}")) +
+          xlim(0, 1) +
+          ylim(0, 1) +
           theme_minimal()
       })
 
@@ -123,6 +127,8 @@ df_enr %>%
       geom_roc() +
       geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
       ggtitle(id_) +
+      xlim(0, 1) +
+      ylim(0, 1) +
       theme_minimal()
     ggsave(file.path(roc_plot_dir, glue("rocs_{id_}.pdf")), width = 8, height = 6)
 
@@ -144,6 +150,8 @@ df_enr %>%
       ggplot(aes(x = recall, y = precision, color = replicate)) +
       geom_line() +
       ggtitle("PR-curve") +
+      xlim(0, 1) +
+      ylim(0, 1) +
       theme_minimal()
     ggsave(file.path(pr_plot_dir, glue("prs_{id_}.pdf")), width = 8, height = 6)
   })
@@ -172,6 +180,8 @@ df_enr %>%
       geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
       ggtitle(id_) +
       scale_x_continuous(limits = c(0, 0.2), oob = squish) +
+      xlim(0, 1) +
+      ylim(0, 1) +
       theme_minimal()
     ggsave(file.path(roc_sub_plot_dir, glue("rocs_{id_}.pdf")), width = 8, height = 6)
   })

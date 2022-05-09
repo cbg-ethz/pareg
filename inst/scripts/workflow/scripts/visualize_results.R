@@ -36,6 +36,8 @@ df_enr %>%
   geom_roc() +
   geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
   coord_fixed() +
+  xlim(0, 1) +
+  ylim(0, 1) +
   theme_minimal()
 ggsave(file.path(outdir, "roc_curves.pdf"))
 
@@ -57,6 +59,8 @@ cowplot::plot_grid(
     geom_line() +
     geom_abline(intercept = 0, slope = 1, color = "gray", linetype = "dashed") +
     ggtitle("ROC-curve") +
+    xlim(0, 1) +
+    ylim(0, 1) +
     theme_minimal(),
   df_enr %>%
     group_by(method) %>%
@@ -72,6 +76,8 @@ cowplot::plot_grid(
     ggplot(aes(x = recall, y = precision, color = method)) +
     geom_line() +
     ggtitle("PR-curve") +
+    xlim(0, 1) +
+    ylim(0, 1) +
     theme_minimal()
 )
 cowplot::save_plot(
