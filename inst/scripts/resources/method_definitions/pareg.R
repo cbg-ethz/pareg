@@ -9,11 +9,12 @@ fit <- pareg::pareg(
   df_terms,
   term_network = term_similarities_sub,
   cv = TRUE,
-  cv_method = cv_method,
+  cv_method = pareg_cv_method,
   family = pareg::beta_phi_var,
   lasso_param_range = lasso_param_range,
   network_param_range = network_param_range,
-  tempdir = file.path(dirname(snakemake@output$fname), "cv_dump")
+  tempdir = file.path(dirname(snakemake@output$fname), "cv_dump"),
+  max_iteration = pareg_max_iteration
 )
 
 df <- fit %>%

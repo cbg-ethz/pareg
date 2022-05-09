@@ -119,7 +119,8 @@ log_threshold(TRACE)
 lasso_param_range <- seq(0, 10, length.out = 5)
 network_param_range <- seq(0, 1000, length.out = 5)
 
-cv_method <- "grid_search_lsf"
+pareg_cv_method <- "grid_search_lsf"
+pareg_max_iteration <- 10000
 
 # print information
 log_info("Running with {thread_count} core(s)")
