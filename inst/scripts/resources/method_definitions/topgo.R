@@ -45,25 +45,15 @@ topgo_obj <- new(
 
 res_elim <- runTest(topgo_obj, algorithm = "elim", statistic = "ks")
 
-df <- GenTable(topgo_obj, enrichment = res_elim) %>%
-  as_tibble %>%
-  dplyr::select(GO.ID, enrichment) %>%
-  dplyr::rename(term = GO.ID) %>%
+df <- score(res_elim) %>%
+  enframe() %>%
+  dplyr::rename(term = name, enrichment = value) %>%
   mutate(
+    method = "topGO",
     term = term %>% str_to_lower %>% str_replace(":", "_"),
-    enrichment = as.numeric(if_else(
-      enrichment == "< 1e-30",
-      "1e-30",
-      enrichment
-    ))
+    enrichment = if_else(enrichment == 0, 30, -log10(enrichment))
   ) %>%
-  mutate(method = "topgo", enrichment = -log10(enrichment))
-
-# there might be some NA terms because topGO uses its own ontology
-df %>%
-  filter(is.na(term))
-df <- df %>%
-  drop_na(term)
+  filter(term %in% df_terms$term)
 
 df %>%
   arrange(desc(enrichment)) %>%
