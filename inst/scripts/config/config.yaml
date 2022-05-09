@@ -5,20 +5,20 @@
 method_list:
     - single_term_methods
     - mgsa
-    - topGO
-    - gsea
-    - pareg_ng
+    - topgo
+    - pareg
+    - random
 
 term_filter:
-    min_size: null
-    max_size: null
+    min_size: 50
+    max_size: 500
     sample_num: null
 
 replicate_count: 10
 
 parameters:
     similarityfactor: [0.5]
-    ontermcount: [5]
+    ontermcount: [20]
     siggenescaling: [0.1]
 
 params_path: config/params.csv
