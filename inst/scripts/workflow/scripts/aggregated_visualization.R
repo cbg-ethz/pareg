@@ -188,7 +188,17 @@ df_enr %>%
 
 # compute AUCs
 df_auc <- df_enr %>%
-  group_by(method, replicate, termsource, alpha, beta, similarityfactor, ontermcount, siggenescaling) %>%
+  group_by(
+    method,
+    replicate,
+    termsource,
+    alpha,
+    beta,
+    similaritymeasure,
+    similarityfactor,
+    ontermcount,
+    siggenescaling
+  ) %>%
   group_modify(function(df_group, key) {
     roc_auc <- roc.curve(
       scores.class0 = df_group$enrichment,
@@ -267,4 +277,50 @@ df_auc %>%
       ylim(0, 1) +
       theme_minimal()
     ggsave(file.path(auc_plot_dir, glue("pr_aucs_{id_}.pdf")), width = 8, height = 6)
+  })
+
+# more final plots
+parameter_columns <- setdiff(
+  colnames(df_enr),
+  c("method", "term", "enrichment", "is_on_term", "replicate")
+)
+
+parameter_columns %>%
+  walk(function(param_name) {
+    df_enr %>%
+      group_by_at(vars(one_of(param_name, "method"))) %>%
+      group_modify(function(group, key) {
+        print(key)
+        pr.curve(
+          scores.class0 = group$enrichment,
+          weights.class0 = group$is_on_term,
+          curve = TRUE
+        )$curve %>%
+          as.data.frame()
+      }) %>%
+      rename(recall = V1, precision = V2, threshold = V3) %>%
+      ggplot(aes_string(
+        x = "recall",
+        y = "precision",
+        color = param_name,
+        linetype = "method"
+      )) +
+      geom_line() +
+      xlim(0, 1) +
+      ylim(0, 1) +
+      theme_minimal()
+    ggsave(file.path(outdir, glue("pr_aggregated_{param_name}.pdf")), width = 8, height = 6)
+  })
+
+parameter_columns %>%
+  walk(function(param_name) {
+    df_auc %>%
+      ggplot(aes_string(x = param_name, y = "pr_auc", fill = "method")) +
+      geom_boxplot() +
+      geom_jitter(shape = ".") +
+      ylab("PR-AUC") +
+      scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+      ylim(0, 1) +
+      theme_minimal()
+    ggsave(file.path(outdir, glue("pr_aucs_aggregated_{param_name}.pdf")), width = 8, height = 6)
   })
