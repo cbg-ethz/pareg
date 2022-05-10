@@ -47,7 +47,8 @@ Suggests:
     ggfittext,
     simplifyEnrichment,
     GSEABenchmarkeR,
-    BiocParallel
+    BiocParallel,
+    ggupset
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:

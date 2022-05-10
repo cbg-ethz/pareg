@@ -17,7 +17,22 @@ fit <- read_rds(fname_obj)
 
 obj <- as_enrichplot_object(fit)
 
-# dotplot
-dotplot(obj) +
+# plots
+dotplot(obj, showCategory = 30) +
   scale_colour_continuous(name = "Enrichment Score")
-ggsave(file.path(outdir, "dotplot.pdf"))
+ggsave(file.path(outdir, "dotplot.pdf"), width = 10, height = 15)
+
+treeplot(obj, showCategory = 30) +
+  scale_colour_continuous(name = "Enrichment Score")
+ggsave(file.path(outdir, "treeplot.pdf"), width = 15, height = 10)
+
+enriched_terms <- df_enr %>%
+  arrange(desc(abs(enrichment))) %>%
+  head(30) %>%
+  pull(term)
+plot(fit, term_subset = enriched_terms)
+ggsave(file.path(outdir, "network.pdf"), width = 15, height = 15)
+
+upplot <- upsetplot(obj, showCategory = 30)
+upplot
+ggsave(file.path(outdir, "upsetplot.pdf"), plot = upplot, width = 15, height = 10)
