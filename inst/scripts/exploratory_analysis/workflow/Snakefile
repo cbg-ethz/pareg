@@ -1,0 +1,49 @@
+# setup workflow
+configfile: "config/config.yaml"
+
+
+cancer_list = config["cancer_types"]
+
+
+# rules
+rule all:
+    input:
+        expand("results/plots/{cancer}/", cancer=cancer_list),
+
+
+rule provide_data:
+    output:
+        outdir=directory("results/tcga_data/"),
+        result_files=expand("results/tcga_data/{cancer}.txt", cancer=cancer_list),
+    script:
+        "scripts/provide_data.R"
+
+
+rule load_terms:
+    output:
+        fname_terms="results/terms/database.csv",
+        fname_sim="results/terms/similarities.csv",
+    script:
+        "scripts/load_terms.R"
+
+
+rule run_pareg:
+    input:
+        fname_de="results/tcga_data/{cancer}.txt",
+        fname_terms="results/terms/database.csv",
+        fname_sim="results/terms/similarities.csv",
+    output:
+        fname_enr="results/enrichments/{cancer}.csv",
+        fname_obj="results/enrichments/{cancer}.rds",
+    script:
+        "scripts/run_pareg.R"
+
+
+rule visualize:
+    input:
+        fname_enr="results/enrichments/{cancer}.csv",
+        fname_obj="results/enrichments/{cancer}.rds",
+    output:
+        outdir=directory("results/plots/{cancer}/"),
+    script:
+        "scripts/visualize.R"

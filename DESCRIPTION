@@ -45,7 +45,8 @@ Suggests:
     tidyverse,
     cowplot,
     ggfittext,
-    simplifyEnrichment
+    simplifyEnrichment,
+    GSEABenchmarkeR
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
