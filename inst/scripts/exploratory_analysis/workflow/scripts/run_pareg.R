@@ -48,10 +48,10 @@ fit <- pareg::pareg(
 )
 
 df <- fit %>%
-  as.data.frame()
+  as.data.frame() %>%
+  arrange(desc(abs(enrichment)))
 
 df %>%
-  arrange(desc(abs(enrichment))) %>%
   head()
 
 # post-processing
