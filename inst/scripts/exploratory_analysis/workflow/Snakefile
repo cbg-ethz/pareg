@@ -15,6 +15,10 @@ rule provide_data:
     output:
         outdir=directory("results/tcga_data/"),
         result_files=expand("results/tcga_data/{cancer}.txt", cancer=cancer_list),
+    threads: 4
+    resources:
+        mem_mb=5_000,
+        time_min=60 * 24,
     script:
         "scripts/provide_data.R"
 
@@ -23,6 +27,8 @@ rule load_terms:
     output:
         fname_terms="results/terms/database.csv",
         fname_sim="results/terms/similarities.csv",
+    resources:
+        mem_mb=10_000,
     script:
         "scripts/load_terms.R"
 
@@ -35,6 +41,10 @@ rule run_pareg:
     output:
         fname_enr="results/enrichments/{cancer}.csv",
         fname_obj="results/enrichments/{cancer}.rds",
+    threads: 4
+    resources:
+        mem_mb=2_000,
+        time_min=60 * 24,
     script:
         "scripts/run_pareg.R"
 
@@ -45,5 +55,7 @@ rule visualize:
         fname_obj="results/enrichments/{cancer}.rds",
     output:
         outdir=directory("results/plots/{cancer}/"),
+    resources:
+        mem_mb=10_000,
     script:
         "scripts/visualize.R"

@@ -1,3 +1,4 @@
+library(BiocParallel)
 library(GSEABenchmarkeR)
 
 
@@ -13,10 +14,13 @@ tcga <- loadEData(
 )
 
 # run DEA
+multicoreParam <- MulticoreParam(workers = snakemake@threads)
+
 tcga <- runDE(
   tcga,
   de.method = "limma",
-  padj.method = "flexible"
+  padj.method = "flexible",
+  parallel = multicoreParam
 )
 
 # save results

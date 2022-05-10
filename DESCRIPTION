@@ -46,7 +46,8 @@ Suggests:
     cowplot,
     ggfittext,
     simplifyEnrichment,
-    GSEABenchmarkeR
+    GSEABenchmarkeR,
+    BiocParallel
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
