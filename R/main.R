@@ -50,6 +50,7 @@
 #' @importFrom logger log_threshold log_debug
 #' @importFrom future plan multicore
 #' @importFrom doFuture registerDoFuture
+#' @importFrom foreach setDoPar
 pareg <- function(
   df_genes,
   df_terms,
@@ -76,7 +77,7 @@ pareg <- function(
     old_dopar <- registerDoFuture()
 
     on.exit({
-      with(old_dopar, foreach::setDoPar(fun = fun, data = data, info = info))
+      with(old_dopar, setDoPar(fun = fun, data = data, info = info))
       plan(old_plan)
     })
   }
