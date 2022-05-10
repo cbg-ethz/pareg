@@ -48,7 +48,7 @@
 #' @importFrom glue glue_collapse
 #' @importFrom magrittr %>%
 #' @importFrom logger log_threshold log_debug
-#' @importFrom future plan multisession
+#' @importFrom future plan multicore
 #' @importFrom doFuture registerDoFuture
 pareg <- function(
   df_genes,
@@ -72,7 +72,7 @@ pareg <- function(
   }
 
   if (!is.null(cv_cores)) {
-    old_plan <- plan(multisession, workers = cv_cores)
+    old_plan <- plan(multicore, workers = cv_cores)
     old_dopar <- registerDoFuture()
 
     on.exit({
