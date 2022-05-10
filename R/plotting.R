@@ -7,6 +7,7 @@
 #' @param x An object of class \code{pareg}.
 #' @param show_term_names Whether to plot node labels.
 #' @param min_similarity Don't plot edges for similarities below this value.
+#' @param term_subset Subset of terms to show.
 #'
 #' @return ggplot object.
 #'
@@ -42,7 +43,8 @@
 plot_pareg_with_args <- function(
   x,
   show_term_names = TRUE,
-  min_similarity = 0
+  min_similarity = 0,
+  term_subset = NULL
 ) {
   # prepare data
   df_enr <- as.data.frame(x)
@@ -63,6 +65,10 @@ plot_pareg_with_args <- function(
   }
 
   # subset term network
+  if (!is.null(term_subset)) {
+    term_network <- term_network[term_subset, term_subset]
+  }
+
   term_network[term_network < min_similarity] <- 0
 
   # create plot

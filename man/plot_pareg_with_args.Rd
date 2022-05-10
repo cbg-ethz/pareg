@@ -4,7 +4,12 @@
 \alias{plot_pareg_with_args}
 \title{Plot result of enrichment computation.}
 \usage{
-plot_pareg_with_args(x, show_term_names = TRUE, min_similarity = 0)
+plot_pareg_with_args(
+  x,
+  show_term_names = TRUE,
+  min_similarity = 0,
+  term_subset = NULL
+)
 }
 \arguments{
 \item{x}{An object of class \code{pareg}.}
@@ -12,6 +17,8 @@ plot_pareg_with_args(x, show_term_names = TRUE, min_similarity = 0)
 \item{show_term_names}{Whether to plot node labels.}
 
 \item{min_similarity}{Don't plot edges for similarities below this value.}
+
+\item{term_subset}{Subset of terms to show.}
 }
 \value{
 ggplot object.
