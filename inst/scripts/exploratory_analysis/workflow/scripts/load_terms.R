@@ -17,7 +17,8 @@ df_terms <- msigdbr(
 ) %>%
   select(gs_name, gene_symbol) %>%
   rename(term = gs_name, gene = gene_symbol) %>%
-  distinct(.keep_all = TRUE)
+  distinct(.keep_all = TRUE) %>%
+  mutate(term = str_replace(term, "^KEGG_", ""))
 
 df_terms %>%
   head()
