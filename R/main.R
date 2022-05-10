@@ -48,8 +48,8 @@
 #' @importFrom glue glue_collapse
 #' @importFrom magrittr %>%
 #' @importFrom logger log_threshold log_debug
-#' @importFrom doParallel registerDoParallel
-#' @importFrom parallel makeCluster
+#' @importFrom future plan multisession
+#' @importFrom doFuture registerDoFuture
 pareg <- function(
   df_genes,
   df_terms,
@@ -72,12 +72,13 @@ pareg <- function(
   }
 
   if (!is.null(cv_cores)) {
-    if (cv_cores == 1) {
-      registerDoParallel(cv_cores)
-    } else {
-      cl <- makeCluster(cv_cores, outfile = "") # enable printing to stdout
-      registerDoParallel(cv_cores)
-    }
+    old_plan <- plan(multisession, workers = cv_cores)
+    old_dopar <- registerDoFuture()
+
+    on.exit({
+      with(old_dopar, foreach::setDoPar(fun = fun, data = data, info = info))
+      plan(old_plan)
+    })
   }
 
   # generate design matrix
