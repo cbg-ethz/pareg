@@ -66,7 +66,12 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_pareg_with_args</span><span class="op">(</span><span class="va">x</span>, show_term_names <span class="op">=</span> <span class="cn">TRUE</span>, min_similarity <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">plot_pareg_with_args</span><span class="op">(</span>
+  <span class="va">x</span>,
+  show_term_names <span class="op">=</span> <span class="cn">TRUE</span>,
+  min_similarity <span class="op">=</span> <span class="fl">0</span>,
+  term_subset <span class="op">=</span> <span class="cn">NULL</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -77,6 +82,8 @@
 <dd><p>Whether to plot node labels.</p></dd>
 <dt>min_similarity</dt>
 <dd><p>Don't plot edges for similarities below this value.</p></dd>
+<dt>term_subset</dt>
+<dd><p>Subset of terms to show.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
