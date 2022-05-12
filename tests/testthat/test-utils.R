@@ -100,11 +100,15 @@ test_that("enrichplot integration works", {
   df_terms <- rbind(
     data.frame(
       term = "foo",
-      gene = paste("g", 1:10, sep = "")
+      gene = paste("g", 1:12, sep = "")
     ),
     data.frame(
       term = "bar",
       gene = paste("g", 11:25, sep = "")
+    ),
+    data.frame(
+      term = "baz",
+      gene = paste("g", 21:25, sep = "")
     )
   )
 
@@ -117,14 +121,18 @@ test_that("enrichplot integration works", {
   enrichplot::cnetplot(obj)
   enrichplot::dotplot(obj) +
     scale_colour_continuous(name = "Enrichment Score")
-  expect_equal(obj@result[c("foo", "bar"), ]$GeneRatio, c("8/10", "2/15"))
+  expect_equal(
+    obj@result[c("foo", "bar", "baz"), ]$GeneRatio,
+    c("9/12", "2/15", "0/5")
+  )
 
   obj <- enrichplot::pairwise_termsim(obj)
-  termsim <- matrix(c(NA, NA, 0, NA), 2, 2)
   rownames(termsim) <- colnames(termsim) <- c("foo", "bar")
-  expect_equal(obj@termsim[c("foo", "bar"), c("foo", "bar")], termsim)
+  expect_equal(obj@termsim["foo", "baz"], 0)
+  expect_equal(obj@termsim["bar", "foo"], 0.08)
+  expect_equal(obj@termsim["bar", "baz"], 0.33333333)
 
-  enrichplot::emapplot(obj) +
+  enrichplot::emapplot(obj, min_edge = 0) +
     scale_fill_continuous(name = "Enrichment Score")
   # enrichplot::treeplot(obj, nCluster = 2) +
   #   scale_colour_continuous(name = "Enrichment Score")
