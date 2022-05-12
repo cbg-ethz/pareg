@@ -1311,7 +1311,8 @@ cv_edgenet_optim <- function(
 
 
 #' @noRd
-#' @importFrom foreach foreach %dopar%
+#' @importFrom foreach foreach
+#' @importFrom doRNG %dorng%
 #' @importFrom tidyr expand_grid
 #' @importFrom logger log_trace log_debug
 #' @importFrom hms as_hms
@@ -1389,7 +1390,7 @@ cv_edgenet_gridsearch <- function(
     .combine = rbind,
     .inorder = FALSE,
     .packages = c("pareg")
-  ) %dopar% {
+  ) %dorng% {
     # extract arguments
     row <- param_grid[i, ]
 
