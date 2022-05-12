@@ -1,2 +1,2 @@
 termsource,alpha,beta,similaritymeasure
-custom@50@15@200,0,0.7,jaccard
+msigdb@C5@GO:BP,0,0.5,jaccard
