@@ -127,7 +127,6 @@ test_that("enrichplot integration works", {
   )
 
   obj <- enrichplot::pairwise_termsim(obj)
-  rownames(termsim) <- colnames(termsim) <- c("foo", "bar")
   expect_equal(obj@termsim["foo", "baz"], 0)
   expect_equal(obj@termsim["bar", "foo"], 0.08)
   expect_equal(obj@termsim["bar", "baz"], 0.33333333)
