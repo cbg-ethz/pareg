@@ -77,7 +77,7 @@ test_that("Cross-validation with network regularization works", {
 
   set.seed(42)
   plan(multicore, workers = 1)
-  registerDoFuture(1)
+  registerDoFuture()
   log_threshold(TRACE)
 
   alpha <- 2.3
