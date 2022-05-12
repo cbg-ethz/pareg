@@ -48,7 +48,8 @@ test_that("Cross-validation works", {
   skip_on_bioc()
 
   set.seed(42)
-  registerDoParallel(1)
+  plan(multicore, workers = 1)
+  registerDoFuture()
   log_threshold(TRACE)
 
   alpha <- 2.3
@@ -75,7 +76,8 @@ test_that("Cross-validation with network regularization works", {
   skip_on_bioc()
 
   set.seed(42)
-  registerDoParallel(1)
+  plan(multicore, workers = 1)
+  registerDoFuture(1)
   log_threshold(TRACE)
 
   alpha <- 2.3
