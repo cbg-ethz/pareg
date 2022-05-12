@@ -39,8 +39,8 @@ rule run_pareg:
         fname_terms="results/terms/database.csv",
         fname_sim="results/terms/similarities.csv",
     output:
-        fname_enr="results/enrichments/{cancer}.csv",
-        fname_obj="results/enrichments/{cancer}.rds",
+        fname_enr="results/enrichments/{cancer}/{cancer}.csv",
+        fname_obj="results/enrichments/{cancer}/{cancer}.rds",
     threads: 4
     resources:
         mem_mb=2_000,
@@ -51,8 +51,8 @@ rule run_pareg:
 
 rule visualize:
     input:
-        fname_enr="results/enrichments/{cancer}.csv",
-        fname_obj="results/enrichments/{cancer}.rds",
+        fname_enr="results/enrichments/{cancer}/{cancer}.csv",
+        fname_obj="results/enrichments/{cancer}/{cancer}.rds",
     output:
         outdir=directory("results/plots/{cancer}/"),
     resources:
