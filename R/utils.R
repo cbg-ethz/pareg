@@ -108,7 +108,7 @@ as.data.frame.pareg <- function(x, row.names = NULL, optional = FALSE, ...) {
     filter(grepl(".member$", .data$rowname)) %>%
     extract(.data$rowname, "term", "(.*).member") %>%
     rename(enrichment = .data$`y[1]`) %>%
-    arrange(desc(.data$enrichment))
+    arrange(desc(abs(.data$enrichment)))
 }
 
 
