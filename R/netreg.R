@@ -1311,7 +1311,7 @@ cv_edgenet_optim <- function(
 
 
 #' @noRd
-#' @importFrom foreach foreach
+#' @importFrom foreach foreach %dopar%
 #' @importFrom doRNG %dorng%
 #' @importFrom tidyr expand_grid
 #' @importFrom logger log_trace log_debug
@@ -1383,8 +1383,10 @@ cv_edgenet_gridsearch <- function(
   # cross-validation
   log_debug("Running CV with {nrow(param_grid)} parameter combinations")
 
-  global_start_time <- Sys.time()
   i <- NULL # avoid 'no visible binding for global variable'
+  invisible(`%dopar%`) # fix as doRNG requires %dopar%
+
+  global_start_time <- Sys.time()
   loss_grid <- foreach(
     i = seq_len(nrow(param_grid)),
     .combine = rbind,
