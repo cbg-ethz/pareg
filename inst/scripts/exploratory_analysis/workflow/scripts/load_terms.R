@@ -12,13 +12,22 @@ fname_sim <- snakemake@output$fname_sim
 # load data
 df_terms <- msigdbr(
   species = "Homo sapiens",
-  category = "C2",
-  subcategory = "CP:KEGG"
+  category = "C5",
+  subcategory = "GO:BP"
 ) %>%
   select(gs_name, gene_symbol) %>%
   rename(term = gs_name, gene = gene_symbol) %>%
   distinct(.keep_all = TRUE) %>%
-  mutate(term = str_replace(term, "^KEGG_", ""))
+  mutate(term = str_replace(term, "^GOBP_", ""))
+
+term_selection <- df_terms %>%
+  group_by(term) %>%
+  tally() %>%
+  filter(50 < n) %>%
+  filter(n < 500) %>%
+  pull(term)
+df_terms <- df_terms %>%
+  filter(term %in% term_selection)
 
 df_terms %>%
   head()
@@ -38,6 +47,15 @@ term_similarities <- 1 - proxy::dist(
   as.matrix()
 
 # plot summary
+max_size <- 500
+if (nrow(term_similarities) > max_size) {
+  # subsample so creating clustermap doesn't take too long
+  random_indices <- sample(nrow(term_similarities), max_size)
+  term_similarities_subsample <- term_similarities[random_indices, random_indices]
+} else {
+  term_similarities_subsample <- term_similarities
+}
+
 png(
   file.path(dirname(fname_sim), "similarity_clustermap.png"),
   width = 20,
@@ -46,7 +64,7 @@ png(
   res = 300
 )
 Heatmap(
-  term_similarities,
+  term_similarities_subsample,
   name = "similarity",
   col = circlize::colorRamp2(c(0, 1), c("white", "black")),
   show_row_names = FALSE,
