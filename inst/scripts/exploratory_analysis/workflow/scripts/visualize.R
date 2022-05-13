@@ -17,9 +17,42 @@ dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 df_enr <- read_csv(fname_enr)
 fit <- read_rds(fname_obj)
 
+# network plot
+min_similarity <- 0.1
+initial_term_count <- 70
+
+enriched_terms <- df_enr %>%
+  arrange(desc(abs(enrichment))) %>%
+  head(initial_term_count) %>%
+  pull(term)
+
+mat_sub <- fit$term_network[enriched_terms, enriched_terms]
+enriched_terms <- enriched_terms %>%
+  map_dfr(function(x) {
+    edge_weights <- mat_sub[x, !colnames(mat_sub) %in% c(x)]
+    max_w <- max(edge_weights)
+
+    data.frame(term = x, max_weight = max_w)
+  }) %>%
+  filter(max_weight >= min_similarity) %>%
+  pull(term)
+print(paste("#selected terms:", length(enriched_terms)))
+
+plot(fit, term_subset = enriched_terms, min_similarity = min_similarity) +
+  theme(
+    legend.title = element_text(size = 20),
+    legend.text = element_text(size = 15)
+  )
+
+ggsave(
+  file.path(outdir, glue("network_{cancer_type}.pdf")),
+  width = 15,
+  height = 15
+)
+
+# enrichplots
 obj <- as_enrichplot_object(fit)
 
-# plots
 dotplot(obj, showCategory = 30) +
   scale_colour_continuous(name = "Enrichment Score")
 ggsave(
@@ -34,17 +67,6 @@ ggsave(
   file.path(outdir, glue("treeplot_{cancer_type}.pdf")),
   width = 15,
   height = 10
-)
-
-enriched_terms <- df_enr %>%
-  arrange(desc(abs(enrichment))) %>%
-  head(30) %>%
-  pull(term)
-plot(fit, term_subset = enriched_terms)
-ggsave(
-  file.path(outdir, glue("network_{cancer_type}.pdf")),
-  width = 15,
-  height = 15
 )
 
 upplot <- upsetplot(obj, showCategory = 30)
