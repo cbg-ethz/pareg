@@ -7,7 +7,7 @@ devtools::load_all("../..")
 fit <- pareg::pareg(
   study$df %>% select(gene, pvalue),
   df_terms,
-  lasso_param = 1
+  lasso_param = 5
 )
 
 df <- fit %>%
@@ -19,20 +19,7 @@ df %>%
   head()
 
 # misc
-do.call(rbind, fit$obj$loss_hist) %>%
-  as_tibble() %>%
-  unnest(everything()) %>%
-  mutate(iteration = seq_along(fit$obj$loss_hist)) %>%
-  pivot_longer(-iteration) %>%
-  ggplot(aes(x = iteration, y = value, color = name)) +
-    geom_line() +
-    # geom_point() +
-    theme_minimal()
-ggsave(
-  file.path(dirname(snakemake@output$fname), "loss.pdf"),
-  width = 8,
-  height = 6
-)
+pareg_post_processing(fit, dirname(snakemake@output$fname))
 
 # save result
 df %>%
