@@ -36,7 +36,7 @@
 #' @importFrom dplyr group_by summarize distinct pull as_tibble n left_join
 #' @importFrom magrittr %<>% extract2 %>%
 #' @importFrom tidygraph as_tbl_graph activate mutate
-#' @importFrom shadowtext geom_shadowtext
+#' @importFrom ggrepel geom_text_repel
 #' @importFrom igraph graph_from_adjacency_matrix
 #' @importFrom ggplot2 aes scale_size scale_color_gradient2
 #' @importFrom ggplot2 coord_fixed theme element_rect
@@ -126,7 +126,7 @@ plot_pareg_with_args <- function(
     )
 
   if (show_term_names) {
-    p <- p + geom_shadowtext(
+    p <- p + geom_text_repel(
       aes(label = .data$name, x = .data$x, y = .data$y),
       color = "black",
       bg.color = "white"

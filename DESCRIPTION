@@ -72,7 +72,7 @@ Imports:
     Matrix,
     keras,
     nloptr,
-    shadowtext,
+    ggrepel,
     methods,
     DOSE,
     stringr,
