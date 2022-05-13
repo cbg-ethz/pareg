@@ -111,15 +111,16 @@ plot_pareg_with_args <- function(
     geom_node_point(
       aes(size = .data$term_size, color = .data$enrichment)
     ) +
-    scale_size(range = c(2, 10)) +
+    scale_size(range = c(2, 10), name = "Term size") +
     scale_color_gradient2(
       low = "red",
       mid = "grey",
       high = "blue",
       midpoint = 0,
-      na.value = "black"
+      na.value = "black",
+      name = "Enrichment"
     ) +
-    scale_edge_alpha() +
+    scale_edge_alpha(name = "Term similarity") +
     coord_fixed() +
     theme(
       panel.background = element_rect(fill = "white")
