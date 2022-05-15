@@ -287,7 +287,7 @@ parameter_columns <- setdiff(
 
 parameter_columns %>%
   walk(function(param_name) {
-    df_enr %>%
+    enr_grpd <- df_enr %>%
       group_by_at(vars(one_of(param_name, "method"))) %>%
       group_modify(function(group, key) {
         print(key)
@@ -298,7 +298,9 @@ parameter_columns %>%
         )$curve %>%
           as.data.frame()
       }) %>%
-      rename(recall = V1, precision = V2, threshold = V3) %>%
+      rename(recall = V1, precision = V2, threshold = V3)
+
+    enr_grpd %>%
       ggplot(aes_string(
         x = "recall",
         y = "precision",
@@ -310,14 +312,32 @@ parameter_columns %>%
       ylim(0, 1) +
       theme_minimal()
     ggsave(file.path(outdir, glue("pr_aggregated_{param_name}.pdf")), width = 8, height = 6)
+
+    enr_grpd %>%
+      group_by_at(vars(one_of(param_name))) %>%
+      group_walk(function(group, key) {
+        print(key)
+
+        group %>%
+          ggplot(aes(
+            x = recall,
+            y = precision,
+            color = method
+          )) +
+          geom_line() +
+          xlim(0, 1) +
+          ylim(0, 1) +
+          theme_minimal()
+        ggsave(file.path(outdir, glue("pr_aggregated_{param_name}_{key}.pdf")), width = 8, height = 6)
+      })
   })
 
 parameter_columns %>%
   walk(function(param_name) {
     df_auc %>%
       ggplot(aes_string(x = param_name, y = "pr_auc", fill = "method")) +
-      geom_boxplot() +
-      geom_jitter(shape = ".") +
+      geom_boxplot(outlier.colour = NA) +
+      geom_point(aes(color = method), position = position_jitterdodge()) +
       ylab("PR-AUC") +
       scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
       ylim(0, 1) +
