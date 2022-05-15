@@ -173,10 +173,15 @@ cluster_apply <- function(
         pb$tick()
       } else if (status == "EXIT") {
         log_error("Job {row$job_id} crashed, killing all other jobs")
+
+        log_file <- file.path(log_dir, glue("job_{row$job_id}.stdout"))
+        log_error("Log: {log_file}")
+
         for (i in seq_len(nrow(df_jobs))) {
           system2("bkill", df_jobs[i, ]$job_id)
         }
-        stop("Cluster job crashed")
+
+        stop(glue("Cluster job {row$job_id} crashed"))
       }
 
       Sys.sleep(0.1)
