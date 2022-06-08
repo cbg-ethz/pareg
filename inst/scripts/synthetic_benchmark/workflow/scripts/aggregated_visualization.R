@@ -188,17 +188,7 @@ df_enr %>%
 
 # compute AUCs
 df_auc <- df_enr %>%
-  group_by(
-    method,
-    replicate,
-    termsource,
-    alpha,
-    beta,
-    similaritymeasure,
-    similarityfactor,
-    ontermcount,
-    siggenescaling
-  ) %>%
+  group_by(across(-all_of(c("term", "enrichment", "is_on_term")))) %>%
   group_modify(function(df_group, key) {
     roc_auc <- roc.curve(
       scores.class0 = df_group$enrichment,
