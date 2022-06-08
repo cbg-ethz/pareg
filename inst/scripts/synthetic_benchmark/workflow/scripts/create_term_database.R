@@ -50,14 +50,20 @@ if (parts[[1]] == "msigdb") {
       term = str_replace_all(term, ":", "_")
     )
 } else if (parts[[1]] == "custom") {
-  group_num <- parts[[2]]
-  group_size <- parts[[3]]
-  pathways_from_group <- parts[[4]]
+  group_num <- as.numeric(parts[[2]])
+  group_size <- as.numeric(parts[[3]])
+  pathways_from_group <- as.numeric(parts[[4]])
+
+  gene_count <- 10
 
   gene_groups <- purrr::map(seq(1, group_num), function(group_idx) {
     glue::glue("g{group_idx}_gene_{seq(1, group_size)}")
   })
   genes_bg <- paste0("bg_gene_", seq(1, 10000))
+
+  if (group_size <= gene_count) {
+    warning("Group size smaller than/equal sample size, no randomness")
+  }
 
   df_terms <- purrr::imap_dfr(
     gene_groups,
@@ -66,8 +72,16 @@ if (parts[[1]] == "msigdb") {
         data.frame(
           term = paste0("g", gene_list_idx, "_term_", pathway_idx),
           gene = c(
-            sample(current_gene_list, 10, replace = FALSE),
-            sample(genes_bg, 10, replace = FALSE)
+            sample(
+              current_gene_list,
+              min(gene_count, group_size),
+              replace = FALSE
+            ),
+            sample(
+              genes_bg,
+              min(gene_count, group_size),
+              replace = FALSE
+            )
           )
         )
       })
