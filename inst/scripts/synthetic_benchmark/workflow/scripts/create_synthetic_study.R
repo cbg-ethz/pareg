@@ -151,6 +151,20 @@ if (model == "mgsa") {
   mat_X <- mat_X %>%
     mutate(across(everything(), as.numeric))
 
+  # visualize raw matrix
+  tmp <- as.matrix(mat_X)
+  rownames(tmp) <- genes
+
+  ht_raw <- ComplexHeatmap::Heatmap(
+    tmp,
+    col = c("white", "black"),
+    column_title = "Raw matrix",
+    show_row_names = FALSE,
+    show_column_names = FALSE,
+    cluster_rows = FALSE,
+    cluster_columns = FALSE
+  )
+
   # introduce noise
   for (term in on_terms) {
     neg_matches <- which(mat_X[[term]] == 0)
@@ -166,6 +180,34 @@ if (model == "mgsa") {
     fn_ind <- sample(pos_matches, fn_count, replace = FALSE)
     mat_X[fn_ind, term] <- 0
   }
+
+  # visualize noisy matrix
+  tmp <- as.matrix(mat_X)
+  rownames(tmp) <- genes
+
+  ht_noisy <- ComplexHeatmap::Heatmap(
+    tmp,
+    col = c("white", "black"),
+    column_title = "Noisy matrix",
+    show_row_names = FALSE,
+    show_column_names = FALSE,
+    cluster_rows = FALSE,
+    cluster_columns = FALSE
+  )
+
+  png(
+    file.path(plotdir, "member_matrix.png"),
+    width = 40,
+    height = 20,
+    units = "in",
+    res = 300
+  )
+  ComplexHeatmap::draw(
+    ht_raw + ht_noisy,
+    row_title = "Genes",
+    column_title = "Terms"
+  )
+  dev.off()
 
   # simulate p-values
   term_vector <- term_vector[colnames(mat_X)]
