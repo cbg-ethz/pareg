@@ -1,8 +1,8 @@
 library(tidyverse)
 library(ggfittext)
-library(parallel)
-library(doParallel)
 library(logger)
+library(future)
+library(doFuture)
 
 
 # parameters
@@ -107,12 +107,8 @@ pareg_post_processing <- function(fit, outdir) {
 }
 
 # misc setup code
-if (thread_count == 1) {
-  registerDoParallel(thread_count)
-} else {
-  cl <- makeCluster(thread_count, outfile = "")
-  registerDoParallel(thread_count)
-}
+plan(multisession, workers = thread_count)
+registerDoFuture()
 
 log_threshold(TRACE)
 
