@@ -17,9 +17,12 @@ dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 df_enr <- read_csv(fname_enr)
 fit <- read_rds(fname_obj)
 
+df_enr %>%
+  head()
+
 # network plot
 min_similarity <- 0.1
-initial_term_count <- 70
+initial_term_count <- 50
 
 enriched_terms <- df_enr %>%
   arrange(desc(abs(enrichment))) %>%
@@ -46,8 +49,8 @@ plot(fit, term_subset = enriched_terms, min_similarity = min_similarity) +
 
 ggsave(
   file.path(outdir, glue("network_{cancer_type}.pdf")),
-  width = 15,
-  height = 15
+  width = 12,
+  height = 12
 )
 
 # enrichplots
