@@ -53,12 +53,24 @@ ggsave(
 # enrichplots
 obj <- as_enrichplot_object(fit)
 
-dotplot(obj, showCategory = 30) +
-  scale_colour_continuous(name = "Enrichment Score")
+dotplot(obj, showCategory = 25) +
+  scale_color_gradient2(
+    low = "red",
+    mid = "grey",
+    high = "blue",
+    midpoint = 0,
+    na.value = "black",
+    name = "Enrichment"
+  ) +
+  scale_size(range = c(3, 8), name = "Term size") +
+  theme(
+    legend.title = element_text(size = 20),
+    legend.text = element_text(size = 15)
+  )
 ggsave(
   file.path(outdir, glue("dotplot_{cancer_type}.pdf")),
   width = 10,
-  height = 15
+  height = 11
 )
 
 treeplot(obj, showCategory = 30) +
