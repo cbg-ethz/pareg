@@ -132,58 +132,89 @@
 <dd><p>input matrix, of dimension (<code>n</code> x <code>p</code>)
 where <code>n</code> is the number of observations and <code>p</code> is the number
 of covariables. Each row is an observation vector.</p></dd>
+
+
 <dt>Y</dt>
 <dd><p>output matrix, of dimension (<code>n</code> x <code>q</code>)
 where <code>n</code> is the number of observations and <code>q</code> is the number
 of response variables. Each row is an observation vector.</p></dd>
+
+
 <dt>G.X</dt>
 <dd><p>non-negativ affinity matrix for <code>X</code>, of dimensions
 (<code>p</code> x <code>p</code>) where <code>p</code> is the number of covariables</p></dd>
+
+
 <dt>G.Y</dt>
 <dd><p>non-negativ affinity matrix for <code>Y</code>, of dimensions
 (<code>q</code> x <code>q</code>) where <code>q</code> is the number of responses</p></dd>
+
+
 <dt>lambda</dt>
 <dd><p><code>numerical</code> shrinkage parameter for LASSO.</p></dd>
+
+
 <dt>psigx</dt>
 <dd><p><code>numerical</code> shrinkage parameter for graph-regularization
 of <code>G.X</code></p></dd>
+
+
 <dt>psigy</dt>
 <dd><p><code>numerical</code> shrinkage parameter for graph-regularization
 of <code>G.Y</code></p></dd>
+
+
 <dt>thresh</dt>
 <dd><p><code>numerical</code> threshold for optimizer</p></dd>
+
+
 <dt>maxit</dt>
 <dd><p>maximum number of iterations for optimizer
 (<code>integer</code>)</p></dd>
+
+
 <dt>learning.rate</dt>
 <dd><p>step size for Adam optimizer (<code>numerical</code>)</p></dd>
+
+
 <dt>family</dt>
 <dd><p>family of response, e.g. <em>gaussian</em> or <em>binomial</em></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <code>edgenet</code></p>
+    
+
+<p>An object of class <code>edgenet</code></p>
 <dl><dt>beta </dt>
 <dd><p>the estimated (<code>p</code> x <code>q</code>)-dimensional
  coefficient matrix B.hat</p></dd>
+
 <dt>alpha </dt>
 <dd><p>the estimated (<code>q</code> x <code>1</code>)-dimensional
  vector of intercepts</p></dd>
+
 <dt>parameters </dt>
 <dd><p>regularization parameters</p></dd>
+
 <dt>lambda </dt>
 <dd><p>regularization parameter lambda)</p></dd>
+
 <dt>psigx </dt>
 <dd><p>regularization parameter psigx</p></dd>
+
 <dt>psigy </dt>
 <dd><p>regularization parameter psigy</p></dd>
+
 <dt>family </dt>
 <dd><p>a description of the error distribution and link function
    to be used. Can be a <code><a href="family-methods.html">pareg::family</a></code>
    function or a character string
    naming a family function, e.g. <code>gaussian</code> or "gaussian".</p></dd>
+
 <dt>call </dt>
 <dd><p>the call that produced the object</p></dd>
+
 </dl></div>
     <div id="references">
     <h2>References</h2>
@@ -231,7 +262,7 @@ of <code>G.Y</code></p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

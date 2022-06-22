@@ -145,34 +145,46 @@
 <dd><p>input matrix, of dimension (<code>n</code> x <code>p</code>)
 where <code>n</code> is the number of observations and <code>p</code> is the number
 of covariables. Each row is an observation vector.</p></dd>
+
+
 <dt>Y</dt>
 <dd><p>output matrix, of dimension (<code>n</code> x <code>q</code>)
 where <code>n</code> is the number of observations and <code>q</code> is the number
 of response variables Each row is an observation vector.</p></dd>
+
+
 <dt>G.X</dt>
 <dd><p>non-negativ affinity matrix for <code>X</code>, of dimensions
 (<code>p</code> x <code>p</code>) where <code>p</code> is the number of covariables.
  Providing a graph <code>G.X</code> will optimize the regularization
  parameter <code>psi.gx</code>. If this is not desired just set <code>G.X</code> to
  <code>NULL</code>.</p></dd>
+
+
 <dt>G.Y</dt>
 <dd><p>non-negativ affinity matrix for <code>Y</code>, of dimensions
 (<code>q</code> x <code>q</code>) where <code>q</code> is the number of responses <code>Y</code>.
 Providing a graph <code>G.Y</code> will optimize the regularization
 parameter <code>psi.gy</code>. If this is not desired just set <code>G.Y</code> to
 <code>NULL</code>.</p></dd>
+
+
 <dt>lambda</dt>
 <dd><p><code>numerical</code> shrinkage parameter for LASSO. Per default
 this parameter is set to <code>NA_real_</code>
 which means that <code>lambda</code> is going to be estimated
 using cross-validation. If any <code>numerical</code> value for <code>lambda</code>
 is set, estimation of the optimal parameter will <em>not</em> be conducted.</p></dd>
+
+
 <dt>psigx</dt>
 <dd><p><code>numerical</code> shrinkage parameter for graph-regularization
 of <code>G.X</code>. Per default this parameter is set to
 <code>NA_real_</code> which means that <code>psigx</code> is going to be estimated
 in the cross-validation. If any <code>numerical</code> value for <code>psigx</code> is
 set, estimation of the optimal parameter will <em>not</em> be conducted.</p></dd>
+
+
 <dt>psigy</dt>
 <dd><p><code>numerical</code> shrinkage parameter for graph-regularization
 of <code>G.Y</code>. Per default this parameter is
@@ -180,57 +192,92 @@ set to <code>NA_real_</code> which means that <code>psigy</code> is
 going to be estimated
 in the cross-validation. If any <code>numerical</code> value for <code>psigy</code> is
 set, estimation of the optimal parameter will <em>not</em> be conducted.</p></dd>
+
+
 <dt>thresh</dt>
 <dd><p><code>numerical</code> threshold for the optimizer</p></dd>
+
+
 <dt>maxit</dt>
 <dd><p>maximum number of iterations for the optimizer
 (<code>integer</code>)</p></dd>
+
+
 <dt>learning.rate</dt>
 <dd><p>step size for Adam optimizer (<code>numerical</code>)</p></dd>
+
+
 <dt>family</dt>
 <dd><p>family of response, e.g. <em>gaussian</em> or <em>binomial</em></p></dd>
+
+
 <dt>optim.thresh</dt>
 <dd><p><code>numerical</code> threshold criterion for the
 optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
+
+
 <dt>optim.maxit</dt>
 <dd><p>the maximum number of iterations for the optimization
 (<code>integer</code>). Usually 1e4 is a good choice.</p></dd>
+
+
 <dt>lambda_range</dt>
 <dd><p>range of lambda to use in CV grid.</p></dd>
+
+
 <dt>psigx_range</dt>
 <dd><p>range of psigx to use in CV grid.</p></dd>
+
+
 <dt>psigy_range</dt>
 <dd><p>range of psigy to use in CV grid.</p></dd>
+
+
 <dt>nfolds</dt>
 <dd><p>the number of folds to be used - default is 10.</p></dd>
+
+
 <dt>cv_method</dt>
 <dd><p>which cross-validation method to use.</p></dd>
+
+
 <dt>tempdir</dt>
 <dd><p>where to store auxiliary files.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object of class <code>cv_edgenet</code></p>
+    
+
+<p>An object of class <code>cv_edgenet</code></p>
 <dl><dt>parameters </dt>
 <dd><p>the estimated, optimal regularization parameters</p></dd>
+
 <dt>lambda </dt>
 <dd><p>optimal estimated value for regularization parameter lambda
   (or, if provided as argument, the value of the parameter)</p></dd>
+
 <dt>psigx </dt>
 <dd><p>optimal estimated value for regularization parameter psigx
   (or, if provided as argument, the value of the parameter)</p></dd>
+
 <dt>psigy </dt>
 <dd><p>optimal estimated value for regularization parameter psigy
   (or, if provided as argument, the value of the parameter)</p></dd>
+
 <dt>estimated.parameters </dt>
 <dd><p>names of parameters that were estimated</p></dd>
+
 <dt>family </dt>
 <dd><p>family used for estimated</p></dd>
+
 <dt>fit </dt>
 <dd><p>an <code>edgenet</code> object fitted with the optimal, estimated
  paramters</p></dd>
+
 <dt>call </dt>
 <dd><p>the call that produced the object</p></dd>
+
 </dl></div>
 
     <div id="ref-examples">
@@ -325,7 +372,7 @@ optimization to stop.  Usually 1e-3 is a good choice.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
