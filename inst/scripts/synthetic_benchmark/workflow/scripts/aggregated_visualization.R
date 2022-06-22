@@ -29,6 +29,17 @@ df_enr <- fname_list %>%
       mutate(!!!tmp)
   })
 
+if ("pareg" %in% df_enr$method) {
+  # put in first position
+  df_enr <- df_enr %>%
+    mutate(method = fct_relevel(method, "pareg"))
+}
+if ("random" %in% df_enr$method) {
+  # put in last position
+  df_enr <- df_enr %>%
+    mutate(method = fct_relevel(method, "random", after = length(unique(df_enr$method))))
+}
+
 df_enr %>%
   head
 
