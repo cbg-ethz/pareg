@@ -92,6 +92,18 @@ module similarity_measures:
 use rule * from similarity_measures as similarity_measures_*
 
 
+module rho:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_config("config_rho/config.yaml")
+    replace_prefix:
+        {"results/": "results/rho/"}
+
+
+use rule * from rho as rho_*
+
+
 # custom logic
 rule compare_rocauc_vs_loss:
     input:
@@ -134,4 +146,5 @@ rule all:
         # rules.noise_all.input,
         # rules.real_datasets_all.input,
         rules.similarity_measures_all.input,
+        rules.rho_all.input,
     default_target: True
