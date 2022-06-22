@@ -334,3 +334,98 @@ parameter_columns %>%
       theme_minimal()
     ggsave(file.path(outdir, glue("pr_aucs_aggregated_{param_name}.pdf")), width = 8, height = 6)
   })
+
+# comparison for given precision/recall values
+recall_value <- 0.8
+precision_value <- 0.8
+
+parameter_columns %>%
+  walk(function(param_name) {
+    # gather data
+    enr_grpd <- df_enr %>%
+      group_by_at(vars(one_of(param_name, "method", "replicate"))) %>%
+      group_modify(function(group, key) {
+        pr.curve(
+          scores.class0 = group$enrichment,
+          weights.class0 = group$is_on_term,
+          minStepSize = 0.01,
+          curve = TRUE
+        )$curve %>%
+          as.data.frame()
+      }) %>%
+      rename(recall = V1, precision = V2, threshold = V3)
+
+    # compute threshold values
+    selection_threshold <- 0.01
+    recall_selection <- enr_grpd %>%
+      filter(abs(recall - recall_value) < selection_threshold) %>%
+      slice_min(abs(recall - recall_value), with_ties = FALSE)
+    precision_selection <- enr_grpd %>%
+      filter(abs(precision - precision_value) < selection_threshold) %>%
+      slice_min(abs(precision - precision_value), with_ties = FALSE)
+
+    # `recall_selection` will always have all entries, but `precision_selection`
+    # might lack some. Let's add them
+    precision_selection_missing <- recall_selection %>%
+      distinct(method, replicate) %>%
+      pmap_dfr(function (...) {
+        row <- list(...)
+
+        df_match <- plyr::match_df(
+          precision_selection,
+          data.frame(
+            method = row$method,
+            replicate = row$replicate
+          ),
+          on = c("method", "replicate")
+        )
+
+        if (dim(df_match)[[1]] == 0) {
+          # entry in `recall_selection` is missing from `precision_selection`
+          new_row <- data.frame(
+            method = row$method,
+            replicate = row$replicate,
+            recall = 0,
+            precision = precision_value,
+            threshold = NA
+          )
+          new_row[[param_name]] <- row[[param_name]]
+
+          return(new_row)
+        }
+
+        NULL
+      })
+
+    precision_selection <- bind_rows(
+      precision_selection,
+      precision_selection_missing
+    ) %>%
+      arrange(method, replicate)
+
+    # recall plot
+    if (dim(recall_selection)[[1]]) {
+      recall_selection %>%
+        ggplot(aes_string(x = param_name, y = "precision", fill = "method")) +
+        geom_boxplot(outlier.colour = NA) +
+        geom_point(aes(color = method), position = position_jitterdodge()) +
+        ylab("Precision") +
+        scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+        ylim(0, 1) +
+        theme_minimal()
+      ggsave(file.path(outdir, glue("pr_recall_threshold_{param_name}_{recall_value}.pdf")), width = 8, height = 6)
+    }
+
+    # precision plot
+    if (dim(precision_selection)[[1]]) {
+      precision_selection %>%
+        ggplot(aes_string(x = param_name, y = "recall", fill = "method")) +
+        geom_boxplot(outlier.colour = NA) +
+        geom_point(aes(color = method), position = position_jitterdodge()) +
+        ylab("Recall") +
+        scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
+        ylim(0, 1) +
+        theme_minimal()
+      ggsave(file.path(outdir, glue("pr_precision_threshold_{param_name}_{precision_value}.pdf")), width = 8, height = 6)
+    }
+  })
