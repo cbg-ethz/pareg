@@ -5,6 +5,7 @@ library(PRROC)
 library(plotROC)
 library(cowplot)
 library(scales)
+library(latex2exp)
 
 
 # parameters
@@ -339,6 +340,11 @@ parameter_columns %>%
       ggplot(aes_string(x = param_name, y = "pr_auc", fill = "method")) +
       geom_boxplot(outlier.colour = NA) +
       geom_point(aes(color = method), position = position_jitterdodge()) +
+      xlab(TeX(case_when(
+        param_name == "beta" ~ "Noise level \\beta",
+        param_name == "similarityfactor" ~ "Similarity factor \\rho",
+        TRUE ~ param_name
+      ))) +
       ylab("PR-AUC") +
       scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
       ylim(0, 1) +
@@ -420,6 +426,11 @@ parameter_columns %>%
         ggplot(aes_string(x = param_name, y = "precision", fill = "method")) +
         geom_boxplot(outlier.colour = NA) +
         geom_point(aes(color = method), position = position_jitterdodge()) +
+        xlab(TeX(case_when(
+          param_name == "beta" ~ "Noise level \\beta",
+          param_name == "similarityfactor" ~ "Similarity factor \\rho",
+          TRUE ~ param_name
+        ))) +
         ylab("Precision") +
         scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
         ylim(0, 1) +
@@ -433,6 +444,11 @@ parameter_columns %>%
         ggplot(aes_string(x = param_name, y = "recall", fill = "method")) +
         geom_boxplot(outlier.colour = NA) +
         geom_point(aes(color = method), position = position_jitterdodge()) +
+        xlab(TeX(case_when(
+          param_name == "beta" ~ "Noise level \\beta",
+          param_name == "similarityfactor" ~ "Similarity factor \\rho",
+          TRUE ~ param_name
+        ))) +
         ylab("Recall") +
         scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
         ylim(0, 1) +

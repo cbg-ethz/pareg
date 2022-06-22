@@ -48,7 +48,8 @@ Suggests:
     simplifyEnrichment,
     GSEABenchmarkeR,
     BiocParallel,
-    ggupset
+    ggupset,
+    latex2exp
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
