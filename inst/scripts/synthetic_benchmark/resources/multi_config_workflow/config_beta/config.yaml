@@ -1,0 +1,24 @@
+---
+
+# `null` will execut all methods
+# list of strings will execute selected methods
+method_list:
+    - single_term_methods
+    - mgsa
+    - topgo
+    - pareg
+    - random
+
+term_filter:
+    min_size: 50
+    max_size: 500
+    sample_num: null
+
+replicate_count: 10
+
+parameters:
+    similarityfactor: [0.5]
+    ontermcount: [20]
+    siggenescaling: [0.1]
+
+params_path: config_beta/params.csv

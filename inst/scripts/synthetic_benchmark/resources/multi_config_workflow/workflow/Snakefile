@@ -104,6 +104,18 @@ module rho:
 use rule * from rho as rho_*
 
 
+module beta:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_config("config_beta/config.yaml")
+    replace_prefix:
+        {"results/": "results/beta/"}
+
+
+use rule * from beta as beta_*
+
+
 # custom logic
 rule compare_rocauc_vs_loss:
     input:
@@ -147,4 +159,5 @@ rule all:
         # rules.real_datasets_all.input,
         rules.similarity_measures_all.input,
         rules.rho_all.input,
+        rules.beta_all.input,
     default_target: True
