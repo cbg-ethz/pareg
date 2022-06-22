@@ -92,7 +92,8 @@ df_enr %>%
             pr.curve(
               scores.class0 = group$enrichment,
               weights.class0 = group$is_on_term,
-              curve = TRUE
+              curve = TRUE,
+              minStepSize = 0.01
             )$curve %>%
               as.data.frame()
           }) %>%
@@ -154,7 +155,8 @@ df_enr %>%
         pr.curve(
           scores.class0 = group$enrichment,
           weights.class0 = group$is_on_term,
-          curve = TRUE
+          curve = TRUE,
+          minStepSize = 0.01
         )$curve %>%
           as.data.frame()
       }) %>%
@@ -296,7 +298,8 @@ parameter_columns %>%
         pr.curve(
           scores.class0 = group$enrichment,
           weights.class0 = group$is_on_term,
-          curve = TRUE
+          curve = TRUE,
+          minStepSize = 0.01
         )$curve %>%
           as.data.frame()
       }) %>%
