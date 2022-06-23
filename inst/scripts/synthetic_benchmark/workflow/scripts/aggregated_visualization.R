@@ -228,7 +228,7 @@ df_auc %>%
 df_auc %>%
   ggplot(aes(x = method, y = roc_auc, fill = method)) +
   geom_boxplot() +
-  geom_jitter(shape = ".") +
+  geom_point(color = "black", size = 0.4, alpha = 0.9, position = position_jitterdodge()) +
   xlab("Method") +
   ylab("ROC-AUC") +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
@@ -239,7 +239,7 @@ ggsave(file.path(outdir, glue("roc_aucs.pdf")), width = 8, height = 6)
 df_auc %>%
   ggplot(aes(x = method, y = pr_auc, fill = method)) +
   geom_boxplot() +
-  geom_jitter(shape = ".") +
+  geom_point(color = "black", size = 0.4, alpha = 0.9, position = position_jitterdodge()) +
   xlab("Method") +
   ylab("PR-AUC") +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
@@ -264,7 +264,7 @@ df_auc %>%
 
     ggplot(df_group, aes(x = method, y = roc_auc, fill = method)) +
       geom_boxplot() +
-      geom_jitter(shape = ".") +
+      geom_point(color = "black", size = 0.4, alpha = 0.9, position = position_jitterdodge()) +
       xlab("Method") +
       ylab("ROC-AUC") +
       scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
@@ -274,7 +274,7 @@ df_auc %>%
 
     ggplot(df_group, aes(x = method, y = pr_auc, fill = method)) +
       geom_boxplot() +
-      geom_jitter(shape = ".") +
+      geom_point(color = "black", size = 0.4, alpha = 0.9, position = position_jitterdodge()) +
       xlab("Method") +
       ylab("PR-AUC") +
       scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
@@ -342,7 +342,7 @@ parameter_columns %>%
     df_auc %>%
       ggplot(aes_string(x = param_name, y = "pr_auc", fill = "method")) +
       geom_boxplot(outlier.colour = NA) +
-      geom_point(aes(color = method), position = position_jitterdodge()) +
+      geom_point(color = "black", size = 0.4, alpha = 0.9, position = position_jitterdodge()) +
       xlab(TeX(case_when(
         param_name == "beta" ~ "Noise level \\beta",
         param_name == "similarityfactor" ~ "Similarity factor \\rho",
@@ -428,7 +428,7 @@ parameter_columns %>%
       recall_selection %>%
         ggplot(aes_string(x = param_name, y = "precision", fill = "method")) +
         geom_boxplot(outlier.colour = NA) +
-        geom_point(aes(color = method), position = position_jitterdodge()) +
+        geom_point(color = "black", size = 0.4, alpha = 0.9, position = position_jitterdodge()) +
         xlab(TeX(case_when(
           param_name == "beta" ~ "Noise level \\beta",
           param_name == "similarityfactor" ~ "Similarity factor \\rho",
@@ -446,7 +446,7 @@ parameter_columns %>%
       precision_selection %>%
         ggplot(aes_string(x = param_name, y = "recall", fill = "method")) +
         geom_boxplot(outlier.colour = NA) +
-        geom_point(aes(color = method), position = position_jitterdodge()) +
+        geom_point(color = "black", size = 0.4, alpha = 0.9, position = position_jitterdodge()) +
         xlab(TeX(case_when(
           param_name == "beta" ~ "Noise level \\beta",
           param_name == "similarityfactor" ~ "Similarity factor \\rho",
