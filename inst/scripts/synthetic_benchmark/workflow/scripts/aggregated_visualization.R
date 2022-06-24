@@ -344,7 +344,7 @@ parameter_columns %>%
       geom_boxplot(outlier.colour = NA) +
       geom_point(color = "black", size = 0.4, alpha = 0.9, position = position_jitterdodge()) +
       xlab(TeX(case_when(
-        param_name == "beta" ~ "Noise level \\beta",
+        param_name == "beta" ~ "Noise level \\eta",  # \eta is not a typo
         param_name == "similarityfactor" ~ "Similarity factor \\rho",
         TRUE ~ param_name
       ))) +
@@ -430,7 +430,7 @@ parameter_columns %>%
         geom_boxplot(outlier.colour = NA) +
         geom_point(color = "black", size = 0.4, alpha = 0.9, position = position_jitterdodge()) +
         xlab(TeX(case_when(
-          param_name == "beta" ~ "Noise level \\beta",
+          param_name == "beta" ~ "Noise level \\eta",  # \eta is not a typo
           param_name == "similarityfactor" ~ "Similarity factor \\rho",
           TRUE ~ param_name
         ))) +
@@ -448,7 +448,7 @@ parameter_columns %>%
         geom_boxplot(outlier.colour = NA) +
         geom_point(color = "black", size = 0.4, alpha = 0.9, position = position_jitterdodge()) +
         xlab(TeX(case_when(
-          param_name == "beta" ~ "Noise level \\beta",
+          param_name == "beta" ~ "Noise level \\eta",  # \eta is not a typo
           param_name == "similarityfactor" ~ "Similarity factor \\rho",
           TRUE ~ param_name
         ))) +
