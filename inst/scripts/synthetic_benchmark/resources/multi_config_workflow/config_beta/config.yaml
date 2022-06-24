@@ -14,7 +14,7 @@ term_filter:
     max_size: 500
     sample_num: null
 
-replicate_count: 10
+replicate_count: 30
 
 parameters:
     similarityfactor: [0.5]
