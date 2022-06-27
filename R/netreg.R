@@ -768,6 +768,7 @@ cross.validate <- function(
     psigy.tensor$assign(params[3])
 
     losses <- vector(mode = "double", length = nfolds)
+    mses <- vector(mode = "double", length = nfolds)
 
     for (fold in seq(nfolds)) {
       log_trace("Testing fold #{fold}")
@@ -786,19 +787,21 @@ cross.validate <- function(
         learning.rate,
         thresh
       ))
+
       losses[fold] <- loss(
         mod,
         cast_float(x.test),
         cast_float(y.test)
       )$likelihood
-
-      mse <- mean(
+      mses[fold] <- mean(
         (mod(cast_float(x.test))$numpy() - cast_float(y.test)$numpy())^2
       )
-      log_trace("Summary: MSE={mse} likelihood={losses[fold]}")
     }
 
-    mean(losses)
+    list(
+      loss = mean(losses),
+      mse = mean(mses)
+    )
   }
 
   fn
@@ -1294,7 +1297,7 @@ cv_edgenet_optim <- function(
   )
 
   opt <- optim(
-    fn = fn,
+    fn = function(...) fn(...)$loss,
     par = init.params,
     var.args = fixed.params,
     lower = rep(0, length(init.params)),
@@ -1438,15 +1441,23 @@ cv_edgenet_gridsearch <- function(
     )
 
     # run CV
-    loss <- fn(c(lambda, psigx, psigy), var.args = c())
+    cv_res <- fn(c(lambda, psigx, psigy), var.args = c())
 
     duration <- as_hms(Sys.time() - start_time)
     log_trace(
       "Finished lambda={lambda}, psigx={psigx}, psigy={psigy} ",
-      "(loss={round(loss, 2)}, duration={duration})"
+      "(loss={round(cv_res$loss, 2)}, ",
+      "mse={round(cv_res$mse, 4)}, ",
+      "duration={duration})"
     )
 
-    data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
+    data.frame(
+      lambda = lambda,
+      psigx = psigx,
+      psigy = psigy,
+      loss = cv_res$loss,
+      mse = cv_res$mse
+    )
   }
 
   row_optim <- loss_grid[which.min(loss_grid$loss), ]
@@ -1458,7 +1469,9 @@ cv_edgenet_gridsearch <- function(
   log_debug(
     "Optimal parameters: ",
     "lambda={lambda_optim}, psigx={psigx_optim}, psigy={psigy_optim} ",
-    "(loss={round(row_optim$loss, 2)}, duration={global_duration})"
+    "(loss={round(row_optim$loss, 2)}, ",
+    "mse={round(row_optim$mse, 4)}, ",
+    "duration={global_duration})"
   )
 
   # finalize output
