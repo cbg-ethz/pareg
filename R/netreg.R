@@ -792,7 +792,9 @@ cross.validate <- function(
         cast_float(y.test)
       )$likelihood
 
-      mse <- mean((mod(cast_float(x.test))$numpy() - cast_float(y.test)$numpy())^2)
+      mse <- mean(
+        (mod(cast_float(x.test))$numpy() - cast_float(y.test)$numpy())^2
+      )
       log_trace("Summary: MSE={mse} likelihood={losses[fold]}")
     }
 
