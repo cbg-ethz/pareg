@@ -1604,15 +1604,23 @@ cv_edgenet_gridsearch_lsf <- function(
     )
 
     # run CV
-    loss <- fn(c(lambda, psigx, psigy), var.args = c())
+    cv_res <- fn(c(lambda, psigx, psigy), var.args = c())
 
     duration <- as_hms(Sys.time() - start_time)
     log_trace(
       "Finished lambda={lambda}, psigx={psigx}, psigy={psigy} ",
-      "(loss={round(loss, 2)}, duration={duration})"
+      "(loss={round(cv_res$loss, 2)}, ",
+      "mse={round(cv_res$mse, 4)}, ",
+      "duration={duration})"
     )
 
-    data.frame(lambda = lambda, psigx = psigx, psigy = psigy, loss = loss)
+    data.frame(
+      lambda = lambda,
+      psigx = psigx,
+      psigy = psigy,
+      loss = cv_res$loss,
+      mse = cv_res$mse
+    )
   }, .tempdir = tempdir, .packages = c("devtools"))
 
   row_optim <- loss_grid[which.min(loss_grid$loss), ]
@@ -1624,7 +1632,9 @@ cv_edgenet_gridsearch_lsf <- function(
   log_debug(
     "Optimal parameters: ",
     "lambda={lambda_optim}, psigx={psigx_optim}, psigy={psigy_optim} ",
-    "(loss={round(row_optim$loss, 2)}, duration={global_duration})"
+    "(loss={round(row_optim$loss, 2)}, ",
+    "mse={round(row_optim$mse, 4)}, ",
+    "duration={global_duration})"
   )
 
   # finalize output
