@@ -425,6 +425,16 @@ parameter_columns %>%
 
     # recall plot
     if (dim(recall_selection)[[1]]) {
+      print(glue("Recall summary for {param_name}"))
+      recall_selection %>%
+        group_by_at(vars(one_of(param_name, "method"))) %>%
+        summarize(
+          precision_mean = mean(precision),
+          precision_median = median(precision),
+          precision_sd = sd(precision)
+        ) %>%
+        print()
+
       recall_selection %>%
         ggplot(aes_string(x = param_name, y = "precision", fill = "method")) +
         geom_boxplot(outlier.colour = NA) +
@@ -443,6 +453,16 @@ parameter_columns %>%
 
     # precision plot
     if (dim(precision_selection)[[1]]) {
+      print(glue("Precision summary for {param_name}"))
+      precision_selection %>%
+        group_by_at(vars(one_of(param_name, "method"))) %>%
+        summarize(
+          recall_mean = mean(recall),
+          recall_median = median(recall),
+          recall_sd = sd(recall)
+        ) %>%
+        print()
+
       precision_selection %>%
         ggplot(aes_string(x = param_name, y = "recall", fill = "method")) +
         geom_boxplot(outlier.colour = NA) +
