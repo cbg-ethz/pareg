@@ -352,7 +352,7 @@ parameter_columns %>%
       scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
       ylim(0, 1) +
       theme_minimal()
-    ggsave(file.path(outdir, glue("pr_aucs_aggregated_{param_name}.pdf")), width = 8, height = 6)
+    ggsave(file.path(outdir, glue("pr_aucs_aggregated_{param_name}.pdf")), width = 6, height = 4.5)
   })
 
 # comparison for given precision/recall values
@@ -448,7 +448,7 @@ parameter_columns %>%
         scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
         ylim(0, 1) +
         theme_minimal()
-      ggsave(file.path(outdir, glue("pr_recall_threshold_{param_name}_{recall_value}.pdf")), width = 8, height = 6)
+      ggsave(file.path(outdir, glue("pr_recall_threshold_{param_name}_{recall_value}.pdf")), width = 6, height = 4.5)
     }
 
     # precision plot
@@ -476,6 +476,6 @@ parameter_columns %>%
         scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
         ylim(0, 1) +
         theme_minimal()
-      ggsave(file.path(outdir, glue("pr_precision_threshold_{param_name}_{precision_value}.pdf")), width = 8, height = 6)
+      ggsave(file.path(outdir, glue("pr_precision_threshold_{param_name}_{precision_value}.pdf")), width = 6, height = 4.5)
     }
   })
