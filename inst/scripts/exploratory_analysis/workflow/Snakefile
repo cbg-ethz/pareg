@@ -9,6 +9,7 @@ cancer_list = config["cancer_types"]
 rule all:
     input:
         expand("results/plots/{cancer}/", cancer=cancer_list),
+        expand("results/extra_stuff/{cancer}/", cancer=cancer_list),
 
 
 rule provide_data:
@@ -59,3 +60,16 @@ rule visualize:
         mem_mb=10_000,
     script:
         "scripts/visualize.R"
+
+
+rule extra_stuff:
+    input:
+        fname_de="results/tcga_data/{cancer}.txt",
+        fname_terms="results/terms/database.csv",
+        fname_sim="results/terms/similarities.csv",
+    output:
+        outdir=directory("results/extra_stuff/{cancer}/"),
+    resources:
+        mem_mb=10_000,
+    script:
+        "scripts/extra_stuff.R"

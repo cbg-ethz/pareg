@@ -49,7 +49,9 @@ Suggests:
     GSEABenchmarkeR,
     BiocParallel,
     ggupset,
-    latex2exp
+    latex2exp,
+    org.Hs.eg.db,
+    GO.db
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Imports:
