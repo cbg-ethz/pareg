@@ -59,29 +59,16 @@ enriched_terms <- df_enr %>%
   head(initial_term_count) %>%
   pull(term)
 
-mat_sub <- term_similarities_sub[enriched_terms, enriched_terms]
-enriched_terms <- enriched_terms %>%
-  map_dfr(function(x) {
-    edge_weights <- mat_sub[x, !colnames(mat_sub) %in% c(x)]
-    max_w <- max(edge_weights)
-
-    data.frame(term = x, max_weight = max_w)
-  }) %>%
-  filter(max_weight >= min_similarity) %>%
-  pull(term)
-print(paste("#selected terms:", length(enriched_terms)))
-
 plot(fit_nonet, term_subset = enriched_terms, min_similarity = min_similarity) +
   theme(
     legend.title = element_text(size = 20),
-    legend.text = element_text(size = 15),
-    aspect.ratio = 2
+    legend.text = element_text(size = 15)
   )
 
 ggsave(
   file.path(outdir, glue("overview_pareg_nonet.pdf")),
-  width = 10,
-  height = 12
+  width = 15,
+  height = 15
 )
 
 # run singular FET enrichment
