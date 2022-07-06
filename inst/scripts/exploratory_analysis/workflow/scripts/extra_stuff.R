@@ -110,11 +110,95 @@ df_fet$term <- AnnotationDbi::select(GO.db, df_fet$id, c("TERM"), "GOID") %>%
 
 head(df_fet)
 
-# visualize FET results
+# compute term similarities
+term_list_list <- AnnotationDbi::select(
+    org.Hs.eg.db,
+    df_de$gene,
+    c("GO"),
+    "SYMBOL"
+  ) %>%
+  inner_join(
+    df_fet,
+    by = c("GO" = "id")
+  ) %>%
+  pipe_split("term", "SYMBOL")
+length(term_list_list)
 
+term_similarities <- 1 - proxy::dist(
+  x = term_list_list,
+  method = function(x, y) {
+    1 - jaccard(x, y)
+  },
+  diag = TRUE, pairwise = TRUE
+) %>%
+  as.matrix()
+
+df_fet <- df_fet %>%
+  filter(df_fet$term %in% colnames(term_similarities))
+
+# visualize FET results
+term_sizes <- df_terms %>%
+  group_by(.data$term) %>%
+  summarize(size = n())
+
+min_similarity <- 0.1
+initial_term_count <- 50
+
+enriched_terms <- df_fet %>%
+  arrange(pvalue) %>%
+  head(initial_term_count) %>%
+  pull(term)
+
+term_network_tmp <- term_similarities[enriched_terms, enriched_terms]
+term_network_tmp[term_network_tmp < min_similarity] <- 0
+
+term_graph <- as_tbl_graph(graph_from_adjacency_matrix(
+  term_network_tmp,
+  weighted = TRUE
+)) %>%
+  activate("nodes") %>%
+  mutate(
+    pvalue = data.frame(term = .data$name) %>%
+      left_join(df_fet, by = "term") %>%
+      pull(.data$pvalue),
+    enrichment = -log10(pvalue),
+    term_size = data.frame(term = .data$name) %>%
+      left_join(term_sizes, by = "term") %>%
+      pull(.data$size),
+  ) %>%
+  activate("edges") %>%
+  mutate(
+    term_similarity = .data$weight
+  )
+
+term_graph %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(alpha = .data$term_similarity)) +
+  geom_node_point(
+    aes(size = .data$term_size, color = .data$enrichment)
+  ) +
+  scale_size(range = c(2, 10), name = "Term size") +
+  scale_color_gradient2(
+    low = "red",
+    mid = "grey",
+    high = "blue",
+    midpoint = 0,
+    na.value = "black",
+    name = "Enrichment"
+  ) +
+  scale_edge_alpha(name = "Term similarity") +
+  geom_text_repel(
+    aes(label = .data$name, x = .data$x, y = .data$y),
+    color = "black",
+    bg.color = "white"
+  ) +
+  coord_fixed() +
+  theme(
+    panel.background = element_rect(fill = "white")
+  )
 
 ggsave(
   file.path(outdir, glue("overview_fet.pdf")),
-  width = 10,
-  height = 12
+  width = 15,
+  height = 15
 )
