@@ -108,6 +108,9 @@ df_fet$term <- AnnotationDbi::select(GO.db, df_fet$id, c("TERM"), "GOID") %>%
   ) %>%
   pull(TERM)
 
+df_fet <- df_fet %>%
+  filter(term %in% df_terms$term)
+
 head(df_fet)
 
 # compute term similarities
