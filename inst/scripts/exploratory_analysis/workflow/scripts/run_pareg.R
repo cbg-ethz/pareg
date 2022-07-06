@@ -40,8 +40,8 @@ fit <- pareg::pareg(
   cv = TRUE,
   cv_method = "grid_search_lsf",
   family = pareg::beta_phi_var,
-  lasso_param_range = seq(0, 10, length.out = 5),
-  network_param_range = seq(0, 1000, length.out = 5),
+  lasso_param_range = seq(0, 1, length.out = 2),
+  network_param_range = seq(0, 200, length.out = 5),
   tempdir = file.path(outdir, "cv_dump"),
   max_iteration = 10000,
   log_level = TRACE
