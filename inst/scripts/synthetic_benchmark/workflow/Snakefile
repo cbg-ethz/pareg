@@ -75,7 +75,7 @@ rule create_synthetic_study:
     params:
         params=paramspace.instance,
     resources:
-        mem_mb=5_000,
+        mem_mb=20_000,
     script:
         "scripts/create_synthetic_study.R"
 

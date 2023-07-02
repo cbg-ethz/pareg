@@ -116,6 +116,18 @@ module beta:
 use rule * from beta as beta_*
 
 
+module ablation_study:
+    snakefile:
+        "../../../workflow/Snakefile"
+    config:
+        load_config("config_ablation_study/config.yaml")
+    replace_prefix:
+        {"results/": "results/ablation_study/"}
+
+
+use rule * from ablation_study as ablation_study_*
+
+
 # custom logic
 rule compare_rocauc_vs_loss:
     input:
@@ -148,8 +160,8 @@ rule compare_rocauc_vs_loss:
 rule all:
     input:
         # rules.dispersion_fitting_all.input,
-        rules.response_distribution_all.input,
-        rules.regularization_effect_all.input,
+        # rules.response_distribution_all.input,
+        # rules.regularization_effect_all.input,
         # rules.regularization_parameter_all.input,
         # expand(
         #     "results/regularization_parameter/rocauc_vs_loss/{params}/",
@@ -157,7 +169,8 @@ rule all:
         # ),
         # rules.noise_all.input,
         # rules.real_datasets_all.input,
-        rules.similarity_measures_all.input,
+        # rules.similarity_measures_all.input,
         rules.rho_all.input,
         rules.beta_all.input,
+        rules.ablation_study_all.input,
     default_target: True

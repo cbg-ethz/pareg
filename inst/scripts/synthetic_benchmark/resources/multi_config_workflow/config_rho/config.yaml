@@ -8,6 +8,7 @@ method_list:
     - topgo
     - pareg
     - random
+    - blitzgsea
 
 term_filter:
     min_size: 50

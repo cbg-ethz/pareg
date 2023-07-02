@@ -3,12 +3,10 @@
 # `null` will execut all methods
 # list of strings will execute selected methods
 method_list:
-    - single_term_methods
-    - mgsa
-    - topgo
-    - pareg
-    - random
-    - blitzgsea
+    - pareg_noterms
+    - pareg_lasso
+    - pareg_network
+    - pareg_network_lasso
 
 term_filter:
     min_size: 50
@@ -22,4 +20,4 @@ parameters:
     ontermcount: [20]
     siggenescaling: [0.1]
 
-params_path: config_beta/params.csv
+params_path: config_ablation_study/params.csv

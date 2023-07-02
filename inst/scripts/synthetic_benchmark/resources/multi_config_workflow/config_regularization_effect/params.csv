@@ -1,2 +1,7 @@
 termsource,alpha,beta,similaritymeasure,model
+msigdb@C5@GO:BP,0,0,jaccard,linear
+msigdb@C5@GO:BP,0.05,0,jaccard,linear
+msigdb@C5@GO:BP,0.1,0,jaccard,linear
+msigdb@C5@GO:BP,0.25,0,jaccard,linear
 msigdb@C5@GO:BP,0,0.5,jaccard,linear
+msigdb@C5@GO:BP,0.75,0,jaccard,linear
