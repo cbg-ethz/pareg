@@ -6,14 +6,18 @@ library(PRROC)
 
 # parameters
 fname_enr <- snakemake@input$fname_enr
+fname_benchmark <- snakemake@input$fname_benchmark
 
 outdir <- snakemake@output$outdir
 dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
 
 # read data
 df_enr <- read_csv(fname_enr)
-
 df_enr %>%
+  head()
+
+df_runtime <- read_csv(fname_benchmark)
+df_runtime %>%
   head()
 
 # comparison plot
@@ -106,3 +110,11 @@ df_enr %>%
     p
     ggsave(file.path(pairwise_dir, glue::glue("pairwise_enrichment_{key}.pdf")), p)
   })
+
+# benchmark plot
+ggplot(df_runtime, aes(x = method, y = duration_seconds)) +
+  geom_boxplot() +
+  scale_y_log10(labels=function(x) {format(as.POSIXct(x), format = "%H:%M:%OS", tz = "UTC")}) +
+  labs(x = "Method", y = "Runtime [hh:mm:ss]") +
+  theme_minimal()
+ggsave(file.path(outdir, "runtime.pdf"))

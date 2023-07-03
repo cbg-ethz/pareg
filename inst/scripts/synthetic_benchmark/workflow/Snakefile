@@ -118,8 +118,14 @@ rule aggregate_results:
             for replicate in range(config["replicate_count"])
             for _ in method_list
         ],
+        fname_list_benchmark=[
+            f"results/benchmarks/{method}/{method}__{paramspace.wildcard_pattern}__{replicate}.benchmark.tsv"
+            for replicate in range(config["replicate_count"])
+            for method in method_list
+        ],
     output:
         fname=f"results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv",
+        fname_benchmark=f"results/enrichments/{paramspace.wildcard_pattern}/all_benchmark.csv",
     script:
         "scripts/aggregate_results.R"
 
@@ -127,6 +133,7 @@ rule aggregate_results:
 rule visualize_results:
     input:
         fname_enr=f"results/enrichments/{paramspace.wildcard_pattern}/all_enr.csv",
+        fname_benchmark=f"results/enrichments/{paramspace.wildcard_pattern}/all_benchmark.csv",
     output:
         outdir=directory(f"results/plots/{paramspace.wildcard_pattern}/"),
     resources:
