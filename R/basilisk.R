@@ -1,9 +1,9 @@
-my_env <- basilisk::BasiliskEnvironment(
-    envname = "pareg_env",
+pareg_env <- basilisk::BasiliskEnvironment(
+    envname = "pareg",
     pkgname = "pareg",
     packages = c(
-        "python=3.8",
-        "tensorflow==2.4.0",
-        "tensorflow_probability==0.12.0"
+        "tensorflow==2.11.1",
+        "tensorflow-probability==0.19.0"
     )
 )
+

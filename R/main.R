@@ -51,6 +51,7 @@
 #' @importFrom future plan multicore
 #' @importFrom doFuture registerDoFuture
 #' @importFrom foreach setDoPar
+#' @importFrom basilisk basiliskRun basiliskStart basiliskStop
 pareg <- function(
   df_genes,
   df_terms,
@@ -150,7 +151,13 @@ pareg <- function(
     }
   }
 
-  fit <- fit_func(
+  cl <- basiliskStart(
+    pareg_env,
+    testload = c("tensorflow", "tensorflow_probability")
+  )
+  fit <- basiliskRun(
+    proc = cl,
+    fun = fit_func,
     X,
     Y,
     G.X = term_network,
@@ -161,6 +168,7 @@ pareg <- function(
     maxit = max_iterations,
     ...
   )
+  basiliskStop(cl)
 
   # update parameters to cross-validation estimates if needed
   if (cv) {

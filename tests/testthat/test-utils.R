@@ -136,3 +136,21 @@ test_that("enrichplot integration works", {
   # enrichplot::treeplot(obj, nCluster = 2) +
   #   scale_colour_continuous(name = "Enrichment Score")
 })
+
+
+test_that("tensorflow integration works", {
+  cl <- basiliskStart(
+    pareg_env,
+    testload = c("tensorflow", "tensorflow_probability")
+  )
+  versions <- basiliskRun(cl, function() {
+    list(
+      tf_version = tensorflow::tf$version$VERSION,
+      tfp_version = tfprobability::tfp$`__version__`
+    )
+  })
+  basiliskStop(cl)
+
+  expect_equal(versions$tf_version, "2.11.1")
+  expect_equal(versions$tfp_version, "0.19.0")
+})
