@@ -2,7 +2,7 @@ library(testthat)
 library(pareg)
 
 cl <- basilisk::basiliskStart(
-  pareg_env,
+  pareg::pareg_env,
   testload = c("tensorflow", "tensorflow_probability")
 )
 basilisk::basiliskRun(

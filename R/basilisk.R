@@ -1,3 +1,4 @@
+#' @export
 pareg_env <- basilisk::BasiliskEnvironment(
     envname = "pareg",
     pkgname = "pareg",
