@@ -1,13 +1,13 @@
 library(testthat)
 library(pareg)
 
-cl <- basiliskStart(
+cl <- basilisk::basiliskStart(
   pareg_env,
   testload = c("tensorflow", "tensorflow_probability")
 )
-basiliskRun(
+basilisk::basiliskRun(
   proc = cl,
   fun = test_check,
   "pareg"
 )
-basiliskStop(cl)
+basilisk::basiliskStop(cl)
