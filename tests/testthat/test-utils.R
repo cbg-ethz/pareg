@@ -151,6 +151,6 @@ test_that("tensorflow integration works", {
   })
   basiliskStop(cl)
 
-  expect_equal(versions$tf_version, "2.11.1")
-  expect_equal(versions$tfp_version, "0.19.0")
+  expect_equal(versions$tf_version, "2.10.0")
+  expect_equal(versions$tfp_version, "0.14.0")
 })
