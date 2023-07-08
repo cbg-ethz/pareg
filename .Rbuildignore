@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^\.github$
 ^\.lintr$
+^\.BBSoptions$
 ^\.mega-linter.yml$
 ^inst/scripts/resources/method_definitions/gsea-3.0.jar$
 ^data-raw$

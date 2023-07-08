@@ -53,7 +53,7 @@ Suggests:
     org.Hs.eg.db,
     GO.db
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Imports:
     stats,
     tidyr,
@@ -83,4 +83,6 @@ Imports:
     reticulate,
     logger,
     hms,
-    devtools
+    devtools,
+    basilisk
+StagedInstall: no
