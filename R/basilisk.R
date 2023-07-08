@@ -1,3 +1,7 @@
+#' @title Conda environment definition.
+#'
+#' @description Declare Python packages needed to run this R package.
+#'
 #' @export
 pareg_env <- basilisk::BasiliskEnvironment(
     envname = "pareg",
