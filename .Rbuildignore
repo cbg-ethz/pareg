@@ -6,3 +6,7 @@
 ^\.mega-linter.yml$
 ^inst/scripts/resources/method_definitions/gsea-3.0.jar$
 ^data-raw$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^codecov\.yml$
